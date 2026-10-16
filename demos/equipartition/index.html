@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="ko" data-lang="both">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>에너지 등분배 정리 · Equipartition theorem</title>
+<meta name="description" content="볼츠만 분포에서 뽑은 표본으로 제곱항 하나의 평균 에너지 ½k_BT를 확인한다 (Blundell 19.1, 연습 19.5–19.6)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
+<script src="../../site-config.js"></script>
+<style>
+/* =====================================================================
+ * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
+ * ===================================================================== */
+:root{
+  color-scheme: light;
+  --bg:#f6f6f3; --surface:#fcfcfb; --surface-2:#f0efeb;
+  --text:#0b0b0b; --text-2:#52514e; --muted:#7d7c76; --line:#e2e1dc; --grid:#ebeae5;
+  --accent:#2a78d6; --accent-ink:#1c5cab; --accent-weak:#e6effa;
+  --series-1:#2a78d6;   /* 곡선·확률 막대 */
+  --series-2:#eb6834;   /* 앙상블 표본 점 */
+  --radius:14px;
+  --font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#121211; --surface:#1a1a19; --surface-2:#232321;
+    --text:#f0efec; --text-2:#c3c2b7; --muted:#8f8e86; --line:#2f2e2b; --grid:#262624;
+    --accent:#3987e5; --accent-ink:#86b6ef; --accent-weak:#1b2a3d;
+    --series-1:#3987e5; --series-2:#d95926;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#121211; --surface:#1a1a19; --surface-2:#232321;
+  --text:#f0efec; --text-2:#c3c2b7; --muted:#8f8e86; --line:#2f2e2b; --grid:#262624;
+  --accent:#3987e5; --accent-ink:#86b6ef; --accent-weak:#1b2a3d;
+  --series-1:#3987e5; --series-2:#d95926;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg); color:var(--text); font-family:var(--font); line-height:1.6; -webkit-text-size-adjust:100%}
+a{color:var(--accent-ink)}
+.wrap{max-width:1180px; margin:0 auto; padding:0 16px}
+
+/* ---------- 언어 표시 규칙 / language display ---------- */
+html[data-lang="ko"] .t-en, html[data-lang="en"] .t-ko{display:none}
+html[data-lang="both"] .bi-inline .t-en::before{content:" · "; color:var(--muted)}
+html[data-lang="both"] .bi-block .t-en{display:block; color:var(--text-2); font-size:.9em; margin-top:.2em}
+html[data-lang="both"] .bi-sub .t-en{display:block; color:var(--muted); font-size:.8em; font-weight:400}
+html[data-lang="both"] .bi-tight .t-en{display:block; color:var(--muted); font-size:.78em; line-height:1.3}
+
+/* ---------- 상단 / header ---------- */
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0}
+.back{text-decoration:none; font-size:.9rem; color:var(--text-2)}
+.back:hover{color:var(--accent-ink)}
+.lang{display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:3px; background:var(--surface)}
+.lang button{border:0; background:transparent; color:var(--text-2); font:inherit; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; min-height:32px}
+.lang button[aria-pressed="true"]{background:var(--accent); color:#fff}
+.title{padding:10px 0 16px}
+.title .chip{display:inline-block; font-size:.78rem; color:var(--accent-ink); background:var(--accent-weak); padding:3px 10px; border-radius:999px; margin-bottom:8px}
+.title h1{font-size:clamp(1.45rem, 4vw, 2.1rem); line-height:1.25; margin:0 0 6px}
+.title p{margin:0; color:var(--text-2); max-width:820px}
+
+/* ---------- 패널 / panels ---------- */
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; min-width:0}
+.panel h2{font-size:1rem; margin:0 0 8px}
+.sim{display:grid; gap:14px; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); grid-template-areas:"levels plots" "controls plots"}
+.p-levels{grid-area:levels} .p-controls{grid-area:controls} .p-plots{grid-area:plots}
+@media (max-width:880px){
+  .sim{grid-template-columns:minmax(0,1fr); grid-template-areas:"levels" "controls" "plots"}
+}
+#levels{width:100%; height:360px; display:block; touch-action:manipulation}
+@media (max-width:600px){ #levels{height:300px} }
+.legend{display:flex; flex-wrap:wrap; gap:6px 16px; font-size:.82rem; color:var(--text-2); margin-top:6px}
+.legend .key{display:inline-flex; align-items:flex-start; gap:6px}
+.sw-bar{width:16px; height:8px; border-radius:2px; background:var(--series-1); margin-top:.5em; flex:none}
+.sw-dot{width:9px; height:9px; border-radius:50%; background:var(--series-2); margin-top:.45em; flex:none}
+.leveldef{font-size:.86rem; color:var(--text-2); margin-top:6px}
+
+/* ---------- 조작부 / controls ---------- */
+.ctl{margin:0 0 14px}
+.ctl:last-child{margin-bottom:0}
+.ctl-label{display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:.9rem; margin-bottom:6px}
+.ctl-label output{font-variant-numeric:tabular-nums; font-weight:600; color:var(--text)}
+.seg{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:4px; background:var(--surface-2); padding:4px; border-radius:10px}
+.seg.two{grid-template-columns:repeat(2, minmax(0,1fr))}
+.seg button{border:0; background:transparent; color:var(--text-2); font:inherit; font-size:.85rem; line-height:1.25; padding:7px 4px; border-radius:7px; cursor:pointer; min-height:40px}
+.seg button[aria-pressed="true"]{background:var(--surface); color:var(--text); box-shadow:0 1px 2px rgba(0,0,0,.12); font-weight:600}
+@media (max-width:420px){ .seg:not(.two){grid-template-columns:repeat(2, minmax(0,1fr))} }
+input[type=range]{width:100%; accent-color:var(--accent); height:28px; margin:0}
+.btns{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.btn{border:1px solid var(--line); background:var(--surface); color:var(--text); font:inherit; font-size:.86rem; padding:7px 12px; border-radius:9px; cursor:pointer; min-height:38px}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+.chk{display:inline-flex; align-items:center; gap:6px; font-size:.86rem; color:var(--text-2); cursor:pointer}
+button:focus-visible, input:focus-visible, summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+/* ---------- 그래프 / plots ---------- */
+.plot{position:relative; margin-bottom:10px}
+.plot:last-of-type{margin-bottom:4px}
+.plot-title{font-size:.88rem; color:var(--text-2); margin:0 0 2px}
+.plot canvas{width:100%; height:150px; display:block; cursor:crosshair; touch-action:pan-y}
+@media (max-width:600px){ .plot canvas{height:130px} }
+.tip{position:absolute; pointer-events:none; background:var(--text); color:var(--bg); font-size:.76rem; padding:4px 7px; border-radius:6px; white-space:nowrap; transform:translate(-50%, -110%); opacity:0; transition:opacity .08s; font-variant-numeric:tabular-nums}
+.xcap{font-size:.8rem; color:var(--muted); margin:2px 0 0}
+
+/* ---------- 수치 타일 / stat tiles ---------- */
+.tiles{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-top:14px}
+.tile{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:10px 12px; min-width:0}
+.tile .lab{font-size:.78rem; color:var(--text-2); line-height:1.3}
+.tile .val{font-size:1.3rem; font-weight:650; font-variant-numeric:tabular-nums; margin-top:2px; overflow-wrap:anywhere}
+.tile .sub{font-size:.76rem; color:var(--muted); font-variant-numeric:tabular-nums}
+
+/* ---------- 본문 섹션 / text sections ---------- */
+.text-sec{display:grid; gap:14px; grid-template-columns:minmax(0,1fr) minmax(0,1fr); margin-top:14px}
+@media (max-width:880px){ .text-sec{grid-template-columns:minmax(0,1fr)} }
+.eq-main{font-size:1.1rem; overflow-x:auto; padding:4px 0}
+.eq-note{font-size:.8rem; color:var(--muted); margin:0 0 10px}
+.eq-no{font-size:.78rem; color:var(--muted); text-align:right}
+.ctl-label.plain{display:block}
+.eq-sys{overflow-x:auto; background:var(--surface-2); border-radius:10px; padding:8px 10px; margin:4px 0 10px}
+.eq-list{margin:0; padding-left:1.1em; font-size:.92rem}
+.eq-list li{margin:4px 0; overflow-x:auto}
+.explain p{margin:0 0 8px}
+.src ul, .notes ul{margin:4px 0; padding-left:1.1em; font-size:.92rem}
+.src li, .notes li{margin:5px 0}
+details{margin-top:12px}
+summary{cursor:pointer; color:var(--text-2); font-size:.9rem}
+table{border-collapse:collapse; width:100%; font-size:.86rem; font-variant-numeric:tabular-nums; margin-top:6px}
+th, td{border-bottom:1px solid var(--line); padding:4px 6px; text-align:right}
+th:first-child, td:first-child{text-align:left}
+footer{border-top:1px solid var(--line); margin-top:24px; padding:16px 0 36px; color:var(--muted); font-size:.82rem}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+
+/* ---------- 공통 확장 (데모 1, 3–12) / shared extensions ---------- */
+:root{ --series-3:#1baf7a; --good:#008300; --warn:#c98500; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --series-3:#199e70; --good:#3fb950; --warn:#e3a72f; } }
+:root[data-theme="dark"]{ --series-3:#199e70; --good:#3fb950; --warn:#e3a72f; }
+.seg.cols{grid-template-columns:repeat(var(--cols,4), minmax(0,1fr))}
+@media (max-width:420px){ .seg.cols{grid-template-columns:repeat(min(var(--cols,4),2), minmax(0,1fr))} }
+canvas.viz{width:100%; height:360px; display:block; touch-action:manipulation}
+@media (max-width:600px){ canvas.viz{height:300px} }
+canvas.viz.short{height:240px}
+@media (max-width:600px){ canvas.viz.short{height:210px} }
+.plot canvas.tall{height:220px}
+@media (max-width:600px){ .plot canvas.tall{height:190px} }
+.sw-line{width:18px; height:3px; border-radius:2px; margin-top:.6em; flex:none}
+.sw-dash{width:18px; height:0; border-top:2px dashed var(--muted); margin-top:.7em; flex:none}
+.verdict{display:inline-block; font-size:.82rem; font-weight:600; padding:3px 10px; border-radius:999px; margin-top:6px}
+.verdict.ok{background:color-mix(in srgb, var(--good) 15%, transparent); color:var(--good)}
+.verdict.no{background:color-mix(in srgb, var(--warn) 18%, transparent); color:var(--warn)}
+.row2{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px}
+.mini{font-size:.82rem; color:var(--text-2)}
+.tile .sub{overflow-wrap:anywhere}
+
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
+  <header class="topbar">
+    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <div class="lang" id="langToggle" role="group" aria-label="Language">
+      <button type="button" data-set-lang="ko">한국어</button>
+      <button type="button" data-set-lang="en">English</button>
+      <button type="button" data-set-lang="both">한·EN</button>
+    </div>
+  </header>
+
+  <!-- ===== 제목 · 한 줄 요약 ===== -->
+  <div class="title">
+    <span class="chip bi-inline" data-i18n="chipSec"></span>
+    <h1 class="bi-sub" data-i18n="title"></h1>
+    <p class="bi-block" data-i18n="summary"></p>
+  </div>
+
+  <!-- ===== 시뮬레이션 + 매개변수 ===== -->
+  <div class="sim">
+    <section class="panel p-levels" aria-labelledby="hViz">
+      <h2 id="hViz" class="bi-inline" data-i18n="pViz"></h2>
+      <div class="plot" id="plotE"><p class="plot-title bi-inline" data-i18n="plotE"></p><canvas class="tall" aria-label="Energy E(x) with sampled particles"></canvas><div class="tip"></div></div>
+      <div class="plot" id="plotP"><p class="plot-title bi-inline" data-i18n="plotP"></p><canvas class="tall" aria-label="Histogram of x with exact P(x)"></canvas><div class="tip"></div></div>
+      <div class="legend">
+        <span class="key"><span class="sw-bar" style="opacity:.45"></span><span class="bi-tight" data-i18n="legHist"></span></span>
+        <span class="key"><span class="sw-line" style="background:var(--series-1)"></span><span class="bi-tight" data-i18n="legExact"></span></span>
+        <span class="key"><span class="sw-dot"></span><span class="bi-tight" data-i18n="legDots"></span></span>
+      </div>
+    </section>
+
+    <section class="panel p-controls" aria-labelledby="hCtl">
+      <h2 id="hCtl" class="bi-inline" data-i18n="pControls"></h2>
+      <div class="ctl">
+        <div class="ctl-label plain bi-inline" data-i18n="lblShape"></div>
+        <div class="seg cols" style="--cols:3" id="shapeSeg" role="group">
+          <button type="button" data-n="2">$\alpha x^2$</button>
+          <button type="button" data-n="1">$\alpha|x|$</button>
+          <button type="button" data-n="4">$\alpha x^4$</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <label class="ctl-label" for="aSlider"><span class="bi-inline" data-i18n="lblAlpha"></span><output id="aOut"></output></label>
+        <input type="range" id="aSlider" min="0" max="1000" step="1">
+      </div>
+      <div class="ctl">
+        <label class="ctl-label" for="tSlider"><span class="bi-inline" data-i18n="lblT"></span><output id="tOut"></output></label>
+        <input type="range" id="tSlider" min="0" max="1000" step="1">
+      </div>
+      <div class="ctl btns">
+        <button type="button" class="btn primary bi-inline" id="runBtn" data-i18n="btnPause"></button>
+        <button type="button" class="btn bi-inline" id="resetBtn" data-i18n="btnReset"></button>
+      </div>
+      <p class="mini bi-block" data-i18n="unitNote"></p>
+    </section>
+
+    <section class="panel p-plots" aria-labelledby="hPlots">
+      <h2 id="hPlots" class="bi-inline" data-i18n="pPlots"></h2>
+      <div class="plot" id="plotRun"><p class="plot-title bi-inline" data-i18n="plotRun"></p><canvas aria-label="Running mean energy"></canvas><div class="tip"></div></div>
+      <div class="plot" id="plotT"><p class="plot-title bi-inline" data-i18n="plotT"></p><canvas aria-label="Mean energy versus temperature"></canvas><div class="tip"></div></div>
+      <div class="legend" style="margin:-4px 0 8px">
+        <span class="key"><span class="sw-line" style="background:var(--series-1)"></span>$\alpha x^2$ : $\tfrac12 k_BT$</span>
+        <span class="key"><span class="sw-line" style="background:var(--series-2)"></span>$\alpha|x|$ : $k_BT$</span>
+        <span class="key"><span class="sw-line" style="background:var(--series-3)"></span>$\alpha x^4$ : $\tfrac14 k_BT$</span>
+      </div>
+      <div class="plot" id="plotA"><p class="plot-title bi-inline" data-i18n="plotA"></p><canvas aria-label="Mean energy versus alpha"></canvas><div class="tip"></div></div>
+      <p class="xcap bi-block" data-i18n="xCap"></p>
+    </section>
+  </div>
+
+  <!-- ===== 현재 값 ===== -->
+  <div class="tiles" aria-live="polite">
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileN"></div><div class="val" id="vN"></div></div>
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileMean"></div><div class="val" id="vMean"></div><div class="sub" id="sMean"></div></div>
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileExact"></div><div class="val" id="vExact"></div></div>
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileRatio"></div><div class="val" id="vRatio"></div><div class="sub bi-tight" id="sRatio"></div></div>
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileX2"></div><div class="val" id="vX2"></div><div class="sub bi-tight" id="sX2"></div></div>
+  </div>
+
+  <!-- ===== 핵심 수식 · 해설 · 교재 ===== -->
+  <div class="text-sec">
+    <section class="panel" aria-labelledby="hEq">
+      <h2 id="hEq" class="bi-inline" data-i18n="hEq"></h2>
+      <div class="eq-main">$$P(x)=\frac{e^{-\beta\alpha x^2}}{\int_{-\infty}^{\infty}e^{-\beta\alpha x^2}\,dx},\qquad \langle E\rangle=\langle\alpha x^2\rangle=\frac{1}{2\beta}=\tfrac12 k_BT$$</div>
+      <p class="eq-note bi-inline" data-i18n="eqMainNote"></p>
+      <div class="ctl-label plain bi-inline" data-i18n="hEqMore"></div>
+      <ul class="eq-list">
+        <li class="bi-block" data-i18n="eq1"></li>
+        <li class="bi-block" data-i18n="eq2"></li>
+        <li class="bi-block" data-i18n="eq3"></li>
+      </ul>
+    </section>
+
+    <section class="panel explain" aria-labelledby="hExp">
+      <h2 id="hExp" class="bi-inline" data-i18n="hExplain"></h2>
+      <p class="bi-block" data-i18n="explain"></p>
+    </section>
+
+    <section class="panel src" aria-labelledby="hSrc">
+      <h2 id="hSrc" class="bi-inline" data-i18n="hSource"></h2>
+      <ul>
+        <li class="bi-block" data-i18n="src1"></li>
+        <li class="bi-block" data-i18n="src2"></li>
+        <li class="bi-block" data-i18n="src3"></li>
+      </ul>
+    </section>
+    <section class="panel notes" aria-labelledby="hNote">
+      <h2 id="hNote" class="bi-inline" data-i18n="hNote"></h2>
+      <ul>
+        <li class="bi-block" data-i18n="note1"></li>
+        <li class="bi-block" data-i18n="note2"></li>
+      </ul>
+    </section>
+  </div>
+
+  <footer class="bi-block" id="footer"></footer>
+</div>
+
+<script>
+/* #####################################################################
+ * 데모 #1  에너지 등분배 정리 · Equipartition theorem  — 이 파일 하나로 동작합니다.
+ * 구조: (1) 문구 사전 → (2) 언어 공통 코드 → (3) 물리 계산
+ *       → (4) 캔버스 그래프 도구 → (5) 화면 갱신 → (6) 이벤트
+ * ##################################################################### */
+
+/* ===== (1) 문구 사전 / UI strings ===================================== */
+const I18N = {
+  ko: {
+    chipSec: '교재 19.1절 · 연습문제 19.4–19.6',
+    title: '에너지 등분배 정리',
+    summary: '에너지가 $\\alpha x^2$ 꼴인 자유도 하나는 열평형에서 평균 $\\tfrac12 k_BT$의 에너지를 갖는다. 볼츠만 분포에서 표본을 직접 뽑아 확인해 보자.',
+    pViz: '볼츠만 분포에서 뽑은 표본',
+    plotE: '에너지 $E(x)/\\varepsilon_0$와 최근 표본',
+    plotP: '$x$의 분포: 히스토그램과 정확한 $P(x)$',
+    legHist: '막대: 표본 히스토그램', legExact: '선: 정확한 $P(x)\\propto e^{-\\beta E(x)}$', legDots: '점: 최근 표본 40개',
+    lblShape: '에너지의 꼴 $E(x)$',
+    lblAlpha: '계수 $\\alpha$ (단위 $\\varepsilon_0/x_0^n$)',
+    lblT: '온도 $k_BT/\\varepsilon_0$',
+    btnPause: '■ 멈춤', btnRun: '▶ 계속', btnReset: '처음부터',
+    unitNote: '에너지 단위 $\\varepsilon_0$, 길이 단위 $x_0$는 임의로 정한 기준값이다. 매개변수를 바꾸면 표본을 처음부터 다시 뽑는다.',
+    pPlots: '평균 에너지',
+    plotRun: '누적 평균 $\\langle E\\rangle/k_BT$ — 표본 수에 따라',
+    plotT: '평균 에너지 $\\langle E\\rangle/\\varepsilon_0$ — 온도에 따라 (선: 정확값, 점: 표본)',
+    plotA: '$\\langle E\\rangle/k_BT$ — 계수 $\\alpha$에 따라 (선: 정확값, 점: 표본)',
+    xCap: '점선은 정확값 $k_BT/n$이다. 그래프를 누르면 그 값(온도·$\\alpha$)으로 이동한다.',
+    tileN: '표본 수', tileMean: '표본 평균 $\\langle E\\rangle/\\varepsilon_0$', tileExact: '정확값 $k_BT/n$ (단위 $\\varepsilon_0$)',
+    tileRatio: '$\\langle E\\rangle/k_BT$', tileX2: '$\\langle x^2\\rangle/x_0^2$',
+    subRatio: '정확값 1/{n}', subX2: '정확값 {v}',
+    eqMainNote: '교재 식 (19.5), (19.6)',
+    hEqMore: '이 데모가 함께 쓰는 식',
+    eq1: '제곱항 $n$개의 합 $E=\\sum_i\\alpha_i x_i^2$이면 $\\langle E\\rangle=\\tfrac n2 k_BT$ — 교재 식 (19.12)',
+    eq2: '$\\langle x_i^2\\rangle=k_BT/2\\alpha_i$ — 교재 연습문제 19.4',
+    eq3: '$E=\\alpha|x|^n$이면 $\\langle E\\rangle=\\xi k_BT$, 여기서 $\\xi=1/n$ — 교재 연습문제 19.5–19.6 ($n=1$이면 $k_BT$)',
+    explain: '열평형에서 $x$는 볼츠만 인자 $e^{-\\beta E(x)}$에 비례하는 확률로 나타난다. $\\alpha$를 키우면 분포의 폭은 $\\sqrt{k_BT/2\\alpha}$로 좁아지지만, 에너지 $\\alpha x^2$의 평균은 그대로 $\\tfrac12k_BT$이다. 그래서 용수철 상수나 질량 같은 세부 사항과 무관하게 제곱항 하나마다 $\\tfrac12k_BT$가 배당된다. 에너지가 $\\alpha|x|$나 $\\alpha x^4$처럼 제곱이 아니면 평균은 $k_BT$, $\\tfrac14k_BT$로 바뀌므로, $\\tfrac12$은 제곱 꼴에서 나오는 값이다. 표본이 많아질수록 누적 평균이 점선에 수렴하는 것을 확인하자.',
+    src1: '19.1절 등분배 정리 (한국어판 271–274쪽), 예제 19.1 (제곱항 $n$개)',
+    src2: '연습문제 19.4 ($\\langle x_i^2\\rangle$), 19.5 ($E=\\alpha|x|$), 19.6 ($E=\\alpha|x|^n$) (한국어판 282쪽)',
+    src3: '관련: 19.3절 사용된 가정 — 고전적으로 적분할 수 있을 때(고온)만 성립',
+    note1: '강의(3주차 부록)에서는 제곱항의 계수를 $a$로 써서 $\\langle ax^2\\rangle=\\tfrac12k_BT$로 적는다. 이 데모는 교재처럼 $\\alpha$를 쓴다.',
+    note2: '표본은 $u=\\beta\\alpha|x|^n$이 감마분포 $\\Gamma(1/n)$를 따른다는 사실을 이용해 정확한 볼츠만 분포에서 직접 뽑는다(근사 없음).'
+  },
+  en: {
+    chipSec: 'Textbook §19.1 · Exercises 19.4–19.6',
+    title: 'The equipartition theorem',
+    summary: 'A degree of freedom whose energy is $\\alpha x^2$ carries an average energy of $\\tfrac12 k_BT$ in thermal equilibrium. Check it by drawing samples straight from the Boltzmann distribution.',
+    pViz: 'Samples from the Boltzmann distribution',
+    plotE: 'Energy $E(x)/\\varepsilon_0$ and recent samples',
+    plotP: 'Distribution of $x$: histogram and exact $P(x)$',
+    legHist: 'Bars: sample histogram', legExact: 'Line: exact $P(x)\\propto e^{-\\beta E(x)}$', legDots: 'Dots: last 40 samples',
+    lblShape: 'Form of the energy $E(x)$',
+    lblAlpha: 'Coefficient $\\alpha$ (units $\\varepsilon_0/x_0^n$)',
+    lblT: 'Temperature $k_BT/\\varepsilon_0$',
+    btnPause: '■ Pause', btnRun: '▶ Resume', btnReset: 'Restart',
+    unitNote: 'The energy unit $\\varepsilon_0$ and length unit $x_0$ are arbitrary reference values. Changing a parameter restarts the sampling.',
+    pPlots: 'Mean energy',
+    plotRun: 'Running mean $\\langle E\\rangle/k_BT$ versus number of samples',
+    plotT: 'Mean energy $\\langle E\\rangle/\\varepsilon_0$ versus temperature (lines: exact, dot: samples)',
+    plotA: '$\\langle E\\rangle/k_BT$ versus the coefficient $\\alpha$ (line: exact, dot: samples)',
+    xCap: 'Dashed lines are the exact value $k_BT/n$. Tap a graph to jump to that temperature or $\\alpha$.',
+    tileN: 'Samples', tileMean: 'Sample mean $\\langle E\\rangle/\\varepsilon_0$', tileExact: 'Exact $k_BT/n$ (units $\\varepsilon_0$)',
+    tileRatio: '$\\langle E\\rangle/k_BT$', tileX2: '$\\langle x^2\\rangle/x_0^2$',
+    subRatio: 'exact 1/{n}', subX2: 'exact {v}',
+    eqMainNote: 'Textbook Eqs. (19.5), (19.6)',
+    hEqMore: 'Also used in this demo',
+    eq1: 'For $n$ quadratic terms $E=\\sum_i\\alpha_i x_i^2$: $\\langle E\\rangle=\\tfrac n2 k_BT$ — Eq. (19.12)',
+    eq2: '$\\langle x_i^2\\rangle=k_BT/2\\alpha_i$ — Exercise 19.4',
+    eq3: 'For $E=\\alpha|x|^n$: $\\langle E\\rangle=\\xi k_BT$ with $\\xi=1/n$ — Exercises 19.5–19.6 ($n=1$ gives $k_BT$)',
+    explain: 'In equilibrium, $x$ occurs with probability proportional to the Boltzmann factor $e^{-\\beta E(x)}$. A larger $\\alpha$ narrows the distribution (width $\\sqrt{k_BT/2\\alpha}$), yet the mean of $\\alpha x^2$ stays at $\\tfrac12k_BT$. That is why every quadratic term gets $\\tfrac12k_BT$, whatever the spring constant or mass. For non-quadratic energies such as $\\alpha|x|$ or $\\alpha x^4$ the mean becomes $k_BT$ or $\\tfrac14k_BT$, so the $\\tfrac12$ comes from the quadratic form. Watch the running mean settle onto the dashed line as samples accumulate.',
+    src1: '§19.1 The equipartition theorem (Korean ed. pp. 271–274), Example 19.1 ($n$ quadratic terms)',
+    src2: 'Exercises 19.4 ($\\langle x_i^2\\rangle$), 19.5 ($E=\\alpha|x|$), 19.6 ($E=\\alpha|x|^n$) (Korean ed. p. 282)',
+    src3: 'Related: §19.3 Assumptions made — valid only when the classical integral applies (high temperature)',
+    note1: 'The lecture (week 3 appendix) writes the coefficient as $a$: $\\langle ax^2\\rangle=\\tfrac12k_BT$. This demo uses the textbook’s $\\alpha$.',
+    note2: 'Samples are drawn exactly from the Boltzmann distribution, using the fact that $u=\\beta\\alpha|x|^n$ follows a Gamma$(1/n)$ distribution (no approximation).'
+  }
+};
+
+/* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
+const I18N_COMMON = {
+  ko: {
+    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
+    footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
+  },
+  en: {
+    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
+    footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
+  }
+};
+for (const l of ['ko','en']) I18N[l] = Object.assign({}, I18N_COMMON[l], I18N[l]);
+
+const CFG = Object.assign({
+  DEFAULT_LANG:'both', SHOW_LANG_TOGGLE:true,
+  COURSE:{ko:'열및통계물리2', en:'Thermal and Statistical Physics 2'},
+  TERM:{ko:'2026-2학기', en:'Fall Semester 2026'}
+}, window.SITE_CONFIG || {});
+const LANGS = ['ko','en','both'];
+const LS_KEY = 'statphys2-lang';
+function resolveLang(){
+  if (!CFG.SHOW_LANG_TOGGLE) return LANGS.includes(CFG.DEFAULT_LANG) ? CFG.DEFAULT_LANG : 'both';
+  const q = new URLSearchParams(location.search).get('lang');
+  if (LANGS.includes(q)) return q;
+  try { const s = localStorage.getItem(LS_KEY); if (LANGS.includes(s)) return s; } catch(e){}
+  return LANGS.includes(CFG.DEFAULT_LANG) ? CFG.DEFAULT_LANG : 'both';
+}
+function bi(ko, en){
+  if (ko == null) ko = en; if (en == null) en = ko;
+  return `<span class="t-ko" lang="ko">${ko}</span><span class="t-en" lang="en">${en}</span>`;
+}
+function biKey(key, vars){
+  const sub = (s, l) => s == null ? s : s.replace(/\{(\w+)\}/g, (m,k) => {
+    const v = vars && vars[k]; return v == null ? m : (typeof v === 'object' ? v[l] : v); });
+  return bi(sub(I18N.ko[key],'ko'), sub(I18N.en[key],'en'));
+}
+function renderMath(root){
+  if (window.renderMathInElement) renderMathInElement(root, {
+    delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false });
+}
+function setHTML(el, html){ if (typeof el === 'string') el = document.getElementById(el); el.innerHTML = html; renderMath(el); }
+function setLang(lang, save){
+  document.documentElement.dataset.lang = lang;
+  document.documentElement.lang = (lang === 'en') ? 'en' : 'ko';
+  document.querySelectorAll('[data-set-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.setLang === lang)));
+  if (save) { try { localStorage.setItem(LS_KEY, lang); } catch(e){} }
+}
+/* 페이지 공통 초기화: 문구 채우기, 꼬리말, 언어 버튼 */
+function initPage(onLang){
+  const vars = { COURSE: CFG.COURSE, TERM: CFG.TERM };
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = biKey(el.dataset.i18n, vars); });
+  setHTML(document.getElementById('footer'), biKey('footer', vars));
+  const toggle = document.getElementById('langToggle');
+  if (!CFG.SHOW_LANG_TOGGLE) toggle.hidden = true;
+  toggle.addEventListener('click', e => { const b = e.target.closest('[data-set-lang]'); if (b) { setLang(b.dataset.setLang, true); if (onLang) onLang(); } });
+  setLang(resolveLang(), false);
+  renderMath(document.body);
+}
+/* 분할 버튼 묶음: data-<attr> 값을 콜백으로 넘긴다 */
+function segInit(id, attr, value, onChange){
+  const el = document.getElementById(id);
+  const mark = v => el.querySelectorAll(`[data-${attr}]`).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[attr] === String(v))));
+  el.addEventListener('click', e => { const b = e.target.closest(`[data-${attr}]`); if (b) { mark(b.dataset[attr]); onChange(b.dataset[attr]); } });
+  mark(value); return mark;
+}
+/* 로그 슬라이더 (0–1000) ↔ 값 */
+const logSlider = (lo, hi) => ({ to: s => lo * Math.pow(hi / lo, s / 1000), from: v => Math.round(1000 * Math.log(v / lo) / Math.log(hi / lo)) });
+
+/* ===== (4) 캔버스 그래프 도구 / canvas plot helper ====================== */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const SUP = {'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+const supNum = n => String(n).split('').map(c => SUP[c] || c).join('');
+function fmt(v, d = 3){
+  if (v == null || !isFinite(v)) return '—';
+  const a = Math.abs(v);
+  if (a !== 0 && (a >= 1e5 || a < 1e-3)) {
+    let e = Math.floor(Math.log10(a)), m = v / Math.pow(10, e);
+    if (Math.abs(m) >= 9.995) { m /= 10; e += 1; }
+    return `${m.toFixed(2)}×10<sup>${e}</sup>`;
+  }
+  return (a >= 100 ? v.toFixed(1) : a >= 10 ? v.toFixed(2) : v.toFixed(d));
+}
+function fmtPlain(v, d = 3){ return fmt(v, d).replace(/<sup>(.*?)<\/sup>/, (m, e) => supNum(e)); }
+function niceTicks(lo, hi, n = 4){
+  const span = hi - lo; if (!(span > 0)) return [lo];
+  const raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(s => span / s <= n + 0.5);
+  const out = []; for (let k = Math.ceil(lo / step - 1e-9); k * step <= hi + step * 1e-6 && out.length < 50; k++) out.push(+(k * step).toPrecision(12));
+  return out;
+}
+function logTicks(lo, hi, maxN = 7){
+  const a = Math.ceil(Math.log10(lo) - 1e-9), b = Math.floor(Math.log10(hi) + 1e-9);
+  let step = Math.max(1, Math.ceil((b - a + 1) / maxN));
+  const out = []; for (let e = a; e <= b; e += step) out.push(Math.pow(10, e));
+  if (out.length < 2) { for (const m of [2, 5]) for (let e = a - 1; e <= b; e++) { const v = m * Math.pow(10, e); if (v >= lo && v <= hi) out.push(v); } out.sort((x, y) => x - y); }
+  return out;
+}
+function tickLabel(v, log){
+  if (log) { const e = Math.log10(v); if (Math.abs(e - Math.round(e)) < 1e-9) { const k = Math.round(e); return (k >= -2 && k <= 3) ? String(+v.toPrecision(3)) : '10' + supNum(k); } return String(+v.toPrecision(2)); }
+  const a = Math.abs(v); if (a !== 0 && (a >= 1e5 || a < 1e-3)) { const e = Math.floor(Math.log10(a)); return (v / Math.pow(10, e)).toFixed(1).replace(/\.0$/, '') + '×10' + supNum(e); }
+  return String(+v.toFixed(6));
+}
+function setupCanvas(cv){
+  const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  const W = Math.max(1, Math.round(r.width)), H = Math.max(1, Math.round(r.height));
+  if (cv.width !== W * dpr || cv.height !== H * dpr) { cv.width = W * dpr; cv.height = H * dpr; }
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.font = '11px ' + css('--font');
+  return { ctx, W, H };
+}
+const colorOf = c => (c && c.startsWith('--')) ? css(c) : (c || css('--series-1'));
+
+/* 선 그래프: 여러 계열, 로그 축, 극한값 점선, 표시점, 십자선 툴팁, 눌러서 값 고르기 */
+class Plot {
+  constructor(wrap, onPick){
+    this.wrap = typeof wrap === 'string' ? document.getElementById(wrap) : wrap;
+    this.cv = this.wrap.querySelector('canvas'); this.tip = this.wrap.querySelector('.tip');
+    this.onPick = onPick; this.hoverX = null;
+    this.pad = { l:48, r:14, t:8, b:20 };
+    this.cv.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { this.hoverX = this.pxToX(e.offsetX); this.draw(); } });
+    this.cv.addEventListener('pointerleave', () => { this.hoverX = null; this.draw(); });
+    this.cv.addEventListener('click', e => { const x = this.pxToX(e.offsetX); if (x != null && this.onPick) this.onPick(x); });
+  }
+  set(d){ this.d = d; this.draw(); }
+  fx(x){ const d = this.d; return d.xLog ? (Math.log(x) - Math.log(d.xMin)) / (Math.log(d.xMax) - Math.log(d.xMin)) : (x - d.xMin) / (d.xMax - d.xMin); }
+  fy(y){ const d = this.d; return d.yLog ? (Math.log(y) - Math.log(d.yMin)) / (Math.log(d.yMax) - Math.log(d.yMin)) : (y - d.yMin) / (d.yMax - d.yMin); }
+  xToPx(x){ return this.pad.l + this.fx(x) * (this.W - this.pad.l - this.pad.r); }
+  yToPx(y){ return this.pad.t + (1 - this.fy(y)) * (this.H - this.pad.t - this.pad.b); }
+  pxToX(px){ if (!this.d) return null; const d = this.d, f = (px - this.pad.l) / (this.W - this.pad.l - this.pad.r);
+    if (f < 0 || f > 1) return null;
+    return d.xLog ? Math.exp(Math.log(d.xMin) + f * (Math.log(d.xMax) - Math.log(d.xMin))) : d.xMin + f * (d.xMax - d.xMin); }
+  ok(x, y){ const d = this.d; return isFinite(x) && isFinite(y) && !(d.xLog && x <= 0) && !(d.yLog && y <= 0); }
+  draw(){
+    if (!this.d) return;
+    const { ctx, W, H } = setupCanvas(this.cv); this.W = W; this.H = H;
+    const d = this.d, p = this.pad;
+    const cGrid = css('--grid'), cMuted = css('--muted'), cText2 = css('--text-2'), cSurf = css('--surface');
+    ctx.clearRect(0, 0, W, H);
+    /* 격자·눈금 */
+    ctx.lineWidth = 1; ctx.strokeStyle = cGrid; ctx.fillStyle = cMuted; ctx.textBaseline = 'middle';
+    const yt = d.yTicks || (d.yLog ? logTicks(d.yMin, d.yMax, 5) : niceTicks(d.yMin, d.yMax, 3));
+    for (const y of yt) { if (y < d.yMin || y > d.yMax) continue;
+      const py = Math.round(this.yToPx(y)) + .5; ctx.beginPath(); ctx.moveTo(p.l, py); ctx.lineTo(W - p.r, py); ctx.stroke();
+      ctx.textAlign = 'right'; ctx.fillText(d.yFmt ? d.yFmt(y) : tickLabel(y, d.yLog), p.l - 6, py); }
+    const xt = d.xTicks || (d.xLog ? logTicks(d.xMin, d.xMax, 7) : niceTicks(d.xMin, d.xMax, 5));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (const x of xt) { if (x < d.xMin * (d.xLog ? 0.999 : 1) - 1e-12 || x > d.xMax * 1.001 + 1e-12) continue;
+      const px = Math.round(this.xToPx(x)) + .5; ctx.beginPath(); ctx.moveTo(px, p.t); ctx.lineTo(px, H - p.b); ctx.stroke();
+      ctx.fillText(d.xFmt ? d.xFmt(x) : tickLabel(x, d.xLog), px, H - p.b + 4); }
+    ctx.save(); ctx.beginPath(); ctx.rect(p.l, p.t, W - p.l - p.r, H - p.t - p.b); ctx.clip();
+    /* 띠 (예: 가시광 영역) */
+    for (const b of (d.bands || [])) { ctx.fillStyle = colorOf(b.color); ctx.globalAlpha = b.alpha || .08;
+      const x0 = this.xToPx(b.x0), x1 = this.xToPx(b.x1); ctx.fillRect(Math.min(x0, x1), p.t, Math.abs(x1 - x0), H - p.t - p.b); ctx.globalAlpha = 1; }
+    /* 극한값·기준 점선 */
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = cMuted; ctx.lineWidth = 1.2;
+    for (const r of (d.refs || [])) {
+      ctx.beginPath();
+      if (r.fn) { let started = false; for (let i = 0; i <= 160; i++) { const x = d.xLog ? d.xMin * Math.pow(d.xMax / d.xMin, i / 160) : d.xMin + (d.xMax - d.xMin) * i / 160;
+          const y = r.fn(x); if (!this.ok(x, y)) { started = false; continue; } const px = this.xToPx(x), py = this.yToPx(y); started ? ctx.lineTo(px, py) : ctx.moveTo(px, py); started = true; } }
+      else if (r.x != null) { const px = this.xToPx(r.x); ctx.moveTo(px, p.t); ctx.lineTo(px, H - p.b); }
+      else { const py = this.yToPx(r.y); ctx.moveTo(p.l, py); ctx.lineTo(W - p.r, py); }
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    /* 계열 */
+    for (const s of d.series) {
+      const col = colorOf(s.color);
+      if (s.bars) { ctx.fillStyle = col; ctx.globalAlpha = s.alpha || .35; const y0 = this.yToPx(Math.max(d.yMin, 0));
+        for (let i = 0; i < s.xs.length; i++) { if (!this.ok(s.xs[i], s.ys[i])) continue;
+          const xa = this.xToPx(s.xs[i] - s.w / 2), xb = this.xToPx(s.xs[i] + s.w / 2), py = this.yToPx(s.ys[i]);
+          ctx.fillRect(xa + 1, Math.min(py, y0), Math.max(1, xb - xa - 2), Math.abs(y0 - py)); }
+        ctx.globalAlpha = 1; continue; }
+      if (s.pts) { for (let i = 0; i < s.xs.length; i++) { if (!this.ok(s.xs[i], s.ys[i])) continue;
+          ctx.beginPath(); ctx.arc(this.xToPx(s.xs[i]), this.yToPx(s.ys[i]), s.r || 4, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = cSurf; ctx.stroke(); }
+        continue; }
+      ctx.strokeStyle = col; ctx.lineWidth = s.width || 2; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      if (s.dash) ctx.setLineDash(s.dash);
+      ctx.beginPath(); let started = false;
+      for (let i = 0; i < s.xs.length; i++) { const x = s.xs[i], y = s.ys[i];
+        if (!this.ok(x, y)) { started = false; continue; }
+        const px = this.xToPx(x), py = Math.max(-1e4, Math.min(1e4, this.yToPx(y)));
+        started ? ctx.lineTo(px, py) : ctx.moveTo(px, py); started = true; }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.restore();
+    /* 기준선 라벨 (텍스트 색) */
+    ctx.fillStyle = cText2; ctx.textBaseline = 'bottom';
+    for (const r of (d.refs || [])) { if (!r.lab) continue;
+      if (r.x != null) { if (r.x >= d.xMin && r.x <= d.xMax) { ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(r.lab, this.xToPx(r.x) + 3, p.t + 1); ctx.textBaseline = 'bottom'; } continue; }
+      const xr = r.labX != null ? r.labX : d.xMax, yr = r.fn ? r.fn(xr) : r.y;
+      if (this.ok(xr, yr) && yr >= d.yMin && yr <= d.yMax) { ctx.textAlign = 'right'; ctx.fillText(r.lab, Math.min(W - p.r - 2, this.xToPx(xr) - 2), this.yToPx(yr) - 2); } }
+    /* 직접 라벨 */
+    for (const l of (d.labels || [])) { if (!this.ok(l.x, l.y)) continue; ctx.textAlign = l.align || 'left'; ctx.fillText(l.text, this.xToPx(l.x) + (l.dx || 4), this.yToPx(l.y) + (l.dy || -2)); }
+    /* 표시점 */
+    for (const m of (d.markers || [])) {
+      if (!this.ok(m.x, m.y) || m.x < d.xMin || m.x > d.xMax) continue;
+      const px = this.xToPx(m.x), py = Math.max(p.t, Math.min(H - p.b, this.yToPx(m.y))), col = colorOf(m.color);
+      if (m.vline !== false) { ctx.strokeStyle = col; ctx.globalAlpha = .35; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, p.t); ctx.lineTo(px, H - p.b); ctx.stroke(); ctx.globalAlpha = 1; }
+      ctx.beginPath(); ctx.arc(px, py, 5, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = cSurf; ctx.stroke();
+    }
+    /* 마우스 십자선 + 툴팁 */
+    if (this.hoverX != null && d.tip) {
+      const px = this.xToPx(this.hoverX);
+      ctx.strokeStyle = cMuted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px + .5, p.t); ctx.lineTo(px + .5, H - p.b); ctx.stroke();
+      const t = d.tip(this.hoverX);
+      if (t) { this.tip.textContent = t; this.tip.style.left = Math.min(Math.max(px, 110), W - 110) + 'px'; this.tip.style.top = (this.cv.offsetTop + 30) + 'px'; this.tip.style.opacity = 1; }
+    } else if (this.tip) this.tip.style.opacity = 0;
+  }
+}
+/* 데이터 범위 + 여백 */
+function extent(arrs, extra = [], padFrac = 0.08){
+  let lo = Infinity, hi = -Infinity;
+  for (const a of arrs) for (const v of a) if (isFinite(v)) { if (v < lo) lo = v; if (v > hi) hi = v; }
+  for (const v of extra) if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+  const pd = (hi - lo) * padFrac || Math.abs(hi) * 0.1 || 0.1; return [lo - pd, hi + pd];
+}
+/* 적분 (심프슨) / Simpson integration */
+function simpson(f, a, b, n = 400){ if (n % 2) n++; const h = (b - a) / n; let s = f(a) + f(b);
+  for (let i = 1; i < n; i++) s += (i % 2 ? 4 : 2) * f(a + i * h); return s * h / 3; }
+/* ln Γ(x) (Lanczos, x > 0) */
+function lnGamma(x){
+  const g = 7, c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313,
+    -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+  if (x < 0.5) return Math.log(Math.PI / Math.abs(Math.sin(Math.PI * x))) - lnGamma(1 - x);
+  x -= 1; let a = c[0]; const t = x + g + 0.5; for (let i = 1; i < g + 2; i++) a += c[i] / (x + i);
+  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+}
+/* 물리 상수 (CODATA, SI) */
+const PHYS = { kB:1.380649e-23, h:6.62607015e-34, hbar:1.054571817e-34, c:2.99792458e8, e:1.602176634e-19,
+  NA:6.02214076e23, R:8.314462618, me:9.1093837015e-31, mp:1.67262192369e-27, u:1.66053906660e-27, muB:9.2740100783e-24, mu0:1.25663706212e-6 };
+PHYS.sigma = Math.PI ** 2 * PHYS.kB ** 4 / (60 * PHYS.c ** 2 * PHYS.hbar ** 3);
+let __rz; window.addEventListener('resize', () => { clearTimeout(__rz); __rz = setTimeout(() => window.onRedraw && window.onRedraw(), 80); });
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => window.onRedraw && window.onRedraw());
+
+
+/* ===== (3) 물리 계산 / physics ======================================= *
+ * E(x) = α|x|^n,  P(x) ∝ exp(-βα|x|^n)
+ * 정확값: ⟨E⟩ = k_BT/n,  ⟨x²⟩ = (k_BT/α)^{2/n} Γ(3/n)/Γ(1/n)   (n=2 → k_BT/2α)
+ * 표본: u = βα|x|^n ~ Gamma(1/n, 1),  |x| = (u k_BT/α)^{1/n}, 부호 ±                    */
+const exactMeanE = (n, t) => t / n;
+const exactX2 = (n, a, t) => Math.pow(t / a, 2 / n) * Math.exp(lnGamma(3 / n) - lnGamma(1 / n));
+const Pnorm = (n, a, t) => 1 / (2 * Math.pow(t / a, 1 / n) * Math.exp(lnGamma(1 + 1 / n)));   // 1/∫e^{-βα|x|^n}dx
+const Px = (x, n, a, t) => Pnorm(n, a, t) * Math.exp(-a * Math.pow(Math.abs(x), n) / t);
+function randn(){ let u = 0, v = 0; while (u === 0) u = Math.random(); v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+function randGamma(k){                                   // Marsaglia–Tsang
+  if (k < 1) return randGamma(k + 1) * Math.pow(Math.random(), 1 / k);
+  const d = k - 1 / 3, c = 1 / Math.sqrt(9 * d);
+  for (;;) { let x, v; do { x = randn(); v = 1 + c * x; } while (v <= 0); v = v * v * v; const u = Math.random();
+    if (u < 1 - 0.0331 * x ** 4 || Math.log(u) < 0.5 * x * x + d * (1 - v + Math.log(v))) return d * v; }
+}
+function sampleX(n, a, t){ const u = randGamma(1 / n); return (Math.random() < .5 ? -1 : 1) * Math.pow(u * t / a, 1 / n); }
+
+/* ===== (5) 상태와 화면 갱신 / state & rendering ======================== */
+const NMAX = 20000, PER_FRAME = 60;
+const aMap = logSlider(0.2, 5), tMap = logSlider(0.2, 4);
+const S = { n:2, a:1, t:1, xs:[], sumE:0, sumX2:0, run:true, hist:[] };
+let plots;
+function reset(){ S.xs = []; S.sumE = 0; S.sumX2 = 0; S.hist = []; }
+function addSamples(k){
+  for (let i = 0; i < k && S.xs.length < NMAX; i++) {
+    const x = sampleX(S.n, S.a, S.t); S.xs.push(x); S.sumE += S.a * Math.pow(Math.abs(x), S.n); S.sumX2 += x * x;
+    const N = S.xs.length; if (N % 20 === 0 || N < 20) S.hist.push([N, S.sumE / N / S.t]);
+  }
+}
+const xRange = () => 3.2 * Math.pow(S.t / S.a, 1 / S.n) * (S.n === 1 ? 1.6 : 1);
+function render(){
+  const N = S.xs.length, X = xRange(), meanE = N ? S.sumE / N : NaN;
+  /* E(x)와 최근 표본 */
+  const xs = [], Es = [], Ps = [];
+  for (let i = 0; i <= 240; i++) { const x = -X + 2 * X * i / 240; xs.push(x); Es.push(S.a * Math.pow(Math.abs(x), S.n)); Ps.push(Px(x, S.n, S.a, S.t)); }
+  const recent = S.xs.slice(-40);
+  const eMax = Math.max(4 * S.t, S.t * 1.2 + 0.1);
+  plots.E.set({ xMin:-X, xMax:X, yMin:0, yMax:eMax, series:[
+      { xs, ys:Es, color:'--muted', width:2 },
+      { xs:recent, ys:recent.map(x => S.a * Math.pow(Math.abs(x), S.n)), color:'--series-2', pts:true, r:4 } ],
+    refs:[{ y:exactMeanE(S.n, S.t), lab:'⟨E⟩ = k_BT/' + S.n }],
+    tip: x => `x = ${fmtPlain(x)}  E = ${fmtPlain(S.a * Math.pow(Math.abs(x), S.n))}` });
+  /* 히스토그램 */
+  const nb = 40, w = 2 * X / nb, cnt = new Array(nb).fill(0);
+  for (const x of S.xs) { const k = Math.floor((x + X) / w); if (k >= 0 && k < nb) cnt[k]++; }
+  const hx = cnt.map((c, k) => -X + (k + .5) * w), hy = cnt.map(c => N ? c / (N * w) : 0);
+  plots.P.set({ xMin:-X, xMax:X, yMin:0, yMax:Math.max(...Ps, ...hy) * 1.12, series:[
+      { xs:hx, ys:hy, w, bars:true, color:'--series-1', alpha:.3 }, { xs, ys:Ps, color:'--series-1' } ],
+    tip: x => `x = ${fmtPlain(x)}  P(x) = ${fmtPlain(Px(x, S.n, S.a, S.t))}` });
+  /* 누적 평균 */
+  const hX = S.hist.map(h => h[0]), hY = S.hist.map(h => h[1]);
+  const yr = Math.max(1 / S.n * 2, 0.8);
+  plots.Run.set({ xMin:10, xMax:NMAX, xLog:true, yMin:0, yMax:yr, series:[{ xs:hX, ys:hY, color:'--series-1' }],
+    refs:[{ y:1 / S.n, lab:'1/' + S.n }].concat(S.n !== 2 ? [{ y:.5, lab:'1/2 (αx²)' }] : []),
+    markers: N ? [{ x:Math.max(10, N), y:meanE / S.t, vline:false }] : [],
+    tip: x => { const h = S.hist.reduce((b, v) => Math.abs(v[0] - x) < Math.abs(b[0] - x) ? v : b, [1e9, NaN]); return isFinite(h[1]) ? `N = ${h[0]}  ⟨E⟩/k_BT = ${h[1].toFixed(4)}` : null; } });
+  /* ⟨E⟩ 대 T */
+  const ts = Array.from({length:50}, (_, i) => 4 * i / 49);
+  plots.T.set({ xMin:0, xMax:4, yMin:0, yMax:4.2, series:[
+      { xs:ts, ys:ts.map(t => t / 2), color:'--series-1', width:S.n === 2 ? 2.5 : 1.5 },
+      { xs:ts, ys:ts, color:'--series-2', width:S.n === 1 ? 2.5 : 1.5 },
+      { xs:ts, ys:ts.map(t => t / 4), color:'--series-3', width:S.n === 4 ? 2.5 : 1.5 } ],
+    markers: N ? [{ x:S.t, y:meanE, color:{2:'--series-1', 1:'--series-2', 4:'--series-3'}[S.n] }] : [],
+    tip: x => `k_BT = ${fmtPlain(x)}  ⟨E⟩: ${fmtPlain(x / 2)} · ${fmtPlain(x)} · ${fmtPlain(x / 4)}` });
+  /* ⟨E⟩/kT 대 α */
+  plots.A.set({ xMin:0.2, xMax:5, xLog:true, yMin:0, yMax:Math.max(1.2, 1.5 / S.n), xTicks:[0.2, 0.5, 1, 2, 5],
+    series:[{ xs:[0.2, 5], ys:[1 / S.n, 1 / S.n], color:{2:'--series-1', 1:'--series-2', 4:'--series-3'}[S.n] }],
+    markers: N ? [{ x:S.a, y:meanE / S.t, color:{2:'--series-1', 1:'--series-2', 4:'--series-3'}[S.n] }] : [],
+    tip: x => `α = ${fmtPlain(x)}  ⟨E⟩/k_BT = 1/${S.n}` });
+  /* 수치 */
+  document.getElementById('vN').textContent = N.toLocaleString('en');
+  document.getElementById('vMean').innerHTML = fmt(meanE, 4);
+  const se = N > 1 ? Math.sqrt(S.xs.reduce((s, x) => { const e = S.a * Math.pow(Math.abs(x), S.n) - meanE; return s + e * e; }, 0) / (N - 1) / N) : NaN;
+  document.getElementById('sMean').textContent = isFinite(se) ? `± ${fmtPlain(se, 4)} (1σ)` : '';
+  document.getElementById('vExact').innerHTML = fmt(exactMeanE(S.n, S.t), 4);
+  document.getElementById('vRatio').innerHTML = fmt(meanE / S.t, 4);
+  setHTML('sRatio', biKey('subRatio', { n: String(S.n) }));
+  document.getElementById('vX2').innerHTML = fmt(N ? S.sumX2 / N : NaN, 4);
+  setHTML('sX2', biKey('subX2', { v: fmtPlain(exactX2(S.n, S.a, S.t), 4) }));
+  document.getElementById('aOut').textContent = S.a.toFixed(2);
+  document.getElementById('tOut').textContent = S.t.toFixed(2);
+}
+window.onRedraw = render;
+
+/* ===== (6) 이벤트 / events ========================================== */
+function init(){
+  initPage(render);
+  const aS = document.getElementById('aSlider'), tS = document.getElementById('tSlider');
+  aS.value = aMap.from(S.a); tS.value = tMap.from(S.t);
+  const setA = a => { S.a = Math.min(5, Math.max(0.2, a)); aS.value = aMap.from(S.a); reset(); render(); };
+  const setT = t => { S.t = Math.min(4, Math.max(0.2, t)); tS.value = tMap.from(S.t); reset(); render(); };
+  plots = { E:new Plot('plotE'), P:new Plot('plotP'), Run:new Plot('plotRun'), T:new Plot('plotT', setT), A:new Plot('plotA', setA) };
+  aS.addEventListener('input', () => setA(aMap.to(+aS.value)));
+  tS.addEventListener('input', () => setT(tMap.to(+tS.value)));
+  segInit('shapeSeg', 'n', S.n, v => { S.n = +v; reset(); render(); });
+  const runBtn = document.getElementById('runBtn');
+  const label = () => { runBtn.innerHTML = biKey(S.run ? 'btnPause' : 'btnRun'); };
+  runBtn.addEventListener('click', () => { S.run = !S.run; label(); });
+  document.getElementById('resetBtn').addEventListener('click', () => { reset(); render(); });
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { addSamples(NMAX); }
+  label();
+  const loop = () => { if (S.run && S.xs.length < NMAX) { addSamples(PER_FRAME); render(); } requestAnimationFrame(loop); };
+  render(); requestAnimationFrame(loop);
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="ko" data-lang="both">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이원자 기체의 열용량 · Heat capacity of a diatomic gas</title>
+<meta name="description" content="회전·진동 특성온도를 바꾸며 C_V/R의 3/2 → 5/2 → 7/2 계단을 관찰한다 (Blundell 19.2, 21.6, 그림 21.5)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
+<script src="../../site-config.js"></script>
+<style>
+/* =====================================================================
+ * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
+ * ===================================================================== */
+:root{
+  color-scheme: light;
+  --bg:#f6f6f3; --surface:#fcfcfb; --surface-2:#f0efeb;
+  --text:#0b0b0b; --text-2:#52514e; --muted:#7d7c76; --line:#e2e1dc; --grid:#ebeae5;
+  --accent:#2a78d6; --accent-ink:#1c5cab; --accent-weak:#e6effa;
+  --series-1:#2a78d6;   /* 곡선·확률 막대 */
+  --series-2:#eb6834;   /* 앙상블 표본 점 */
+  --radius:14px;
+  --font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#121211; --surface:#1a1a19; --surface-2:#232321;
+    --text:#f0efec; --text-2:#c3c2b7; --muted:#8f8e86; --line:#2f2e2b; --grid:#262624;
+    --accent:#3987e5; --accent-ink:#86b6ef; --accent-weak:#1b2a3d;
+    --series-1:#3987e5; --series-2:#d95926;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#121211; --surface:#1a1a19; --surface-2:#232321;
+  --text:#f0efec; --text-2:#c3c2b7; --muted:#8f8e86; --line:#2f2e2b; --grid:#262624;
+  --accent:#3987e5; --accent-ink:#86b6ef; --accent-weak:#1b2a3d;
+  --series-1:#3987e5; --series-2:#d95926;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg); color:var(--text); font-family:var(--font); line-height:1.6; -webkit-text-size-adjust:100%}
+a{color:var(--accent-ink)}
+.wrap{max-width:1180px; margin:0 auto; padding:0 16px}
+
+/* ---------- 언어 표시 규칙 / language display ---------- */
+html[data-lang="ko"] .t-en, html[data-lang="en"] .t-ko{display:none}
+html[data-lang="both"] .bi-inline .t-en::before{content:" · "; color:var(--muted)}
+html[data-lang="both"] .bi-block .t-en{display:block; color:var(--text-2); font-size:.9em; margin-top:.2em}
+html[data-lang="both"] .bi-sub .t-en{display:block; color:var(--muted); font-size:.8em; font-weight:400}
+html[data-lang="both"] .bi-tight .t-en{display:block; color:var(--muted); font-size:.78em; line-height:1.3}
+
+/* ---------- 상단 / header ---------- */
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0}
+.back{text-decoration:none; font-size:.9rem; color:var(--text-2)}
+.back:hover{color:var(--accent-ink)}
+.lang{display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:3px; background:var(--surface)}
+.lang button{border:0; background:transparent; color:var(--text-2); font:inherit; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; min-height:32px}
+.lang button[aria-pressed="true"]{background:var(--accent); color:#fff}
+.title{padding:10px 0 16px}
+.title .chip{display:inline-block; font-size:.78rem; color:var(--accent-ink); background:var(--accent-weak); padding:3px 10px; border-radius:999px; margin-bottom:8px}
+.title h1{font-size:clamp(1.45rem, 4vw, 2.1rem); line-height:1.25; margin:0 0 6px}
+.title p{margin:0; color:var(--text-2); max-width:820px}
+
+/* ---------- 패널 / panels ---------- */
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; min-width:0}
+.panel h2{font-size:1rem; margin:0 0 8px}
+.sim{display:grid; gap:14px; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); grid-template-areas:"levels plots" "controls plots"}
+.p-levels{grid-area:levels} .p-controls{grid-area:controls} .p-plots{grid-area:plots}
+@media (max-width:880px){
+  .sim{grid-template-columns:minmax(0,1fr); grid-template-areas:"levels" "controls" "plots"}
+}
+#levels{width:100%; height:360px; display:block; touch-action:manipulation}
+@media (max-width:600px){ #levels{height:300px} }
+.legend{display:flex; flex-wrap:wrap; gap:6px 16px; font-size:.82rem; color:var(--text-2); margin-top:6px}
+.legend .key{display:inline-flex; align-items:flex-start; gap:6px}
+.sw-bar{width:16px; height:8px; border-radius:2px; background:var(--series-1); margin-top:.5em; flex:none}
+.sw-dot{width:9px; height:9px; border-radius:50%; background:var(--series-2); margin-top:.45em; flex:none}
+.leveldef{font-size:.86rem; color:var(--text-2); margin-top:6px}
+
+/* ---------- 조작부 / controls ---------- */
+.ctl{margin:0 0 14px}
+.ctl:last-child{margin-bottom:0}
+.ctl-label{display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:.9rem; margin-bottom:6px}
+.ctl-label output{font-variant-numeric:tabular-nums; font-weight:600; color:var(--text)}
+.seg{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:4px; background:var(--surface-2); padding:4px; border-radius:10px}
+.seg.two{grid-template-columns:repeat(2, minmax(0,1fr))}
+.seg button{border:0; background:transparent; color:var(--text-2); font:inherit; font-size:.85rem; line-height:1.25; padding:7px 4px; border-radius:7px; cursor:pointer; min-height:40px}
+.seg button[aria-pressed="true"]{background:var(--surface); color:var(--text); box-shadow:0 1px 2px rgba(0,0,0,.12); font-weight:600}
+@media (max-width:420px){ .seg:not(.two){grid-template-columns:repeat(2, minmax(0,1fr))} }
+input[type=range]{width:100%; accent-color:var(--accent); height:28px; margin:0}
+.btns{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.btn{border:1px solid var(--line); background:var(--surface); color:var(--text); font:inherit; font-size:.86rem; padding:7px 12px; border-radius:9px; cursor:pointer; min-height:38px}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+.chk{display:inline-flex; align-items:center; gap:6px; font-size:.86rem; color:var(--text-2); cursor:pointer}
+button:focus-visible, input:focus-visible, summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+/* ---------- 그래프 / plots ---------- */
+.plot{position:relative; margin-bottom:10px}
+.plot:last-of-type{margin-bottom:4px}
+.plot-title{font-size:.88rem; color:var(--text-2); margin:0 0 2px}
+.plot canvas{width:100%; height:150px; display:block; cursor:crosshair; touch-action:pan-y}
+@media (max-width:600px){ .plot canvas{height:130px} }
+.tip{position:absolute; pointer-events:none; background:var(--text); color:var(--bg); font-size:.76rem; padding:4px 7px; border-radius:6px; white-space:nowrap; transform:translate(-50%, -110%); opacity:0; transition:opacity .08s; font-variant-numeric:tabular-nums}
+.xcap{font-size:.8rem; color:var(--muted); margin:2px 0 0}
+
+/* ---------- 수치 타일 / stat tiles ---------- */
+.tiles{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-top:14px}
+.tile{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:10px 12px; min-width:0}
+.tile .lab{font-size:.78rem; color:var(--text-2); line-height:1.3}
+.tile .val{font-size:1.3rem; font-weight:650; font-variant-numeric:tabular-nums; margin-top:2px; overflow-wrap:anywhere}
+.tile .sub{font-size:.76rem; color:var(--muted); font-variant-numeric:tabular-nums}
+
+/* ---------- 본문 섹션 / text sections ---------- */
+.text-sec{display:grid; gap:14px; grid-template-columns:minmax(0,1fr) minmax(0,1fr); margin-top:14px}
+@media (max-width:880px){ .text-sec{grid-template-columns:minmax(0,1fr)} }
+.eq-main{font-size:1.1rem; overflow-x:auto; padding:4px 0}
+.eq-note{font-size:.8rem; color:var(--muted); margin:0 0 10px}
+.eq-no{font-size:.78rem; color:var(--muted); text-align:right}
+.ctl-label.plain{display:block}
+.eq-sys{overflow-x:auto; background:var(--surface-2); border-radius:10px; padding:8px 10px; margin:4px 0 10px}
+.eq-list{margin:0; padding-left:1.1em; font-size:.92rem}
+.eq-list li{margin:4px 0; overflow-x:auto}
+.explain p{margin:0 0 8px}
+.src ul, .notes ul{margin:4px 0; padding-left:1.1em; font-size:.92rem}
+.src li, .notes li{margin:5px 0}
+details{margin-top:12px}
+summary{cursor:pointer; color:var(--text-2); font-size:.9rem}
+table{border-collapse:collapse; width:100%; font-size:.86rem; font-variant-numeric:tabular-nums; margin-top:6px}
+th, td{border-bottom:1px solid var(--line); padding:4px 6px; text-align:right}
+th:first-child, td:first-child{text-align:left}
+footer{border-top:1px solid var(--line); margin-top:24px; padding:16px 0 36px; color:var(--muted); font-size:.82rem}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+
+/* ---------- 공통 확장 (데모 1, 3–12) / shared extensions ---------- */
+:root{ --series-3:#1baf7a; --good:#008300; --warn:#c98500; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --series-3:#199e70; --good:#3fb950; --warn:#e3a72f; } }
+:root[data-theme="dark"]{ --series-3:#199e70; --good:#3fb950; --warn:#e3a72f; }
+.seg.cols{grid-template-columns:repeat(var(--cols,4), minmax(0,1fr))}
+@media (max-width:420px){ .seg.cols{grid-template-columns:repeat(min(var(--cols,4),2), minmax(0,1fr))} }
+canvas.viz{width:100%; height:360px; display:block; touch-action:manipulation}
+@media (max-width:600px){ canvas.viz{height:300px} }
+canvas.viz.short{height:240px}
+@media (max-width:600px){ canvas.viz.short{height:210px} }
+.plot canvas.tall{height:220px}
+@media (max-width:600px){ .plot canvas.tall{height:190px} }
+.sw-line{width:18px; height:3px; border-radius:2px; margin-top:.6em; flex:none}
+.sw-dash{width:18px; height:0; border-top:2px dashed var(--muted); margin-top:.7em; flex:none}
+.verdict{display:inline-block; font-size:.82rem; font-weight:600; padding:3px 10px; border-radius:999px; margin-top:6px}
+.verdict.ok{background:color-mix(in srgb, var(--good) 15%, transparent); color:var(--good)}
+.verdict.no{background:color-mix(in srgb, var(--warn) 18%, transparent); color:var(--warn)}
+.row2{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px}
+.mini{font-size:.82rem; color:var(--text-2)}
+.tile .sub{overflow-wrap:anywhere}
+
+.modebars{display:grid; gap:8px; margin-top:8px}
+.mb-row{display:grid; grid-template-columns:minmax(0,11em) 1fr 3.4em; gap:8px; align-items:center; font-size:.84rem}
+.mb-track{position:relative; height:14px; background:var(--surface-2); border-radius:4px; overflow:hidden}
+.mb-fill{position:absolute; left:0; top:0; bottom:0; border-radius:0 4px 4px 0}
+.mb-val{font-variant-numeric:tabular-nums; text-align:right; color:var(--text)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
+  <header class="topbar">
+    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <div class="lang" id="langToggle" role="group" aria-label="Language">
+      <button type="button" data-set-lang="ko">한국어</button>
+      <button type="button" data-set-lang="en">English</button>
+      <button type="button" data-set-lang="both">한·EN</button>
+    </div>
+  </header>
+
+  <!-- ===== 제목 · 한 줄 요약 ===== -->
+  <div class="title">
+    <span class="chip bi-inline" data-i18n="chipSec"></span>
+    <h1 class="bi-sub" data-i18n="title"></h1>
+    <p class="bi-block" data-i18n="summary"></p>
+  </div>
+
+  <div class="sim">
+    <section class="panel p-levels" aria-labelledby="hViz">
+      <h2 id="hViz" class="bi-inline" data-i18n="pViz"></h2>
+      <canvas id="mol" class="viz short" role="img" aria-label="Diatomic molecule rotating and vibrating"></canvas>
+      <div id="bars" class="modebars"></div>
+      <p class="leveldef bi-block" data-i18n="vizNote"></p>
+    </section>
+
+    <section class="panel p-controls" aria-labelledby="hCtl">
+      <h2 id="hCtl" class="bi-inline" data-i18n="pControls"></h2>
+      <div class="ctl">
+        <label class="ctl-label" for="tSlider"><span class="bi-inline" data-i18n="lblT"></span><output id="tOut"></output></label>
+        <input type="range" id="tSlider" min="0" max="1000" step="1">
+      </div>
+      <div class="ctl">
+        <label class="ctl-label" for="rSlider"><span class="bi-inline" data-i18n="lblRot"></span><output id="rOut"></output></label>
+        <input type="range" id="rSlider" min="0" max="1000" step="1">
+      </div>
+      <div class="ctl">
+        <label class="ctl-label" for="vSlider"><span class="bi-inline" data-i18n="lblVib"></span><output id="vOut"></output></label>
+        <input type="range" id="vSlider" min="0" max="1000" step="1">
+      </div>
+      <div class="ctl btns">
+        <button type="button" class="btn primary bi-inline" id="sweepBtn" data-i18n="btnSweep"></button>
+      </div>
+      <p class="mini bi-block" data-i18n="unitNote"></p>
+    </section>
+
+    <section class="panel p-plots" aria-labelledby="hPlots">
+      <h2 id="hPlots" class="bi-inline" data-i18n="pPlots"></h2>
+      <div class="plot" id="plotC"><p class="plot-title bi-inline" data-i18n="plotC"></p><canvas class="tall" aria-label="C_V over R versus temperature"></canvas><div class="tip"></div></div>
+      <div class="plot" id="plotParts"><p class="plot-title bi-inline" data-i18n="plotParts"></p><canvas aria-label="Rotational and vibrational contributions"></canvas><div class="tip"></div></div>
+      <div class="legend">
+        <span class="key"><span class="sw-line" style="background:var(--series-2)"></span><span class="bi-tight" data-i18n="legRot"></span></span>
+        <span class="key"><span class="sw-line" style="background:var(--series-3)"></span><span class="bi-tight" data-i18n="legVib"></span></span>
+        <span class="key"><span class="sw-dash"></span><span class="bi-tight" data-i18n="legRef"></span></span>
+      </div>
+    </section>
+  </div>
+
+  <div class="tiles" aria-live="polite">
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileC"></div><div class="val" id="vC"></div></div>
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileRot"></div><div class="val" id="vRotC"></div><div class="sub" id="sRot"></div></div>
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileVib"></div><div class="val" id="vVibC"></div><div class="sub" id="sVib"></div></div>
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileF"></div><div class="val" id="vF"></div></div>
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileGamma"></div><div class="val" id="vG"></div></div>
+  </div>
+
+  <!-- ===== 핵심 수식 · 해설 · 교재 ===== -->
+  <div class="text-sec">
+    <section class="panel" aria-labelledby="hEq">
+      <h2 id="hEq" class="bi-inline" data-i18n="hEq"></h2>
+      <div class="eq-main">$$Z=Z_{\rm trans}Z_{\rm rot}Z_{\rm vib},\qquad Z_{\rm rot}=\sum_{J=0}^{\infty}(2J+1)\,e^{-\beta\hbar^2J(J+1)/2I}$$</div>
+      <p class="eq-note bi-inline" data-i18n="eqMainNote"></p>
+      <div class="ctl-label plain bi-inline" data-i18n="hEqMore"></div>
+      <ul class="eq-list">
+        <li class="bi-block" data-i18n="eq1"></li>
+        <li class="bi-block" data-i18n="eq2"></li>
+        <li class="bi-block" data-i18n="eq3"></li>
+      </ul>
+    </section>
+
+    <section class="panel explain" aria-labelledby="hExp">
+      <h2 id="hExp" class="bi-inline" data-i18n="hExplain"></h2>
+      <p class="bi-block" data-i18n="explain"></p>
+    </section>
+
+    <section class="panel src" aria-labelledby="hSrc">
+      <h2 id="hSrc" class="bi-inline" data-i18n="hSource"></h2>
+      <ul>
+        <li class="bi-block" data-i18n="src1"></li>
+        <li class="bi-block" data-i18n="src2"></li>
+        <li class="bi-block" data-i18n="src3"></li>
+      </ul>
+    </section>
+    <section class="panel notes" aria-labelledby="hNote">
+      <h2 id="hNote" class="bi-inline" data-i18n="hNote"></h2>
+      <ul>
+        <li class="bi-block" data-i18n="note1"></li>
+        <li class="bi-block" data-i18n="note2"></li>
+      </ul>
+    </section>
+  </div>
+
+  <footer class="bi-block" id="footer"></footer>
+</div>
+
+<script>
+/* #####################################################################
+ * 데모 #7  이원자 기체의 열용량 · Heat capacity of a diatomic gas  — 이 파일 하나로 동작합니다.
+ * 구조: (1) 문구 사전 → (2) 언어 공통 코드 → (3) 물리 계산
+ *       → (4) 캔버스 그래프 도구 → (5) 화면 갱신 → (6) 이벤트
+ * ##################################################################### */
+
+/* ===== (1) 문구 사전 / UI strings ===================================== */
+const I18N = {
+  ko: {
+    chipSec: '교재 19.2절, 21.6절 · 그림 21.5',
+    title: '이원자 기체의 열용량',
+    summary: '등분배 정리는 이원자 기체의 몰 열용량을 $\\tfrac72R$로 예측하지만, 실제로는 온도에 따라 $\\tfrac32R\\to\\tfrac52R\\to\\tfrac72R$로 계단처럼 오른다. 회전·진동 자유도가 언제 깨어나는지 확인해 보자.',
+    pViz: '분자의 운동과 자유도별 열용량',
+    vizNote: '막대는 각 운동이 기여하는 몰 열용량(단위 $R$)과 등분배 최댓값이다. 병진은 언제나 $\\tfrac32$, 회전과 진동은 각각 최대 1이다.',
+    mTrans: '병진 (제곱항 3개)', mRot: '회전 (제곱항 2개)', mVib: '진동 (제곱항 2개)',
+    lblT: '온도 $T$ (K)', lblRot: '회전 특성온도 $\\theta_{\\rm rot}=\\hbar^2/2Ik_B$ (K)', lblVib: '진동 특성온도 $\\theta_{\\rm vib}=\\hbar\\omega/k_B$ (K)',
+    btnSweep: '▶ 온도 훑기', btnStop: '■ 멈춤',
+    unitNote: '특성온도는 특정 기체가 아니라 예시로 고른 값이다. 그래프를 누르면 그 온도로 이동한다.',
+    pPlots: '온도에 따른 몰 열용량',
+    plotC: '$C_V/R$ — 온도에 따라 (로그 축, 교재 그림 21.5)',
+    plotParts: '회전과 진동의 기여 $C_{\\rm rot}/R$, $C_{\\rm vib}/R$',
+    legRot: '회전', legVib: '진동', legRef: '등분배 값 $\\tfrac32,\\tfrac52,\\tfrac72$ 및 $\\theta_{\\rm rot},\\theta_{\\rm vib}$',
+    tileC: '$C_V/R$', tileRot: '회전 기여 $C_{\\rm rot}/R$', tileVib: '진동 기여 $C_{\\rm vib}/R$',
+    tileF: '유효 자유도 $f=2C_V/R$', tileGamma: '$\\gamma=C_p/C_V=1+2/f$',
+    eqMainNote: '교재 식 (21.41), (21.42)',
+    hEqMore: '이 데모가 함께 쓰는 식',
+    eq1: '등분배: $\\langle E\\rangle=\\tfrac f2k_BT$, 몰당 $C_V=\\tfrac f2R$, $\\gamma=1+\\tfrac2f$ — 교재 식 (19.21)–(19.24)',
+    eq2: '$Z_{\\rm trans}=V/\\lambda_{th}^3$ → $C_{\\rm trans}=\\tfrac32R$; $Z_{\\rm vib}=\\dfrac{e^{-\\frac12\\beta\\hbar\\omega}}{1-e^{-\\beta\\hbar\\omega}}$ → $\\dfrac{C_{\\rm vib}}{R}=\\dfrac{x^2e^x}{(e^x-1)^2}$, $x=\\theta_{\\rm vib}/T$ — 교재 식 (20.30), (21.41)',
+    eq3: '각 부분의 열용량은 $C/R=\\beta^2\\langle(\\Delta E)^2\\rangle$로 구한다(분배함수가 곱이면 $\\ln Z$와 $C$는 합).',
+    explain: '분배함수가 병진·회전·진동의 곱이므로 열용량은 세 기여의 합이다. 병진 준위는 매우 촘촘해 아주 낮은 온도에서도 고전적이므로 $C_V$는 $\\tfrac32R$에서 시작한다. $T$가 $\\theta_{\\rm rot}$ 근처를 지나면 회전이 깨어나 $\\tfrac52R$가 되고, $\\theta_{\\rm vib}$ 근처를 지나면 진동이 깨어나 $\\tfrac72R$가 된다. $k_BT$가 준위 간격보다 작으면 그 자유도는 바닥상태에 머물러 에너지를 받아들이지 못한다(얼어붙음). 두 특성온도를 가깝게 놓으면 계단이 뭉개지고, 멀리 떼면 평평한 단이 뚜렷해지는 것을 확인하자.',
+    src1: '19.2절 응용 (단원자·이원자 기체, 한국어판 275–278쪽), 19.3절 사용된 가정',
+    src2: '21.6절 이원자 기체의 열용량 (한국어판 311–313쪽), 그림 21.5',
+    src3: '관련: 데모 2(분배함수: 조화진동자, 회전자)',
+    note1: '병진 운동의 기여는 모든 온도에서 $\\tfrac32R$이므로, 곡선은 저온에서 0이 아니라 $\\tfrac32$에서 시작한다(교재 그림 21.5).',
+    note2: '회전 분배함수는 교재 식 (21.42)를 그대로 쓴다. 회전 기여는 $T\\approx0.81\\,\\theta_{\\rm rot}$에서 $1.10$까지 잠깐 넘쳤다가 1로 내려온다(교재 그림 20.5(b)).'
+  },
+  en: {
+    chipSec: 'Textbook §19.2, §21.6 · Fig. 21.5',
+    title: 'Heat capacity of a diatomic gas',
+    summary: 'Equipartition predicts a molar heat capacity of $\\tfrac72R$ for a diatomic gas, but the measured value climbs in steps, $\\tfrac32R\\to\\tfrac52R\\to\\tfrac72R$, as the temperature rises. See when rotation and vibration switch on.',
+    pViz: 'Molecular motion and heat capacity per mode',
+    vizNote: 'Bars show each motion’s molar heat capacity (units of $R$) against its equipartition maximum. Translation always gives $\\tfrac32$; rotation and vibration each give at most 1.',
+    mTrans: 'Translation (3 quadratic terms)', mRot: 'Rotation (2 quadratic terms)', mVib: 'Vibration (2 quadratic terms)',
+    lblT: 'Temperature $T$ (K)', lblRot: 'Rotational temperature $\\theta_{\\rm rot}=\\hbar^2/2Ik_B$ (K)', lblVib: 'Vibrational temperature $\\theta_{\\rm vib}=\\hbar\\omega/k_B$ (K)',
+    btnSweep: '▶ Sweep T', btnStop: '■ Stop',
+    unitNote: 'The characteristic temperatures are illustrative values, not those of a particular gas. Tap a graph to jump to that temperature.',
+    pPlots: 'Molar heat capacity versus temperature',
+    plotC: '$C_V/R$ versus temperature (log axis, textbook Fig. 21.5)',
+    plotParts: 'Rotational and vibrational contributions $C_{\\rm rot}/R$, $C_{\\rm vib}/R$',
+    legRot: 'Rotation', legVib: 'Vibration', legRef: 'Equipartition values $\\tfrac32,\\tfrac52,\\tfrac72$ and $\\theta_{\\rm rot},\\theta_{\\rm vib}$',
+    tileC: '$C_V/R$', tileRot: 'Rotation $C_{\\rm rot}/R$', tileVib: 'Vibration $C_{\\rm vib}/R$',
+    tileF: 'Effective modes $f=2C_V/R$', tileGamma: '$\\gamma=C_p/C_V=1+2/f$',
+    eqMainNote: 'Textbook Eqs. (21.41), (21.42)',
+    hEqMore: 'Also used in this demo',
+    eq1: 'Equipartition: $\\langle E\\rangle=\\tfrac f2k_BT$, molar $C_V=\\tfrac f2R$, $\\gamma=1+\\tfrac2f$ — Eqs. (19.21)–(19.24)',
+    eq2: '$Z_{\\rm trans}=V/\\lambda_{th}^3$ → $C_{\\rm trans}=\\tfrac32R$; $Z_{\\rm vib}=\\dfrac{e^{-\\frac12\\beta\\hbar\\omega}}{1-e^{-\\beta\\hbar\\omega}}$ → $\\dfrac{C_{\\rm vib}}{R}=\\dfrac{x^2e^x}{(e^x-1)^2}$, $x=\\theta_{\\rm vib}/T$ — Eqs. (20.30), (21.41)',
+    eq3: 'Each contribution is computed as $C/R=\\beta^2\\langle(\\Delta E)^2\\rangle$ (a product of partition functions gives a sum of $\\ln Z$ and of $C$).',
+    explain: 'The partition function is a product of translational, rotational and vibrational factors, so the heat capacity is the sum of three contributions. Translational levels are so closely spaced that translation is classical even at very low temperature, so $C_V$ starts at $\\tfrac32R$. Around $\\theta_{\\rm rot}$ rotation switches on ($\\tfrac52R$); around $\\theta_{\\rm vib}$ vibration switches on ($\\tfrac72R$). When $k_BT$ is smaller than a mode’s level spacing, that mode stays in its ground state and cannot take up energy — it is frozen out. Put the two temperatures close together and the steps blur; pull them apart and the plateaus become sharp.',
+    src1: '§19.2 Applications (monatomic and diatomic gases, Korean ed. pp. 275–278), §19.3 Assumptions made',
+    src2: '§21.6 Heat capacity of a diatomic gas (Korean ed. pp. 311–313), Fig. 21.5',
+    src3: 'Related: demo 2 (partition function: oscillator, rotor)',
+    note1: 'Translation contributes $\\tfrac32R$ at every temperature, so the curve starts at $\\tfrac32$, not at 0 (textbook Fig. 21.5).',
+    note2: 'The rotational partition function is Eq. (21.42) as written. The rotational part briefly overshoots to $1.10$ at $T\\approx0.81\\,\\theta_{\\rm rot}$ before settling at 1 (textbook Fig. 20.5(b)).'
+  }
+};
+
+/* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
+const I18N_COMMON = {
+  ko: {
+    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
+    footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
+  },
+  en: {
+    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
+    footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
+  }
+};
+for (const l of ['ko','en']) I18N[l] = Object.assign({}, I18N_COMMON[l], I18N[l]);
+
+const CFG = Object.assign({
+  DEFAULT_LANG:'both', SHOW_LANG_TOGGLE:true,
+  COURSE:{ko:'열및통계물리2', en:'Thermal and Statistical Physics 2'},
+  TERM:{ko:'2026-2학기', en:'Fall Semester 2026'}
+}, window.SITE_CONFIG || {});
+const LANGS = ['ko','en','both'];
+const LS_KEY = 'statphys2-lang';
+function resolveLang(){
+  if (!CFG.SHOW_LANG_TOGGLE) return LANGS.includes(CFG.DEFAULT_LANG) ? CFG.DEFAULT_LANG : 'both';
+  const q = new URLSearchParams(location.search).get('lang');
+  if (LANGS.includes(q)) return q;
+  try { const s = localStorage.getItem(LS_KEY); if (LANGS.includes(s)) return s; } catch(e){}
+  return LANGS.includes(CFG.DEFAULT_LANG) ? CFG.DEFAULT_LANG : 'both';
+}
+function bi(ko, en){
+  if (ko == null) ko = en; if (en == null) en = ko;
+  return `<span class="t-ko" lang="ko">${ko}</span><span class="t-en" lang="en">${en}</span>`;
+}
+function biKey(key, vars){
+  const sub = (s, l) => s == null ? s : s.replace(/\{(\w+)\}/g, (m,k) => {
+    const v = vars && vars[k]; return v == null ? m : (typeof v === 'object' ? v[l] : v); });
+  return bi(sub(I18N.ko[key],'ko'), sub(I18N.en[key],'en'));
+}
+function renderMath(root){
+  if (window.renderMathInElement) renderMathInElement(root, {
+    delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false });
+}
+function setHTML(el, html){ if (typeof el === 'string') el = document.getElementById(el); el.innerHTML = html; renderMath(el); }
+function setLang(lang, save){
+  document.documentElement.dataset.lang = lang;
+  document.documentElement.lang = (lang === 'en') ? 'en' : 'ko';
+  document.querySelectorAll('[data-set-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.setLang === lang)));
+  if (save) { try { localStorage.setItem(LS_KEY, lang); } catch(e){} }
+}
+/* 페이지 공통 초기화: 문구 채우기, 꼬리말, 언어 버튼 */
+function initPage(onLang){
+  const vars = { COURSE: CFG.COURSE, TERM: CFG.TERM };
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = biKey(el.dataset.i18n, vars); });
+  setHTML(document.getElementById('footer'), biKey('footer', vars));
+  const toggle = document.getElementById('langToggle');
+  if (!CFG.SHOW_LANG_TOGGLE) toggle.hidden = true;
+  toggle.addEventListener('click', e => { const b = e.target.closest('[data-set-lang]'); if (b) { setLang(b.dataset.setLang, true); if (onLang) onLang(); } });
+  setLang(resolveLang(), false);
+  renderMath(document.body);
+}
+/* 분할 버튼 묶음: data-<attr> 값을 콜백으로 넘긴다 */
+function segInit(id, attr, value, onChange){
+  const el = document.getElementById(id);
+  const mark = v => el.querySelectorAll(`[data-${attr}]`).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[attr] === String(v))));
+  el.addEventListener('click', e => { const b = e.target.closest(`[data-${attr}]`); if (b) { mark(b.dataset[attr]); onChange(b.dataset[attr]); } });
+  mark(value); return mark;
+}
+/* 로그 슬라이더 (0–1000) ↔ 값 */
+const logSlider = (lo, hi) => ({ to: s => lo * Math.pow(hi / lo, s / 1000), from: v => Math.round(1000 * Math.log(v / lo) / Math.log(hi / lo)) });
+
+/* ===== (4) 캔버스 그래프 도구 / canvas plot helper ====================== */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const SUP = {'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+const supNum = n => String(n).split('').map(c => SUP[c] || c).join('');
+function fmt(v, d = 3){
+  if (v == null || !isFinite(v)) return '—';
+  const a = Math.abs(v);
+  if (a !== 0 && (a >= 1e5 || a < 1e-3)) {
+    let e = Math.floor(Math.log10(a)), m = v / Math.pow(10, e);
+    if (Math.abs(m) >= 9.995) { m /= 10; e += 1; }
+    return `${m.toFixed(2)}×10<sup>${e}</sup>`;
+  }
+  return (a >= 100 ? v.toFixed(1) : a >= 10 ? v.toFixed(2) : v.toFixed(d));
+}
+function fmtPlain(v, d = 3){ return fmt(v, d).replace(/<sup>(.*?)<\/sup>/, (m, e) => supNum(e)); }
+function niceTicks(lo, hi, n = 4){
+  const span = hi - lo; if (!(span > 0)) return [lo];
+  const raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(s => span / s <= n + 0.5);
+  const out = []; for (let k = Math.ceil(lo / step - 1e-9); k * step <= hi + step * 1e-6 && out.length < 50; k++) out.push(+(k * step).toPrecision(12));
+  return out;
+}
+function logTicks(lo, hi, maxN = 7){
+  const a = Math.ceil(Math.log10(lo) - 1e-9), b = Math.floor(Math.log10(hi) + 1e-9);
+  let step = Math.max(1, Math.ceil((b - a + 1) / maxN));
+  const out = []; for (let e = a; e <= b; e += step) out.push(Math.pow(10, e));
+  if (out.length < 2) { for (const m of [2, 5]) for (let e = a - 1; e <= b; e++) { const v = m * Math.pow(10, e); if (v >= lo && v <= hi) out.push(v); } out.sort((x, y) => x - y); }
+  return out;
+}
+function tickLabel(v, log){
+  if (log) { const e = Math.log10(v); if (Math.abs(e - Math.round(e)) < 1e-9) { const k = Math.round(e); return (k >= -2 && k <= 3) ? String(+v.toPrecision(3)) : '10' + supNum(k); } return String(+v.toPrecision(2)); }
+  const a = Math.abs(v); if (a !== 0 && (a >= 1e5 || a < 1e-3)) { const e = Math.floor(Math.log10(a)); return (v / Math.pow(10, e)).toFixed(1).replace(/\.0$/, '') + '×10' + supNum(e); }
+  return String(+v.toFixed(6));
+}
+function setupCanvas(cv){
+  const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  const W = Math.max(1, Math.round(r.width)), H = Math.max(1, Math.round(r.height));
+  if (cv.width !== W * dpr || cv.height !== H * dpr) { cv.width = W * dpr; cv.height = H * dpr; }
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.font = '11px ' + css('--font');
+  return { ctx, W, H };
+}
+const colorOf = c => (c && c.startsWith('--')) ? css(c) : (c || css('--series-1'));
+
+/* 선 그래프: 여러 계열, 로그 축, 극한값 점선, 표시점, 십자선 툴팁, 눌러서 값 고르기 */
+class Plot {
+  constructor(wrap, onPick){
+    this.wrap = typeof wrap === 'string' ? document.getElementById(wrap) : wrap;
+    this.cv = this.wrap.querySelector('canvas'); this.tip = this.wrap.querySelector('.tip');
+    this.onPick = onPick; this.hoverX = null;
+    this.pad = { l:48, r:14, t:8, b:20 };
+    this.cv.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { this.hoverX = this.pxToX(e.offsetX); this.draw(); } });
+    this.cv.addEventListener('pointerleave', () => { this.hoverX = null; this.draw(); });
+    this.cv.addEventListener('click', e => { const x = this.pxToX(e.offsetX); if (x != null && this.onPick) this.onPick(x); });
+  }
+  set(d){ this.d = d; this.draw(); }
+  fx(x){ const d = this.d; return d.xLog ? (Math.log(x) - Math.log(d.xMin)) / (Math.log(d.xMax) - Math.log(d.xMin)) : (x - d.xMin) / (d.xMax - d.xMin); }
+  fy(y){ const d = this.d; return d.yLog ? (Math.log(y) - Math.log(d.yMin)) / (Math.log(d.yMax) - Math.log(d.yMin)) : (y - d.yMin) / (d.yMax - d.yMin); }
+  xToPx(x){ return this.pad.l + this.fx(x) * (this.W - this.pad.l - this.pad.r); }
+  yToPx(y){ return this.pad.t + (1 - this.fy(y)) * (this.H - this.pad.t - this.pad.b); }
+  pxToX(px){ if (!this.d) return null; const d = this.d, f = (px - this.pad.l) / (this.W - this.pad.l - this.pad.r);
+    if (f < 0 || f > 1) return null;
+    return d.xLog ? Math.exp(Math.log(d.xMin) + f * (Math.log(d.xMax) - Math.log(d.xMin))) : d.xMin + f * (d.xMax - d.xMin); }
+  ok(x, y){ const d = this.d; return isFinite(x) && isFinite(y) && !(d.xLog && x <= 0) && !(d.yLog && y <= 0); }
+  draw(){
+    if (!this.d) return;
+    const { ctx, W, H } = setupCanvas(this.cv); this.W = W; this.H = H;
+    const d = this.d, p = this.pad;
+    const cGrid = css('--grid'), cMuted = css('--muted'), cText2 = css('--text-2'), cSurf = css('--surface');
+    ctx.clearRect(0, 0, W, H);
+    /* 격자·눈금 */
+    ctx.lineWidth = 1; ctx.strokeStyle = cGrid; ctx.fillStyle = cMuted; ctx.textBaseline = 'middle';
+    const yt = d.yTicks || (d.yLog ? logTicks(d.yMin, d.yMax, 5) : niceTicks(d.yMin, d.yMax, 3));
+    for (const y of yt) { if (y < d.yMin || y > d.yMax) continue;
+      const py = Math.round(this.yToPx(y)) + .5; ctx.beginPath(); ctx.moveTo(p.l, py); ctx.lineTo(W - p.r, py); ctx.stroke();
+      ctx.textAlign = 'right'; ctx.fillText(d.yFmt ? d.yFmt(y) : tickLabel(y, d.yLog), p.l - 6, py); }
+    const xt = d.xTicks || (d.xLog ? logTicks(d.xMin, d.xMax, 7) : niceTicks(d.xMin, d.xMax, 5));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (const x of xt) { if (x < d.xMin * (d.xLog ? 0.999 : 1) - 1e-12 || x > d.xMax * 1.001 + 1e-12) continue;
+      const px = Math.round(this.xToPx(x)) + .5; ctx.beginPath(); ctx.moveTo(px, p.t); ctx.lineTo(px, H - p.b); ctx.stroke();
+      ctx.fillText(d.xFmt ? d.xFmt(x) : tickLabel(x, d.xLog), px, H - p.b + 4); }
+    ctx.save(); ctx.beginPath(); ctx.rect(p.l, p.t, W - p.l - p.r, H - p.t - p.b); ctx.clip();
+    /* 띠 (예: 가시광 영역) */
+    for (const b of (d.bands || [])) { ctx.fillStyle = colorOf(b.color); ctx.globalAlpha = b.alpha || .08;
+      const x0 = this.xToPx(b.x0), x1 = this.xToPx(b.x1); ctx.fillRect(Math.min(x0, x1), p.t, Math.abs(x1 - x0), H - p.t - p.b); ctx.globalAlpha = 1; }
+    /* 극한값·기준 점선 */
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = cMuted; ctx.lineWidth = 1.2;
+    for (const r of (d.refs || [])) {
+      ctx.beginPath();
+      if (r.fn) { let started = false; for (let i = 0; i <= 160; i++) { const x = d.xLog ? d.xMin * Math.pow(d.xMax / d.xMin, i / 160) : d.xMin + (d.xMax - d.xMin) * i / 160;
+          const y = r.fn(x); if (!this.ok(x, y)) { started = false; continue; } const px = this.xToPx(x), py = this.yToPx(y); started ? ctx.lineTo(px, py) : ctx.moveTo(px, py); started = true; } }
+      else if (r.x != null) { const px = this.xToPx(r.x); ctx.moveTo(px, p.t); ctx.lineTo(px, H - p.b); }
+      else { const py = this.yToPx(r.y); ctx.moveTo(p.l, py); ctx.lineTo(W - p.r, py); }
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    /* 계열 */
+    for (const s of d.series) {
+      const col = colorOf(s.color);
+      if (s.bars) { ctx.fillStyle = col; ctx.globalAlpha = s.alpha || .35; const y0 = this.yToPx(Math.max(d.yMin, 0));
+        for (let i = 0; i < s.xs.length; i++) { if (!this.ok(s.xs[i], s.ys[i])) continue;
+          const xa = this.xToPx(s.xs[i] - s.w / 2), xb = this.xToPx(s.xs[i] + s.w / 2), py = this.yToPx(s.ys[i]);
+          ctx.fillRect(xa + 1, Math.min(py, y0), Math.max(1, xb - xa - 2), Math.abs(y0 - py)); }
+        ctx.globalAlpha = 1; continue; }
+      if (s.pts) { for (let i = 0; i < s.xs.length; i++) { if (!this.ok(s.xs[i], s.ys[i])) continue;
+          ctx.beginPath(); ctx.arc(this.xToPx(s.xs[i]), this.yToPx(s.ys[i]), s.r || 4, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = cSurf; ctx.stroke(); }
+        continue; }
+      ctx.strokeStyle = col; ctx.lineWidth = s.width || 2; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      if (s.dash) ctx.setLineDash(s.dash);
+      ctx.beginPath(); let started = false;
+      for (let i = 0; i < s.xs.length; i++) { const x = s.xs[i], y = s.ys[i];
+        if (!this.ok(x, y)) { started = false; continue; }
+        const px = this.xToPx(x), py = Math.max(-1e4, Math.min(1e4, this.yToPx(y)));
+        started ? ctx.lineTo(px, py) : ctx.moveTo(px, py); started = true; }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.restore();
+    /* 기준선 라벨 (텍스트 색) */
+    ctx.fillStyle = cText2; ctx.textBaseline = 'bottom';
+    for (const r of (d.refs || [])) { if (!r.lab) continue;
+      if (r.x != null) { if (r.x >= d.xMin && r.x <= d.xMax) { ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(r.lab, this.xToPx(r.x) + 3, p.t + 1); ctx.textBaseline = 'bottom'; } continue; }
+      const xr = r.labX != null ? r.labX : d.xMax, yr = r.fn ? r.fn(xr) : r.y;
+      if (this.ok(xr, yr) && yr >= d.yMin && yr <= d.yMax) { ctx.textAlign = 'right'; ctx.fillText(r.lab, Math.min(W - p.r - 2, this.xToPx(xr) - 2), this.yToPx(yr) - 2); } }
+    /* 직접 라벨 */
+    for (const l of (d.labels || [])) { if (!this.ok(l.x, l.y)) continue; ctx.textAlign = l.align || 'left'; ctx.fillText(l.text, this.xToPx(l.x) + (l.dx || 4), this.yToPx(l.y) + (l.dy || -2)); }
+    /* 표시점 */
+    for (const m of (d.markers || [])) {
+      if (!this.ok(m.x, m.y) || m.x < d.xMin || m.x > d.xMax) continue;
+      const px = this.xToPx(m.x), py = Math.max(p.t, Math.min(H - p.b, this.yToPx(m.y))), col = colorOf(m.color);
+      if (m.vline !== false) { ctx.strokeStyle = col; ctx.globalAlpha = .35; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, p.t); ctx.lineTo(px, H - p.b); ctx.stroke(); ctx.globalAlpha = 1; }
+      ctx.beginPath(); ctx.arc(px, py, 5, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = cSurf; ctx.stroke();
+    }
+    /* 마우스 십자선 + 툴팁 */
+    if (this.hoverX != null && d.tip) {
+      const px = this.xToPx(this.hoverX);
+      ctx.strokeStyle = cMuted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px + .5, p.t); ctx.lineTo(px + .5, H - p.b); ctx.stroke();
+      const t = d.tip(this.hoverX);
+      if (t) { this.tip.textContent = t; this.tip.style.left = Math.min(Math.max(px, 110), W - 110) + 'px'; this.tip.style.top = (this.cv.offsetTop + 30) + 'px'; this.tip.style.opacity = 1; }
+    } else if (this.tip) this.tip.style.opacity = 0;
+  }
+}
+/* 데이터 범위 + 여백 */
+function extent(arrs, extra = [], padFrac = 0.08){
+  let lo = Infinity, hi = -Infinity;
+  for (const a of arrs) for (const v of a) if (isFinite(v)) { if (v < lo) lo = v; if (v > hi) hi = v; }
+  for (const v of extra) if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+  const pd = (hi - lo) * padFrac || Math.abs(hi) * 0.1 || 0.1; return [lo - pd, hi + pd];
+}
+/* 적분 (심프슨) / Simpson integration */
+function simpson(f, a, b, n = 400){ if (n % 2) n++; const h = (b - a) / n; let s = f(a) + f(b);
+  for (let i = 1; i < n; i++) s += (i % 2 ? 4 : 2) * f(a + i * h); return s * h / 3; }
+/* ln Γ(x) (Lanczos, x > 0) */
+function lnGamma(x){
+  const g = 7, c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313,
+    -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+  if (x < 0.5) return Math.log(Math.PI / Math.abs(Math.sin(Math.PI * x))) - lnGamma(1 - x);
+  x -= 1; let a = c[0]; const t = x + g + 0.5; for (let i = 1; i < g + 2; i++) a += c[i] / (x + i);
+  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+}
+/* 물리 상수 (CODATA, SI) */
+const PHYS = { kB:1.380649e-23, h:6.62607015e-34, hbar:1.054571817e-34, c:2.99792458e8, e:1.602176634e-19,
+  NA:6.02214076e23, R:8.314462618, me:9.1093837015e-31, mp:1.67262192369e-27, u:1.66053906660e-27, muB:9.2740100783e-24, mu0:1.25663706212e-6 };
+PHYS.sigma = Math.PI ** 2 * PHYS.kB ** 4 / (60 * PHYS.c ** 2 * PHYS.hbar ** 3);
+let __rz; window.addEventListener('resize', () => { clearTimeout(__rz); __rz = setTimeout(() => window.onRedraw && window.onRedraw(), 80); });
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => window.onRedraw && window.onRedraw());
+
+
+/* ===== (3) 물리 계산 / physics ======================================= *
+ * C_V/R = 3/2 + c_rot(T/θ_rot) + c_vib(θ_vib/T)
+ *   c_rot = β²⟨(ΔE)²⟩ over levels E_J = θ_rot J(J+1) (K 단위), g_J = 2J+1   (식 21.42)
+ *   c_vib = x² eˣ/(eˣ−1)²,  x = θ_vib/T                                    (식 20.30)                */
+function cRot(t){                     // t = T/θ_rot
+  if (t < 0.02) return 0;
+  const Jmax = Math.ceil(Math.sqrt(45 * t)) + 3; let s = 0, m = 0, m2 = 0;
+  for (let J = 0; J <= Jmax; J++) { const E = J * (J + 1), w = (2 * J + 1) * Math.exp(-E / t); s += w; m += w * E; m2 += w * E * E; }
+  m /= s; m2 /= s; return (m2 - m * m) / (t * t);
+}
+function cVib(x){ if (x > 700) return 0; if (x < 1e-6) return 1; const e = Math.exp(x); return x * x * e / ((e - 1) * (e - 1)); }
+const CV = (T, tr, tv) => 1.5 + cRot(T / tr) + cVib(tv / T);
+
+/* ===== (5) 상태와 화면 갱신 ========================================== */
+const tMap = logSlider(1, 30000), rMap = logSlider(1, 300), vMap = logSlider(100, 10000);
+const S = { T:300, tr:10, tv:1000, phase:0, sweeping:false };
+let plots;
+function drawMol(){
+  const cv = document.getElementById('mol'), { ctx, W, H } = setupCanvas(cv);
+  ctx.clearRect(0, 0, W, H);
+  const aR = cRot(S.T / S.tr), aV = cVib(S.tv / S.T);
+  const cx = W / 2, cy = H / 2, L = Math.min(W, H) * 0.28 * (1 + 0.18 * aV * Math.sin(S.phase * 6));
+  const ang = S.phase * 2.2 * aR;
+  const x1 = cx - L * Math.cos(ang), y1 = cy - L * Math.sin(ang) * 0.5, x2 = cx + L * Math.cos(ang), y2 = cy + L * Math.sin(ang) * 0.5;
+  ctx.strokeStyle = css('--series-3'); ctx.lineWidth = 3; ctx.setLineDash(aV > 0.05 ? [] : [2, 3]);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.setLineDash([]);
+  for (const [x, y] of [[x1, y1], [x2, y2]]) { ctx.beginPath(); ctx.arc(x, y, 16, 0, 2 * Math.PI); ctx.fillStyle = css('--series-1'); ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = css('--surface'); ctx.stroke(); }
+  /* 병진 화살표 */
+  ctx.strokeStyle = css('--muted'); ctx.lineWidth = 1.5; const tx = cx + Math.cos(S.phase * 1.3) * 10, ty = cy + 0.4 * H - 6;
+  ctx.beginPath(); ctx.moveTo(tx - 24, ty); ctx.lineTo(tx + 24, ty); ctx.moveTo(tx + 24, ty); ctx.lineTo(tx + 17, ty - 5); ctx.moveTo(tx + 24, ty); ctx.lineTo(tx + 17, ty + 5); ctx.stroke();
+  ctx.fillStyle = css('--text-2'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText(`T/θ_rot = ${fmtPlain(S.T / S.tr)}   T/θ_vib = ${fmtPlain(S.T / S.tv)}`, 6, 4);
+}
+function drawBars(){
+  const rows = [['mTrans', 1.5, 1.5, '--series-1'], ['mRot', cRot(S.T / S.tr), 1, '--series-2'], ['mVib', cVib(S.tv / S.T), 1, '--series-3']];
+  setHTML('bars', rows.map(([k, v, mx, c]) => `<div class="mb-row"><span class="bi-tight">${biKey(k)}</span>
+    <span class="mb-track" title="max ${mx}"><span class="mb-fill" style="width:${Math.min(100, 100 * v / 1.5)}%; background:var(${c})"></span>
+    <span style="position:absolute; left:${100 * mx / 1.5}%; top:0; bottom:0; border-left:2px dashed var(--muted)"></span></span>
+    <span class="mb-val">${v.toFixed(3)}</span></div>`).join(''));
+}
+function render(){
+  drawMol(); drawBars();
+  const Ts = Array.from({length:301}, (_, i) => Math.pow(10, Math.log10(1) + Math.log10(30000) * i / 300));
+  const cur = CV(S.T, S.tr, S.tv);
+  plots.C.set({ xMin:1, xMax:30000, xLog:true, yMin:1.2, yMax:3.8, yTicks:[1.5, 2.5, 3.5],
+    series:[{ xs:Ts, ys:Ts.map(T => CV(T, S.tr, S.tv)) }],
+    refs:[{ y:1.5, lab:'3/2' }, { y:2.5, lab:'5/2' }, { y:3.5, lab:'7/2' }, { x:S.tr, lab:'θ_rot' }, { x:S.tv, lab:'θ_vib' }],
+    markers:[{ x:S.T, y:cur }],
+    tip: T => `T = ${fmtPlain(T)} K  C_V/R = ${CV(T, S.tr, S.tv).toFixed(4)}` });
+  plots.Parts.set({ xMin:1, xMax:30000, xLog:true, yMin:0, yMax:1.2,
+    series:[{ xs:Ts, ys:Ts.map(T => cRot(T / S.tr)), color:'--series-2' }, { xs:Ts, ys:Ts.map(T => cVib(S.tv / T)), color:'--series-3' }],
+    refs:[{ y:1, lab:'1' }, { x:S.tr, lab:'' }, { x:S.tv, lab:'' }],
+    markers:[{ x:S.T, y:cRot(S.T / S.tr), color:'--series-2' }, { x:S.T, y:cVib(S.tv / S.T), color:'--series-3', vline:false }],
+    tip: T => `T = ${fmtPlain(T)} K  rot ${cRot(T / S.tr).toFixed(4)}  vib ${cVib(S.tv / T).toFixed(4)}` });
+  document.getElementById('vC').innerHTML = fmt(cur, 4);
+  document.getElementById('vRotC').innerHTML = fmt(cRot(S.T / S.tr), 4);
+  document.getElementById('sRot').textContent = `T/θ_rot = ${fmtPlain(S.T / S.tr)}`;
+  document.getElementById('vVibC').innerHTML = fmt(cVib(S.tv / S.T), 4);
+  document.getElementById('sVib').textContent = `T/θ_vib = ${fmtPlain(S.T / S.tv)}`;
+  document.getElementById('vF').innerHTML = fmt(2 * cur, 3);
+  document.getElementById('vG').innerHTML = fmt((cur + 1) / cur, 4);
+  document.getElementById('tOut').textContent = fmtPlain(S.T, 3);
+  document.getElementById('rOut').textContent = fmtPlain(S.tr, 3);
+  document.getElementById('vOut').textContent = fmtPlain(S.tv, 3);
+}
+window.onRedraw = render;
+
+/* ===== (6) 이벤트 ================================================== */
+function init(){
+  initPage(render);
+  const tS = document.getElementById('tSlider'), rS = document.getElementById('rSlider'), vS = document.getElementById('vSlider');
+  tS.value = tMap.from(S.T); rS.value = rMap.from(S.tr); vS.value = vMap.from(S.tv);
+  const setT = T => { S.T = Math.min(30000, Math.max(1, T)); tS.value = tMap.from(S.T); render(); };
+  plots = { C:new Plot('plotC', setT), Parts:new Plot('plotParts', setT) };
+  tS.addEventListener('input', () => { S.T = tMap.to(+tS.value); render(); });
+  rS.addEventListener('input', () => { S.tr = rMap.to(+rS.value); render(); });
+  vS.addEventListener('input', () => { S.tv = vMap.to(+vS.value); render(); });
+  const sweep = document.getElementById('sweepBtn');
+  const lab = () => { sweep.innerHTML = biKey(S.sweeping ? 'btnStop' : 'btnSweep'); };
+  sweep.addEventListener('click', () => { S.sweeping = !S.sweeping; if (S.sweeping && +tS.value >= 995) tS.value = 0; lab(); });
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let last = 0;
+  const loop = t => {
+    if (S.sweeping) { tS.value = Math.min(1000, +tS.value + 2); S.T = tMap.to(+tS.value); if (+tS.value >= 1000) { S.sweeping = false; lab(); } render(); }
+    else if (!reduce && t - last > 40) { S.phase += 0.05; drawMol(); last = t; }
+    if (S.sweeping) S.phase += 0.05;
+    requestAnimationFrame(loop); };
+  lab(); render(); requestAnimationFrame(loop);
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="ko" data-lang="both">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>구별가능성과 깁스 역설 · Gibbs paradox</title>
+<meta name="description" content="같은 기체와 다른 기체를 섞을 때 혼합 엔트로피를 1/N! 유무로 비교한다 (Blundell 21.3, 21.5, 예제 21.2)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
+<script src="../../site-config.js"></script>
+<style>
+/* =====================================================================
+ * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
+ * ===================================================================== */
+:root{
+  color-scheme: light;
+  --bg:#f6f6f3; --surface:#fcfcfb; --surface-2:#f0efeb;
+  --text:#0b0b0b; --text-2:#52514e; --muted:#7d7c76; --line:#e2e1dc; --grid:#ebeae5;
+  --accent:#2a78d6; --accent-ink:#1c5cab; --accent-weak:#e6effa;
+  --series-1:#2a78d6;   /* 곡선·확률 막대 */
+  --series-2:#eb6834;   /* 앙상블 표본 점 */
+  --radius:14px;
+  --font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#121211; --surface:#1a1a19; --surface-2:#232321;
+    --text:#f0efec; --text-2:#c3c2b7; --muted:#8f8e86; --line:#2f2e2b; --grid:#262624;
+    --accent:#3987e5; --accent-ink:#86b6ef; --accent-weak:#1b2a3d;
+    --series-1:#3987e5; --series-2:#d95926;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#121211; --surface:#1a1a19; --surface-2:#232321;
+  --text:#f0efec; --text-2:#c3c2b7; --muted:#8f8e86; --line:#2f2e2b; --grid:#262624;
+  --accent:#3987e5; --accent-ink:#86b6ef; --accent-weak:#1b2a3d;
+  --series-1:#3987e5; --series-2:#d95926;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg); color:var(--text); font-family:var(--font); line-height:1.6; -webkit-text-size-adjust:100%}
+a{color:var(--accent-ink)}
+.wrap{max-width:1180px; margin:0 auto; padding:0 16px}
+
+/* ---------- 언어 표시 규칙 / language display ---------- */
+html[data-lang="ko"] .t-en, html[data-lang="en"] .t-ko{display:none}
+html[data-lang="both"] .bi-inline .t-en::before{content:" · "; color:var(--muted)}
+html[data-lang="both"] .bi-block .t-en{display:block; color:var(--text-2); font-size:.9em; margin-top:.2em}
+html[data-lang="both"] .bi-sub .t-en{display:block; color:var(--muted); font-size:.8em; font-weight:400}
+html[data-lang="both"] .bi-tight .t-en{display:block; color:var(--muted); font-size:.78em; line-height:1.3}
+
+/* ---------- 상단 / header ---------- */
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0}
+.back{text-decoration:none; font-size:.9rem; color:var(--text-2)}
+.back:hover{color:var(--accent-ink)}
+.lang{display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:3px; background:var(--surface)}
+.lang button{border:0; background:transparent; color:var(--text-2); font:inherit; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; min-height:32px}
+.lang button[aria-pressed="true"]{background:var(--accent); color:#fff}
+.title{padding:10px 0 16px}
+.title .chip{display:inline-block; font-size:.78rem; color:var(--accent-ink); background:var(--accent-weak); padding:3px 10px; border-radius:999px; margin-bottom:8px}
+.title h1{font-size:clamp(1.45rem, 4vw, 2.1rem); line-height:1.25; margin:0 0 6px}
+.title p{margin:0; color:var(--text-2); max-width:820px}
+
+/* ---------- 패널 / panels ---------- */
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; min-width:0}
+.panel h2{font-size:1rem; margin:0 0 8px}
+.sim{display:grid; gap:14px; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); grid-template-areas:"levels plots" "controls plots"}
+.p-levels{grid-area:levels} .p-controls{grid-area:controls} .p-plots{grid-area:plots}
+@media (max-width:880px){
+  .sim{grid-template-columns:minmax(0,1fr); grid-template-areas:"levels" "controls" "plots"}
+}
+#levels{width:100%; height:360px; display:block; touch-action:manipulation}
+@media (max-width:600px){ #levels{height:300px} }
+.legend{display:flex; flex-wrap:wrap; gap:6px 16px; font-size:.82rem; color:var(--text-2); margin-top:6px}
+.legend .key{display:inline-flex; align-items:flex-start; gap:6px}
+.sw-bar{width:16px; height:8px; border-radius:2px; background:var(--series-1); margin-top:.5em; flex:none}
+.sw-dot{width:9px; height:9px; border-radius:50%; background:var(--series-2); margin-top:.45em; flex:none}
+.leveldef{font-size:.86rem; color:var(--text-2); margin-top:6px}
+
+/* ---------- 조작부 / controls ---------- */
+.ctl{margin:0 0 14px}
+.ctl:last-child{margin-bottom:0}
+.ctl-label{display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:.9rem; margin-bottom:6px}
+.ctl-label output{font-variant-numeric:tabular-nums; font-weight:600; color:var(--text)}
+.seg{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:4px; background:var(--surface-2); padding:4px; border-radius:10px}
+.seg.two{grid-template-columns:repeat(2, minmax(0,1fr))}
+.seg button{border:0; background:transparent; color:var(--text-2); font:inherit; font-size:.85rem; line-height:1.25; padding:7px 4px; border-radius:7px; cursor:pointer; min-height:40px}
+.seg button[aria-pressed="true"]{background:var(--surface); color:var(--text); box-shadow:0 1px 2px rgba(0,0,0,.12); font-weight:600}
+@media (max-width:420px){ .seg:not(.two){grid-template-columns:repeat(2, minmax(0,1fr))} }
+input[type=range]{width:100%; accent-color:var(--accent); height:28px; margin:0}
+.btns{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.btn{border:1px solid var(--line); background:var(--surface); color:var(--text); font:inherit; font-size:.86rem; padding:7px 12px; border-radius:9px; cursor:pointer; min-height:38px}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+.chk{display:inline-flex; align-items:center; gap:6px; font-size:.86rem; color:var(--text-2); cursor:pointer}
+button:focus-visible, input:focus-visible, summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+/* ---------- 그래프 / plots ---------- */
+.plot{position:relative; margin-bottom:10px}
+.plot:last-of-type{margin-bottom:4px}
+.plot-title{font-size:.88rem; color:var(--text-2); margin:0 0 2px}
+.plot canvas{width:100%; height:150px; display:block; cursor:crosshair; touch-action:pan-y}
+@media (max-width:600px){ .plot canvas{height:130px} }
+.tip{position:absolute; pointer-events:none; background:var(--text); color:var(--bg); font-size:.76rem; padding:4px 7px; border-radius:6px; white-space:nowrap; transform:translate(-50%, -110%); opacity:0; transition:opacity .08s; font-variant-numeric:tabular-nums}
+.xcap{font-size:.8rem; color:var(--muted); margin:2px 0 0}
+
+/* ---------- 수치 타일 / stat tiles ---------- */
+.tiles{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-top:14px}
+.tile{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:10px 12px; min-width:0}
+.tile .lab{font-size:.78rem; color:var(--text-2); line-height:1.3}
+.tile .val{font-size:1.3rem; font-weight:650; font-variant-numeric:tabular-nums; margin-top:2px; overflow-wrap:anywhere}
+.tile .sub{font-size:.76rem; color:var(--muted); font-variant-numeric:tabular-nums}
+
+/* ---------- 본문 섹션 / text sections ---------- */
+.text-sec{display:grid; gap:14px; grid-template-columns:minmax(0,1fr) minmax(0,1fr); margin-top:14px}
+@media (max-width:880px){ .text-sec{grid-template-columns:minmax(0,1fr)} }
+.eq-main{font-size:1.1rem; overflow-x:auto; padding:4px 0}
+.eq-note{font-size:.8rem; color:var(--muted); margin:0 0 10px}
+.eq-no{font-size:.78rem; color:var(--muted); text-align:right}
+.ctl-label.plain{display:block}
+.eq-sys{overflow-x:auto; background:var(--surface-2); border-radius:10px; padding:8px 10px; margin:4px 0 10px}
+.eq-list{margin:0; padding-left:1.1em; font-size:.92rem}
+.eq-list li{margin:4px 0; overflow-x:auto}
+.explain p{margin:0 0 8px}
+.src ul, .notes ul{margin:4px 0; padding-left:1.1em; font-size:.92rem}
+.src li, .notes li{margin:5px 0}
+details{margin-top:12px}
+summary{cursor:pointer; color:var(--text-2); font-size:.9rem}
+table{border-collapse:collapse; width:100%; font-size:.86rem; font-variant-numeric:tabular-nums; margin-top:6px}
+th, td{border-bottom:1px solid var(--line); padding:4px 6px; text-align:right}
+th:first-child, td:first-child{text-align:left}
+footer{border-top:1px solid var(--line); margin-top:24px; padding:16px 0 36px; color:var(--muted); font-size:.82rem}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+
+/* ---------- 공통 확장 (데모 1, 3–12) / shared extensions ---------- */
+:root{ --series-3:#1baf7a; --good:#008300; --warn:#c98500; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --series-3:#199e70; --good:#3fb950; --warn:#e3a72f; } }
+:root[data-theme="dark"]{ --series-3:#199e70; --good:#3fb950; --warn:#e3a72f; }
+.seg.cols{grid-template-columns:repeat(var(--cols,4), minmax(0,1fr))}
+@media (max-width:420px){ .seg.cols{grid-template-columns:repeat(min(var(--cols,4),2), minmax(0,1fr))} }
+canvas.viz{width:100%; height:360px; display:block; touch-action:manipulation}
+@media (max-width:600px){ canvas.viz{height:300px} }
+canvas.viz.short{height:240px}
+@media (max-width:600px){ canvas.viz.short{height:210px} }
+.plot canvas.tall{height:220px}
+@media (max-width:600px){ .plot canvas.tall{height:190px} }
+.sw-line{width:18px; height:3px; border-radius:2px; margin-top:.6em; flex:none}
+.sw-dash{width:18px; height:0; border-top:2px dashed var(--muted); margin-top:.7em; flex:none}
+.verdict{display:inline-block; font-size:.82rem; font-weight:600; padding:3px 10px; border-radius:999px; margin-top:6px}
+.verdict.ok{background:color-mix(in srgb, var(--good) 15%, transparent); color:var(--good)}
+.verdict.no{background:color-mix(in srgb, var(--warn) 18%, transparent); color:var(--warn)}
+.row2{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px}
+.mini{font-size:.82rem; color:var(--text-2)}
+.tile .sub{overflow-wrap:anywhere}
+
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
+  <header class="topbar">
+    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <div class="lang" id="langToggle" role="group" aria-label="Language">
+      <button type="button" data-set-lang="ko">한국어</button>
+      <button type="button" data-set-lang="en">English</button>
+      <button type="button" data-set-lang="both">한·EN</button>
+    </div>
+  </header>
+
+  <!-- ===== 제목 · 한 줄 요약 ===== -->
+  <div class="title">
+    <span class="chip bi-inline" data-i18n="chipSec"></span>
+    <h1 class="bi-sub" data-i18n="title"></h1>
+    <p class="bi-block" data-i18n="summary"></p>
+  </div>
+
+  <div class="sim">
+    <section class="panel p-levels" aria-labelledby="hViz">
+      <h2 id="hViz" class="bi-inline" data-i18n="pViz"></h2>
+      <canvas id="box" class="viz short" role="img" aria-label="Two halves of a box separated by a partition"></canvas>
+      <div class="legend" id="vizLegend"></div>
+      <p class="leveldef bi-block" data-i18n="vizNote"></p>
+    </section>
+
+    <section class="panel p-controls" aria-labelledby="hCtl">
+      <h2 id="hCtl" class="bi-inline" data-i18n="pControls"></h2>
+      <div class="ctl">
+        <div class="ctl-label plain bi-inline" data-i18n="lblGas"></div>
+        <div class="seg cols" style="--cols:2" id="gasSeg" role="group">
+          <button type="button" class="bi-tight" data-gas="same" data-i18n="gasSame"></button>
+          <button type="button" class="bi-tight" data-gas="diff" data-i18n="gasDiff"></button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-label plain bi-inline" data-i18n="lblFact"></div>
+        <div class="seg cols" style="--cols:2" id="factSeg" role="group">
+          <button type="button" class="bi-tight" data-fact="on" data-i18n="factOn"></button>
+          <button type="button" class="bi-tight" data-fact="off" data-i18n="factOff"></button>
+        </div>
+      </div>
+      <div class="ctl">
+        <label class="ctl-label" for="nSlider"><span class="bi-inline" data-i18n="lblN"></span><output id="nOut"></output></label>
+        <input type="range" id="nSlider" min="0" max="1000" step="1">
+      </div>
+      <div class="ctl btns">
+        <button type="button" class="btn primary bi-inline" id="wallBtn" data-i18n="btnRemove"></button>
+      </div>
+    </section>
+
+    <section class="panel p-plots" aria-labelledby="hPlots">
+      <h2 id="hPlots" class="bi-inline" data-i18n="pPlots"></h2>
+      <div class="plot" id="plotMix"><p class="plot-title bi-inline" data-i18n="plotMix"></p><canvas aria-label="Entropy of mixing per particle versus N"></canvas><div class="tip"></div></div>
+      <div class="legend" style="margin:-4px 0 8px">
+        <span class="key"><span class="sw-line" style="background:var(--series-1)"></span><span class="bi-tight" data-i18n="legSameOn"></span></span>
+        <span class="key"><span class="sw-line" style="background:var(--series-2)"></span><span class="bi-tight" data-i18n="legSameOff"></span></span>
+        <span class="key"><span class="sw-dash"></span><span class="bi-tight" data-i18n="legDiff"></span></span>
+      </div>
+      <div class="plot" id="plotExt"><p class="plot-title bi-inline" data-i18n="plotExt"></p><canvas aria-label="Entropy per particle versus N at fixed density"></canvas><div class="tip"></div></div>
+      <div class="legend">
+        <span class="key"><span class="sw-line" style="background:var(--series-1)"></span><span class="bi-tight" data-i18n="legExtOn"></span></span>
+        <span class="key"><span class="sw-line" style="background:var(--series-2)"></span><span class="bi-tight" data-i18n="legExtOff"></span></span>
+      </div>
+    </section>
+  </div>
+
+  <div class="tiles" aria-live="polite">
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileCase"></div><div class="val bi-tight" style="font-size:1rem" id="vCase"></div></div>
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileDS"></div><div class="val" id="vDS"></div></div>
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileDSN"></div><div class="val" id="vDSN"></div><div class="sub bi-tight" id="sDSN"></div></div>
+    <div class="tile"><div class="lab bi-tight" data-i18n="tileExt"></div><div class="val" id="vExt"></div></div>
+  </div>
+
+  <details>
+    <summary class="bi-inline" data-i18n="exSummary"></summary>
+    <p class="mini bi-block" data-i18n="exIntro"></p>
+    <table>
+      <thead><tr><th class="bi-tight" data-i18n="thCase"></th><th class="bi-tight" data-i18n="thStates"></th><th>$Z_2$</th><th>$\beta\varepsilon=1$</th></tr></thead>
+      <tbody id="exTable"></tbody>
+    </table>
+    <p class="mini bi-block" data-i18n="exNote"></p>
+  </details>
+
+  <!-- ===== 핵심 수식 · 해설 · 교재 ===== -->
+  <div class="text-sec">
+    <section class="panel" aria-labelledby="hEq">
+      <h2 id="hEq" class="bi-inline" data-i18n="hEq"></h2>
+      <div class="eq-main">$$Z_N=\frac{1}{N!}\left(\frac{V}{\lambda_{th}^3}\right)^N,\qquad S=Nk_B\left[\frac52-\ln(n\lambda_{th}^3)\right]$$</div>
+      <p class="eq-note bi-inline" data-i18n="eqMainNote"></p>
+      <div class="ctl-label plain bi-inline" data-i18n="hEqMore"></div>
+      <ul class="eq-list">
+        <li class="bi-block" data-i18n="eq1"></li>
+        <li class="bi-block" data-i18n="eq2"></li>
+        <li class="bi-block" data-i18n="eq3"></li>
+      </ul>
+    </section>
+
+    <section class="panel explain" aria-labelledby="hExp">
+      <h2 id="hExp" class="bi-inline" data-i18n="hExplain"></h2>
+      <p class="bi-block" data-i18n="explain"></p>
+    </section>
+
+    <section class="panel src" aria-labelledby="hSrc">
+      <h2 id="hSrc" class="bi-inline" data-i18n="hSource"></h2>
+      <ul>
+        <li class="bi-block" data-i18n="src1"></li>
+        <li class="bi-block" data-i18n="src2"></li>
+        <li class="bi-block" data-i18n="src3"></li>
+      </ul>
+    </section>
+    <section class="panel notes" aria-labelledby="hNote">
+      <h2 id="hNote" class="bi-inline" data-i18n="hNote"></h2>
+      <ul>
+        <li class="bi-block" data-i18n="note1"></li>
+        <li class="bi-block" data-i18n="note2"></li>
+      </ul>
+    </section>
+  </div>
+
+  <footer class="bi-block" id="footer"></footer>
+</div>
+
+<script>
+/* #####################################################################
+ * 데모 #6  구별가능성과 깁스 역설 · Gibbs paradox  — 이 파일 하나로 동작합니다.
+ * 구조: (1) 문구 사전 → (2) 언어 공통 코드 → (3) 물리 계산
+ *       → (4) 캔버스 그래프 도구 → (5) 화면 갱신 → (6) 이벤트
+ * ##################################################################### */
+
+/* ===== (1) 문구 사전 / UI strings ===================================== */
+const I18N = {
+  ko: {
+    chipSec: '교재 21.3절, 21.5절 · 예제 21.2',
+    title: '구별가능성과 깁스 역설',
+    summary: '칸막이로 나뉜 두 기체를 섞으면 엔트로피는 얼마나 늘까? 같은 기체를 섞는 경우에는 $Z_N$의 $1/N!$이 답을 결정한다.',
+    pViz: '칸막이로 나뉜 상자 (각 칸 부피 $V$, 입자 $N$개, 같은 $T$)',
+    vizNote: '그림의 점은 예시로 60개만 그렸다. 엔트로피는 오른쪽 $N$ 값으로 계산한다.',
+    legA: '기체 A', legB: '기체 B', legSame: '같은 기체',
+    lblGas: '두 칸의 기체', gasSame: '같은 기체', gasDiff: '다른 기체 (A, B)',
+    lblFact: '$Z_N$의 $1/N!$', factOn: '포함 (구별 불가능)', factOff: '제외 (구별 가능처럼)',
+    lblN: '한 칸의 입자 수 $N$',
+    btnRemove: '칸막이 빼기', btnInsert: '칸막이 다시 넣기',
+    pPlots: '혼합 엔트로피와 크기변수 검사',
+    plotMix: '$\\Delta S_{\\rm mix}/Nk_B$ — 한 칸의 입자 수 $N$에 따라',
+    legSameOn: '같은 기체, $1/N!$ 포함', legSameOff: '같은 기체, $1/N!$ 제외', legDiff: '다른 기체 $2\\ln2$ (두 경우 같음)',
+    plotExt: '$S/Nk_B$ — 밀도 고정 ($n\\lambda_{th}^3=6.9\\times10^{-8}$, N₂·300 K·$10^{25}$ m$^{-3}$)에서 $N$에 따라',
+    legExtOn: '$1/N!$ 포함: 크기변수', legExtOff: '$1/N!$ 제외: $N$이 늘면 커짐',
+    tileCase: '지금의 경우', tileDS: '$\\Delta S_{\\rm mix}/k_B$', tileDSN: '$\\Delta S_{\\rm mix}/Nk_B$', tileExt: '$[S(2N,2V)-2S(N,V)]/Nk_B$',
+    subDSN: '$2\\ln2=1.386$과 비교',
+    caseSameOn: '같은 기체 · $1/N!$ 포함', caseSameOff: '같은 기체 · $1/N!$ 제외', caseDiff: '다른 기체',
+    exSummary: '예제 21.2: 두 입자, 두 준위(0, $\\varepsilon$) 세기',
+    exIntro: '입자 하나의 분배함수는 $Z_1=1+e^{-\\beta\\varepsilon}$이다. 두 입자의 상태를 직접 세면 다음과 같다.',
+    thCase: '경우', thStates: '미시상태',
+    rowDist: '구별 가능', rowIndist: '구별 불가능 (정확)', rowApprox: '$Z_1^2/2!$ (근사)',
+    exNote: '$Z_1^2/2!$은 두 입자가 같은 상태에 있는 항을 반으로 줄여 버리므로 정확한 값과 다르다. 대부분의 입자가 서로 다른 상태에 있는 $n\\ll n_Q$에서만 $1/N!$ 보정이 맞다(교재 식 21.26, 21.27).',
+    eqMainNote: '교재 식 (21.28), (21.37) — 사쿠르–테트로드 식',
+    hEqMore: '이 데모가 함께 쓰는 식',
+    eq1: '구별 가능 $Z_N=Z_1^N$, 구별 불가능 $Z_N=Z_1^N/N!$ — 교재 식 (21.25), (21.26)',
+    eq2: '서로 다른 두 기체의 혼합: $\\Delta S=2Nk_B\\ln2$ — 교재 식 (21.40). 줄 팽창 $\\Delta S=Nk_B\\ln2$ — 식 (21.39)',
+    eq3: '$1/N!$ 없이 쓰면 $S=Nk_B\\left[\\tfrac32-\\ln(\\lambda_{th}^3/V)\\right]$ — 교재 연습문제 21.2 (식 21.44), 크기변수가 아니다',
+    explain: '서로 다른 기체를 섞으면 각 기체가 차지하는 부피가 두 배가 되므로 $\\Delta S=2Nk_B\\ln2$만큼 엔트로피가 는다. 같은 기체를 섞으면 칸막이를 다시 넣어 원래 상태로 되돌릴 수 있으므로 거시적으로 $\\Delta S=0$이어야 한다. $1/N!$을 빼면 같은 기체에서도 $2Nk_B\\ln2$가 나오는데, 이것이 깁스 역설이다. $1/N!$을 넣으면 $\\Delta S$가 정확히 계산해도 $\\tfrac12\\ln(\\pi N)$ 정도로 남을 뿐이라 입자 하나당 값은 $N$이 커지면 0으로 간다. 아래 그래프처럼 $1/N!$이 있어야 엔트로피가 입자 수에 비례하는 크기변수가 된다.',
+    src1: '21.3절 구별가능 (한국어판 305–308쪽), 예제 21.2',
+    src2: '21.4절 이상기체의 상태함수, 21.5절 깁스 패러독스 (한국어판 308–311쪽), 식 (21.35)–(21.40)',
+    src3: '연습문제 21.2 (크기변수 검사)',
+    note1: '강의(3주차 부록)는 "깁스 역설", 교재 번역본은 "깁스 패러독스"로 쓴다. 같은 내용이다.',
+    note2: '$\\ln N!$은 스털링 근사 대신 $\\ln\\Gamma(N+1)$로 정확히 계산했다. 그래서 같은 기체·$1/N!$ 포함인 경우 $\\Delta S/k_B=2N\\ln2-\\ln(2N)!+2\\ln N!\\approx\\tfrac12\\ln(\\pi N)$이 작게 남는다.'
+  },
+  en: {
+    chipSec: 'Textbook §21.3, §21.5 · Example 21.2',
+    title: 'Distinguishability and the Gibbs paradox',
+    summary: 'Remove the partition between two gases: how much does the entropy rise? When the two gases are the same, the $1/N!$ in $Z_N$ decides the answer.',
+    pViz: 'A box split by a partition (each half: volume $V$, $N$ particles, same $T$)',
+    vizNote: 'Only 60 dots are drawn for illustration; the entropy uses the $N$ chosen on the right.',
+    legA: 'Gas A', legB: 'Gas B', legSame: 'Same gas',
+    lblGas: 'Gases in the two halves', gasSame: 'Same gas', gasDiff: 'Different gases (A, B)',
+    lblFact: 'The $1/N!$ in $Z_N$', factOn: 'Included (indistinguishable)', factOff: 'Left out (as if distinguishable)',
+    lblN: 'Particles per half, $N$',
+    btnRemove: 'Remove partition', btnInsert: 'Reinsert partition',
+    pPlots: 'Entropy of mixing and extensivity',
+    plotMix: '$\\Delta S_{\\rm mix}/Nk_B$ versus particles per half $N$',
+    legSameOn: 'Same gas, with $1/N!$', legSameOff: 'Same gas, without $1/N!$', legDiff: 'Different gases $2\\ln2$ (both cases)',
+    plotExt: '$S/Nk_B$ at fixed density ($n\\lambda_{th}^3=6.9\\times10^{-8}$: N₂, 300 K, $10^{25}$ m$^{-3}$) versus $N$',
+    legExtOn: 'With $1/N!$: extensive', legExtOff: 'Without $1/N!$: grows with $N$',
+    tileCase: 'Current case', tileDS: '$\\Delta S_{\\rm mix}/k_B$', tileDSN: '$\\Delta S_{\\rm mix}/Nk_B$', tileExt: '$[S(2N,2V)-2S(N,V)]/Nk_B$',
+    subDSN: 'compare with $2\\ln2=1.386$',
+    caseSameOn: 'Same gas · with $1/N!$', caseSameOff: 'Same gas · without $1/N!$', caseDiff: 'Different gases',
+    exSummary: 'Example 21.2: counting two particles on two levels (0, $\\varepsilon$)',
+    exIntro: 'One particle has $Z_1=1+e^{-\\beta\\varepsilon}$. Counting the two-particle states directly gives:',
+    thCase: 'Case', thStates: 'Microstates',
+    rowDist: 'Distinguishable', rowIndist: 'Indistinguishable (exact)', rowApprox: '$Z_1^2/2!$ (approximation)',
+    exNote: '$Z_1^2/2!$ also halves the terms where both particles share a state, so it misses the exact value. The $1/N!$ correction is right only when particles almost always occupy different states, i.e. $n\\ll n_Q$ (Eqs. 21.26, 21.27).',
+    eqMainNote: 'Textbook Eqs. (21.28), (21.37) — Sackur–Tetrode equation',
+    hEqMore: 'Also used in this demo',
+    eq1: 'Distinguishable $Z_N=Z_1^N$; indistinguishable $Z_N=Z_1^N/N!$ — Eqs. (21.25), (21.26)',
+    eq2: 'Mixing two different gases: $\\Delta S=2Nk_B\\ln2$ — Eq. (21.40). Joule expansion $\\Delta S=Nk_B\\ln2$ — Eq. (21.39)',
+    eq3: 'Without $1/N!$: $S=Nk_B\\left[\\tfrac32-\\ln(\\lambda_{th}^3/V)\\right]$ — Exercise 21.2 (Eq. 21.44), not extensive',
+    explain: 'Mixing two different gases doubles the volume each one fills, so the entropy rises by $\\Delta S=2Nk_B\\ln2$. Mixing a gas with more of itself must give $\\Delta S=0$, because reinserting the partition restores the original state. Leave out $1/N!$ and the same gas still gives $2Nk_B\\ln2$ — the Gibbs paradox. Keep $1/N!$ and even the exact $\\Delta S$ is only about $\\tfrac12\\ln(\\pi N)$, so the value per particle vanishes as $N$ grows. As the lower graph shows, $1/N!$ is what makes the entropy extensive.',
+    src1: '§21.3 Distinguishability (Korean ed. pp. 305–308), Example 21.2',
+    src2: '§21.4 Functions of state of the ideal gas, §21.5 Gibbs paradox (Korean ed. pp. 308–311), Eqs. (21.35)–(21.40)',
+    src3: 'Exercise 21.2 (extensivity)',
+    note1: 'The lecture (week 3 appendix) and the Korean translation use different Korean renderings of "Gibbs paradox"; the content is the same.',
+    note2: '$\\ln N!$ is evaluated exactly as $\\ln\\Gamma(N+1)$, not with Stirling’s formula. For the same gas with $1/N!$ this leaves a small $\\Delta S/k_B=2N\\ln2-\\ln(2N)!+2\\ln N!\\approx\\tfrac12\\ln(\\pi N)$.'
+  }
+};
+
+/* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
+const I18N_COMMON = {
+  ko: {
+    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
+    footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
+  },
+  en: {
+    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
+    footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
+  }
+};
+for (const l of ['ko','en']) I18N[l] = Object.assign({}, I18N_COMMON[l], I18N[l]);
+
+const CFG = Object.assign({
+  DEFAULT_LANG:'both', SHOW_LANG_TOGGLE:true,
+  COURSE:{ko:'열및통계물리2', en:'Thermal and Statistical Physics 2'},
+  TERM:{ko:'2026-2학기', en:'Fall Semester 2026'}
+}, window.SITE_CONFIG || {});
+const LANGS = ['ko','en','both'];
+const LS_KEY = 'statphys2-lang';
+function resolveLang(){
+  if (!CFG.SHOW_LANG_TOGGLE) return LANGS.includes(CFG.DEFAULT_LANG) ? CFG.DEFAULT_LANG : 'both';
+  const q = new URLSearchParams(location.search).get('lang');
+  if (LANGS.includes(q)) return q;
+  try { const s = localStorage.getItem(LS_KEY); if (LANGS.includes(s)) return s; } catch(e){}
+  return LANGS.includes(CFG.DEFAULT_LANG) ? CFG.DEFAULT_LANG : 'both';
+}
+function bi(ko, en){
+  if (ko == null) ko = en; if (en == null) en = ko;
+  return `<span class="t-ko" lang="ko">${ko}</span><span class="t-en" lang="en">${en}</span>`;
+}
+function biKey(key, vars){
+  const sub = (s, l) => s == null ? s : s.replace(/\{(\w+)\}/g, (m,k) => {
+    const v = vars && vars[k]; return v == null ? m : (typeof v === 'object' ? v[l] : v); });
+  return bi(sub(I18N.ko[key],'ko'), sub(I18N.en[key],'en'));
+}
+function renderMath(root){
+  if (window.renderMathInElement) renderMathInElement(root, {
+    delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false });
+}
+function setHTML(el, html){ if (typeof el === 'string') el = document.getElementById(el); el.innerHTML = html; renderMath(el); }
+function setLang(lang, save){
+  document.documentElement.dataset.lang = lang;
+  document.documentElement.lang = (lang === 'en') ? 'en' : 'ko';
+  document.querySelectorAll('[data-set-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.setLang === lang)));
+  if (save) { try { localStorage.setItem(LS_KEY, lang); } catch(e){} }
+}
+/* 페이지 공통 초기화: 문구 채우기, 꼬리말, 언어 버튼 */
+function initPage(onLang){
+  const vars = { COURSE: CFG.COURSE, TERM: CFG.TERM };
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = biKey(el.dataset.i18n, vars); });
+  setHTML(document.getElementById('footer'), biKey('footer', vars));
+  const toggle = document.getElementById('langToggle');
+  if (!CFG.SHOW_LANG_TOGGLE) toggle.hidden = true;
+  toggle.addEventListener('click', e => { const b = e.target.closest('[data-set-lang]'); if (b) { setLang(b.dataset.setLang, true); if (onLang) onLang(); } });
+  setLang(resolveLang(), false);
+  renderMath(document.body);
+}
+/* 분할 버튼 묶음: data-<attr> 값을 콜백으로 넘긴다 */
+function segInit(id, attr, value, onChange){
+  const el = document.getElementById(id);
+  const mark = v => el.querySelectorAll(`[data-${attr}]`).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[attr] === String(v))));
+  el.addEventListener('click', e => { const b = e.target.closest(`[data-${attr}]`); if (b) { mark(b.dataset[attr]); onChange(b.dataset[attr]); } });
+  mark(value); return mark;
+}
+/* 로그 슬라이더 (0–1000) ↔ 값 */
+const logSlider = (lo, hi) => ({ to: s => lo * Math.pow(hi / lo, s / 1000), from: v => Math.round(1000 * Math.log(v / lo) / Math.log(hi / lo)) });
+
+/* ===== (4) 캔버스 그래프 도구 / canvas plot helper ====================== */
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const SUP = {'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+const supNum = n => String(n).split('').map(c => SUP[c] || c).join('');
+function fmt(v, d = 3){
+  if (v == null || !isFinite(v)) return '—';
+  const a = Math.abs(v);
+  if (a !== 0 && (a >= 1e5 || a < 1e-3)) {
+    let e = Math.floor(Math.log10(a)), m = v / Math.pow(10, e);
+    if (Math.abs(m) >= 9.995) { m /= 10; e += 1; }
+    return `${m.toFixed(2)}×10<sup>${e}</sup>`;
+  }
+  return (a >= 100 ? v.toFixed(1) : a >= 10 ? v.toFixed(2) : v.toFixed(d));
+}
+function fmtPlain(v, d = 3){ return fmt(v, d).replace(/<sup>(.*?)<\/sup>/, (m, e) => supNum(e)); }
+function niceTicks(lo, hi, n = 4){
+  const span = hi - lo; if (!(span > 0)) return [lo];
+  const raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(s => span / s <= n + 0.5);
+  const out = []; for (let k = Math.ceil(lo / step - 1e-9); k * step <= hi + step * 1e-6 && out.length < 50; k++) out.push(+(k * step).toPrecision(12));
+  return out;
+}
+function logTicks(lo, hi, maxN = 7){
+  const a = Math.ceil(Math.log10(lo) - 1e-9), b = Math.floor(Math.log10(hi) + 1e-9);
+  let step = Math.max(1, Math.ceil((b - a + 1) / maxN));
+  const out = []; for (let e = a; e <= b; e += step) out.push(Math.pow(10, e));
+  if (out.length < 2) { for (const m of [2, 5]) for (let e = a - 1; e <= b; e++) { const v = m * Math.pow(10, e); if (v >= lo && v <= hi) out.push(v); } out.sort((x, y) => x - y); }
+  return out;
+}
+function tickLabel(v, log){
+  if (log) { const e = Math.log10(v); if (Math.abs(e - Math.round(e)) < 1e-9) { const k = Math.round(e); return (k >= -2 && k <= 3) ? String(+v.toPrecision(3)) : '10' + supNum(k); } return String(+v.toPrecision(2)); }
+  const a = Math.abs(v); if (a !== 0 && (a >= 1e5 || a < 1e-3)) { const e = Math.floor(Math.log10(a)); return (v / Math.pow(10, e)).toFixed(1).replace(/\.0$/, '') + '×10' + supNum(e); }
+  return String(+v.toFixed(6));
+}
+function setupCanvas(cv){
+  const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  const W = Math.max(1, Math.round(r.width)), H = Math.max(1, Math.round(r.height));
+  if (cv.width !== W * dpr || cv.height !== H * dpr) { cv.width = W * dpr; cv.height = H * dpr; }
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.font = '11px ' + css('--font');
+  return { ctx, W, H };
+}
+const colorOf = c => (c && c.startsWith('--')) ? css(c) : (c || css('--series-1'));
+
+/* 선 그래프: 여러 계열, 로그 축, 극한값 점선, 표시점, 십자선 툴팁, 눌러서 값 고르기 */
+class Plot {
+  constructor(wrap, onPick){
+    this.wrap = typeof wrap === 'string' ? document.getElementById(wrap) : wrap;
+    this.cv = this.wrap.querySelector('canvas'); this.tip = this.wrap.querySelector('.tip');
+    this.onPick = onPick; this.hoverX = null;
+    this.pad = { l:48, r:14, t:8, b:20 };
+    this.cv.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { this.hoverX = this.pxToX(e.offsetX); this.draw(); } });
+    this.cv.addEventListener('pointerleave', () => { this.hoverX = null; this.draw(); });
+    this.cv.addEventListener('click', e => { const x = this.pxToX(e.offsetX); if (x != null && this.onPick) this.onPick(x); });
+  }
+  set(d){ this.d = d; this.draw(); }
+  fx(x){ const d = this.d; return d.xLog ? (Math.log(x) - Math.log(d.xMin)) / (Math.log(d.xMax) - Math.log(d.xMin)) : (x - d.xMin) / (d.xMax - d.xMin); }
+  fy(y){ const d = this.d; return d.yLog ? (Math.log(y) - Math.log(d.yMin)) / (Math.log(d.yMax) - Math.log(d.yMin)) : (y - d.yMin) / (d.yMax - d.yMin); }
+  xToPx(x){ return this.pad.l + this.fx(x) * (this.W - this.pad.l - this.pad.r); }
+  yToPx(y){ return this.pad.t + (1 - this.fy(y)) * (this.H - this.pad.t - this.pad.b); }
+  pxToX(px){ if (!this.d) return null; const d = this.d, f = (px - this.pad.l) / (this.W - this.pad.l - this.pad.r);
+    if (f < 0 || f > 1) return null;
+    return d.xLog ? Math.exp(Math.log(d.xMin) + f * (Math.log(d.xMax) - Math.log(d.xMin))) : d.xMin + f * (d.xMax - d.xMin); }
+  ok(x, y){ const d = this.d; return isFinite(x) && isFinite(y) && !(d.xLog && x <= 0) && !(d.yLog && y <= 0); }
+  draw(){
+    if (!this.d) return;
+    const { ctx, W, H } = setupCanvas(this.cv); this.W = W; this.H = H;
+    const d = this.d, p = this.pad;
+    const cGrid = css('--grid'), cMuted = css('--muted'), cText2 = css('--text-2'), cSurf = css('--surface');
+    ctx.clearRect(0, 0, W, H);
+    /* 격자·눈금 */
+    ctx.lineWidth = 1; ctx.strokeStyle = cGrid; ctx.fillStyle = cMuted; ctx.textBaseline = 'middle';
+    const yt = d.yTicks || (d.yLog ? logTicks(d.yMin, d.yMax, 5) : niceTicks(d.yMin, d.yMax, 3));
+    for (const y of yt) { if (y < d.yMin || y > d.yMax) continue;
+      const py = Math.round(this.yToPx(y)) + .5; ctx.beginPath(); ctx.moveTo(p.l, py); ctx.lineTo(W - p.r, py); ctx.stroke();
+      ctx.textAlign = 'right'; ctx.fillText(d.yFmt ? d.yFmt(y) : tickLabel(y, d.yLog), p.l - 6, py); }
+    const xt = d.xTicks || (d.xLog ? logTicks(d.xMin, d.xMax, 7) : niceTicks(d.xMin, d.xMax, 5));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (const x of xt) { if (x < d.xMin * (d.xLog ? 0.999 : 1) - 1e-12 || x > d.xMax * 1.001 + 1e-12) continue;
+      const px = Math.round(this.xToPx(x)) + .5; ctx.beginPath(); ctx.moveTo(px, p.t); ctx.lineTo(px, H - p.b); ctx.stroke();
+      ctx.fillText(d.xFmt ? d.xFmt(x) : tickLabel(x, d.xLog), px, H - p.b + 4); }
+    ctx.save(); ctx.beginPath(); ctx.rect(p.l, p.t, W - p.l - p.r, H - p.t - p.b); ctx.clip();
+    /* 띠 (예: 가시광 영역) */
+    for (const b of (d.bands || [])) { ctx.fillStyle = colorOf(b.color); ctx.globalAlpha = b.alpha || .08;
+      const x0 = this.xToPx(b.x0), x1 = this.xToPx(b.x1); ctx.fillRect(Math.min(x0, x1), p.t, Math.abs(x1 - x0), H - p.t - p.b); ctx.globalAlpha = 1; }
+    /* 극한값·기준 점선 */
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = cMuted; ctx.lineWidth = 1.2;
+    for (const r of (d.refs || [])) {
+      ctx.beginPath();
+      if (r.fn) { let started = false; for (let i = 0; i <= 160; i++) { const x = d.xLog ? d.xMin * Math.pow(d.xMax / d.xMin, i / 160) : d.xMin + (d.xMax - d.xMin) * i / 160;
+          const y = r.fn(x); if (!this.ok(x, y)) { started = false; continue; } const px = this.xToPx(x), py = this.yToPx(y); started ? ctx.lineTo(px, py) : ctx.moveTo(px, py); started = true; } }
+      else if (r.x != null) { const px = this.xToPx(r.x); ctx.moveTo(px, p.t); ctx.lineTo(px, H - p.b); }
+      else { const py = this.yToPx(r.y); ctx.moveTo(p.l, py); ctx.lineTo(W - p.r, py); }
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    /* 계열 */
+    for (const s of d.series) {
+      const col = colorOf(s.color);
+      if (s.bars) { ctx.fillStyle = col; ctx.globalAlpha = s.alpha || .35; const y0 = this.yToPx(Math.max(d.yMin, 0));
+        for (let i = 0; i < s.xs.length; i++) { if (!this.ok(s.xs[i], s.ys[i])) continue;
+          const xa = this.xToPx(s.xs[i] - s.w / 2), xb = this.xToPx(s.xs[i] + s.w / 2), py = this.yToPx(s.ys[i]);
+          ctx.fillRect(xa + 1, Math.min(py, y0), Math.max(1, xb - xa - 2), Math.abs(y0 - py)); }
+        ctx.globalAlpha = 1; continue; }
+      if (s.pts) { for (let i = 0; i < s.xs.length; i++) { if (!this.ok(s.xs[i], s.ys[i])) continue;
+          ctx.beginPath(); ctx.arc(this.xToPx(s.xs[i]), this.yToPx(s.ys[i]), s.r || 4, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = cSurf; ctx.stroke(); }
+        continue; }
+      ctx.strokeStyle = col; ctx.lineWidth = s.width || 2; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      if (s.dash) ctx.setLineDash(s.dash);
+      ctx.beginPath(); let started = false;
+      for (let i = 0; i < s.xs.length; i++) { const x = s.xs[i], y = s.ys[i];
+        if (!this.ok(x, y)) { started = false; continue; }
+        const px = this.xToPx(x), py = Math.max(-1e4, Math.min(1e4, this.yToPx(y)));
+        started ? ctx.lineTo(px, py) : ctx.moveTo(px, py); started = true; }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.restore();
+    /* 기준선 라벨 (텍스트 색) */
+    ctx.fillStyle = cText2; ctx.textBaseline = 'bottom';
+    for (const r of (d.refs || [])) { if (!r.lab) continue;
+      if (r.x != null) { if (r.x >= d.xMin && r.x <= d.xMax) { ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(r.lab, this.xToPx(r.x) + 3, p.t + 1); ctx.textBaseline = 'bottom'; } continue; }
+      const xr = r.labX != null ? r.labX : d.xMax, yr = r.fn ? r.fn(xr) : r.y;
+      if (this.ok(xr, yr) && yr >= d.yMin && yr <= d.yMax) { ctx.textAlign = 'right'; ctx.fillText(r.lab, Math.min(W - p.r - 2, this.xToPx(xr) - 2), this.yToPx(yr) - 2); } }
+    /* 직접 라벨 */
+    for (const l of (d.labels || [])) { if (!this.ok(l.x, l.y)) continue; ctx.textAlign = l.align || 'left'; ctx.fillText(l.text, this.xToPx(l.x) + (l.dx || 4), this.yToPx(l.y) + (l.dy || -2)); }
+    /* 표시점 */
+    for (const m of (d.markers || [])) {
+      if (!this.ok(m.x, m.y) || m.x < d.xMin || m.x > d.xMax) continue;
+      const px = this.xToPx(m.x), py = Math.max(p.t, Math.min(H - p.b, this.yToPx(m.y))), col = colorOf(m.color);
+      if (m.vline !== false) { ctx.strokeStyle = col; ctx.globalAlpha = .35; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, p.t); ctx.lineTo(px, H - p.b); ctx.stroke(); ctx.globalAlpha = 1; }
+      ctx.beginPath(); ctx.arc(px, py, 5, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = cSurf; ctx.stroke();
+    }
+    /* 마우스 십자선 + 툴팁 */
+    if (this.hoverX != null && d.tip) {
+      const px = this.xToPx(this.hoverX);
+      ctx.strokeStyle = cMuted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px + .5, p.t); ctx.lineTo(px + .5, H - p.b); ctx.stroke();
+      const t = d.tip(this.hoverX);
+      if (t) { this.tip.textContent = t; this.tip.style.left = Math.min(Math.max(px, 110), W - 110) + 'px'; this.tip.style.top = (this.cv.offsetTop + 30) + 'px'; this.tip.style.opacity = 1; }
+    } else if (this.tip) this.tip.style.opacity = 0;
+  }
+}
+/* 데이터 범위 + 여백 */
+function extent(arrs, extra = [], padFrac = 0.08){
+  let lo = Infinity, hi = -Infinity;
+  for (const a of arrs) for (const v of a) if (isFinite(v)) { if (v < lo) lo = v; if (v > hi) hi = v; }
+  for (const v of extra) if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+  const pd = (hi - lo) * padFrac || Math.abs(hi) * 0.1 || 0.1; return [lo - pd, hi + pd];
+}
+/* 적분 (심프슨) / Simpson integration */
+function simpson(f, a, b, n = 400){ if (n % 2) n++; const h = (b - a) / n; let s = f(a) + f(b);
+  for (let i = 1; i < n; i++) s += (i % 2 ? 4 : 2) * f(a + i * h); return s * h / 3; }
+/* ln Γ(x) (Lanczos, x > 0) */
+function lnGamma(x){
+  const g = 7, c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313,
+    -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+  if (x < 0.5) return Math.log(Math.PI / Math.abs(Math.sin(Math.PI * x))) - lnGamma(1 - x);
+  x -= 1; let a = c[0]; const t = x + g + 0.5; for (let i = 1; i < g + 2; i++) a += c[i] / (x + i);
+  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+}
+/* 물리 상수 (CODATA, SI) */
+const PHYS = { kB:1.380649e-23, h:6.62607015e-34, hbar:1.054571817e-34, c:2.99792458e8, e:1.602176634e-19,
+  NA:6.02214076e23, R:8.314462618, me:9.1093837015e-31, mp:1.67262192369e-27, u:1.66053906660e-27, muB:9.2740100783e-24, mu0:1.25663706212e-6 };
+PHYS.sigma = Math.PI ** 2 * PHYS.kB ** 4 / (60 * PHYS.c ** 2 * PHYS.hbar ** 3);
+let __rz; window.addEventListener('resize', () => { clearTimeout(__rz); __rz = setTimeout(() => window.onRedraw && window.onRedraw(), 80); });
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => window.onRedraw && window.onRedraw());
+
+
+/* ===== (3) 물리 계산 / physics ======================================= *
+ * 한 칸: 부피 V, 입자 N.  S/k_B = ln Z_N + βU,  βU = 3N/2,  ln Z_N = N ln(V/λ³) − [ln N!]
+ * 혼합 전후 (λ, T 같음):
+ *   같은 기체, 1/N! 포함:  ΔS/k = 2N ln2 − ln(2N)! + 2 ln N!
+ *   같은 기체, 1/N! 제외:  ΔS/k = 2N ln2
+ *   다른 기체 (각각 1/N_A!, 1/N_B!):  ΔS/k = 2N ln2  (1/N! 유무와 무관)
+ * 크기변수 검사 (밀도 고정 nλ³):  S/Nk = ln(1/nλ³) + 3/2 + (N ln N − ln N!)/N   (포함)
+ *                                  S/Nk = ln(N/nλ³) + 3/2                         (제외)               */
+const lnFact = N => lnGamma(N + 1);
+function dSmix(gas, fact, N){
+  if (gas === 'diff' || fact === 'off') return 2 * N * Math.LN2;
+  return 2 * N * Math.LN2 - lnFact(2 * N) + 2 * lnFact(N);
+}
+const NL3 = 6.9e-8;              // N₂, 300 K, n = 1e25 m^-3 (데모 5와 같은 값)
+const SperN = (fact, N) => fact === 'on' ? Math.log(1 / NL3) + 1.5 + (N * Math.log(N) - lnFact(N)) / N : Math.log(N / NL3) + 1.5;
+/* 크기변수 검사: S(2N,2V) − 2S(N,V)  (같은 밀도) */
+const extTest = (fact, N) => 2 * N * SperN(fact, 2 * N) - 2 * N * SperN(fact, N);
+
+/* ===== (5) 상태와 화면 갱신 ========================================== */
+const nMap = logSlider(1, 1e6), NP = 60;
+const S = { gas:'same', fact:'on', N:100, wall:true, pts:[] };
+let plots;
+function initPts(){
+  S.pts = Array.from({length:NP}, (_, i) => { const left = i < NP / 2; return { x:(left ? 0.05 : 1.05) + 0.9 * Math.random(), y:0.05 + 0.9 * Math.random(), g:left ? 'A' : 'B' }; });
+}
+function step(){
+  for (const p of S.pts) {
+    let nx = p.x + (Math.random() - .5) * 0.06, ny = p.y + (Math.random() - .5) * 0.06;
+    if (ny < 0.02 || ny > 0.98) ny = p.y;
+    if (nx < 0.02 || nx > 1.98) nx = p.x;
+    if (S.wall && ((p.x < 1) !== (nx < 1))) nx = p.x;
+    p.x = nx; p.y = ny;
+  }
+}
+function drawBox(){
+  const cv = document.getElementById('box'), { ctx, W, H } = setupCanvas(cv);
+  ctx.clearRect(0, 0, W, H);
+  const pad = 10, bw = W - 2 * pad, bh = Math.min(H - 2 * pad, bw / 2), y0 = (H - bh) / 2;
+  ctx.strokeStyle = css('--line'); ctx.lineWidth = 2; ctx.strokeRect(pad, y0, bw, bh);
+  if (S.wall) { ctx.strokeStyle = css('--text-2'); ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(pad + bw / 2, y0); ctx.lineTo(pad + bw / 2, y0 + bh); ctx.stroke(); }
+  const cA = css('--series-1'), cB = S.gas === 'diff' ? css('--series-2') : cA, cs = css('--surface');
+  for (const p of S.pts) { ctx.beginPath(); ctx.arc(pad + p.x / 2 * bw, y0 + p.y * bh, 4, 0, 2 * Math.PI); ctx.fillStyle = p.g === 'A' ? cA : cB; ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = cs; ctx.stroke(); }
+  const nA = S.pts.filter(p => p.x < 1 && p.g === 'A').length, nB = S.pts.filter(p => p.x < 1 && p.g === 'B').length;
+  ctx.fillStyle = css('--text-2'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  ctx.fillText(S.gas === 'diff' ? `left: A ${nA}, B ${nB}` : `left: ${nA + nB}`, pad + 4, 2);
+}
+function render(){
+  drawBox();
+  setHTML('vizLegend', S.gas === 'diff'
+    ? `<span class="key"><span class="sw-dot" style="background:var(--series-1)"></span><span class="bi-tight">${biKey('legA')}</span></span><span class="key"><span class="sw-dot" style="background:var(--series-2)"></span><span class="bi-tight">${biKey('legB')}</span></span>`
+    : `<span class="key"><span class="sw-dot" style="background:var(--series-1)"></span><span class="bi-tight">${biKey('legSame')}</span></span>`);
+  const Ns = Array.from({length:121}, (_, i) => Math.pow(10, 6 * i / 120));
+  const cur = dSmix(S.gas, S.fact, S.N) / S.N;
+  plots.Mix.set({ xMin:1, xMax:1e6, xLog:true, yMin:0, yMax:1.6,
+    series:[{ xs:Ns, ys:Ns.map(N => dSmix('same', 'on', N) / N), color:'--series-1' }, { xs:Ns, ys:Ns.map(() => 2 * Math.LN2), color:'--series-2' }],
+    refs:[{ y:2 * Math.LN2, lab:'2 ln 2' }],
+    markers:[{ x:S.N, y:cur, color:S.gas === 'same' && S.fact === 'on' ? '--series-1' : '--series-2' }],
+    tip: N => `N = ${fmtPlain(N)}  same+1/N!: ${(dSmix('same', 'on', N) / N).toFixed(5)}  others: ${(2 * Math.LN2).toFixed(4)}` });
+  plots.Ext.set({ xMin:1, xMax:1e6, xLog:true, yMin:15, yMax:34,
+    series:[{ xs:Ns, ys:Ns.map(N => SperN('on', N)), color:'--series-1' }, { xs:Ns, ys:Ns.map(N => SperN('off', N)), color:'--series-2' }],
+    refs:[{ y:2.5 - Math.log(NL3), lab:'5/2 − ln(nλ³)' }],
+    markers:[{ x:S.N, y:SperN(S.fact, S.N), color:S.fact === 'on' ? '--series-1' : '--series-2' }],
+    tip: N => `N = ${fmtPlain(N)}  S/Nk: with 1/N! ${SperN('on', N).toFixed(3)}, without ${SperN('off', N).toFixed(3)}` });
+  setHTML('vCase', biKey(S.gas === 'diff' ? 'caseDiff' : (S.fact === 'on' ? 'caseSameOn' : 'caseSameOff')));
+  const ds = dSmix(S.gas, S.fact, S.N);
+  document.getElementById('vDS').innerHTML = fmt(ds, 4);
+  document.getElementById('vDSN').innerHTML = fmt(ds / S.N, 4);
+  setHTML('sDSN', biKey('subDSN'));
+  document.getElementById('vExt').innerHTML = fmt(extTest(S.fact, S.N) / S.N, 4);
+  document.getElementById('nOut').textContent = Math.round(S.N).toLocaleString('en');
+  document.getElementById('wallBtn').innerHTML = biKey(S.wall ? 'btnRemove' : 'btnInsert');
+}
+function exTable(){
+  const z1 = 1 + Math.exp(-1);
+  const rows = [['rowDist', '(0,0) (0,ε) (ε,0) (ε,ε)', '$Z_1^2=1+2e^{-\\beta\\varepsilon}+e^{-2\\beta\\varepsilon}$', z1 * z1],
+                ['rowIndist', '{0,0} {0,ε} {ε,ε}', '$1+e^{-\\beta\\varepsilon}+e^{-2\\beta\\varepsilon}$', 1 + Math.exp(-1) + Math.exp(-2)],
+                ['rowApprox', '—', '$Z_1^2/2$', z1 * z1 / 2]];
+  setHTML('exTable', rows.map(r => `<tr><td class="bi-tight">${biKey(r[0])}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3].toFixed(4)}</td></tr>`).join(''));
+}
+window.onRedraw = render;
+
+/* ===== (6) 이벤트 ================================================== */
+function init(){
+  initPage(render);
+  const nS = document.getElementById('nSlider'); nS.value = nMap.from(S.N);
+  const setN = N => { S.N = Math.max(1, Math.min(1e6, Math.round(N))); nS.value = nMap.from(S.N); render(); };
+  plots = { Mix:new Plot('plotMix', setN), Ext:new Plot('plotExt', setN) };
+  nS.addEventListener('input', () => setN(nMap.to(+nS.value)));
+  segInit('gasSeg', 'gas', S.gas, v => { S.gas = v; render(); });
+  segInit('factSeg', 'fact', S.fact, v => { S.fact = v; render(); });
+  document.getElementById('wallBtn').addEventListener('click', () => {
+    if (S.wall) S.wall = false; else { S.wall = true; S.pts.forEach(p => { if (Math.abs(p.x - 1) < 0.02) p.x += p.x < 1 ? -0.03 : 0.03; }); }
+    render(); });
+  initPts(); exTable();
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let last = 0;
+  const loop = t => { if (!reduce && t - last > 50) { step(); drawBox(); last = t; } requestAnimationFrame(loop); };
+  render(); requestAnimationFrame(loop);
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
