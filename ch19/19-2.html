@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>19.2 응용 · 19장 에너지 등분배 · 통계역학 학습서</title>
+<meta name="description" content="제곱항을 세어 단원자·이원자 기체와 고체의 열용량, γ를 예측하고 측정값과 비교한다. 교재 19.2절(275–278쪽).">
+<link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+<script src="../assets/book.js"></script>
+<script defer src="sim19.js"></script>
+</head>
+<body data-root="../" data-page="19.2">
+<main id="main" class="bk-main" tabindex="-1">
+<article class="bk-page">
+<p class="bk-crumb"><a href="index.html">19장 에너지 등분배</a> › 19.2</p>
+<h1 class="bk-title"><span class="no">19.2</span>응용</h1>
+<p class="bk-meta">교재 275–278쪽 · 19.2.1–19.2.4 · 식 19.14–19.25 · 그림 19.3–19.6 · 교재 예제 없음</p>
+<p class="bk-lang-note" hidden>새로 쓴 본문은 아직 한국어만 있습니다. · The new study text is Korean-only for now.</p>
+<ul class="bk-flow" aria-label="이 절의 흐름">
+  <li><a href="#goals">학습 목표</a></li><li><a href="#solves">맡은 질문</a></li><li><a href="#start">출발점</a></li><li><a href="#body">본문 전개</a></li>
+  <li><a href="#verdict">결과 판정</a></li><li><a href="#examples">예제 평가</a></li><li><a href="#selfq">스스로 던질 질문</a></li><li><a href="#hand">손으로 풀기</a></li><li><a href="#notation">표기 참고</a></li>
+</ul>
+
+<h2 id="goals">학습 목표</h2>
+<ol>
+  <li>분자 모형의 에너지 식에서 서로 독립인 제곱항을 세어 자유도 수 $f$를 정할 수 있다(단원자 3, 이원자 5 또는 7).</li>
+  <li>$f$로부터 몰당 $C_V=\tfrac f2R$, $C_p=(\tfrac f2+1)R$, $\gamma=1+\tfrac2f$를 유도하고 측정값과 비교할 수 있다.</li>
+  <li>이원자 분자의 결합축 둘레 회전을 세지 않는 이유가 무엇이고, 그것이 이 절 안에서는 정당화되지 않는다는 점을 말할 수 있다.</li>
+  <li>입방 격자 모형에서 고체의 몰 열용량 $3R$(뒬롱-프티 법칙)을 유도할 수 있다.</li>
+</ol>
+
+<h2 id="solves">이 절이 맡은 질문</h2>
+<p><a class="qchip" href="index.html#q2">Q2</a> 그 규칙만으로 기체와 고체의 몰 열용량과 $\gamma=C_p/C_V$를 예측할 수 있는가?</p>
+<p>이 절은 19.1절의 정리를 “제곱항 세기” 문제로 바꾸어 Q2에 답한다. 예측은 단원자 기체와 상온 금속에서 잘 맞지만, 이원자 기체에서는 어긋남이 보인다. 그 어긋남이 <a class="qchip" href="index.html#q3">Q3</a>으로 이어진다.</p>
+
+<h2 id="start">출발점</h2>
+<div class="claim" data-k="cite" data-ref="19-1.html#theorem" data-ref-label="19.1절 · 등분배 정리"><p>독립인 제곱 모드 $f$개의 합이면 평균 에너지는 $\tfrac f2k_BT$이다.</p></div>
+<div class="claim" data-k="cite" data-ext="5장 · 식 5.17" data-note="교재 275쪽이 인용한다. 기체 분자 운동론의 평균 운동 에너지."><p>기체 분자 운동론으로 구한 기체 분자의 평균 병진 운동 에너지는 $\tfrac32k_BT$이다.</p></div>
+<div class="claim" data-k="cite" data-ext="11장 · 식 11.27" data-note="교재 277쪽이 인용한다."><p>이상기체 1몰에서 $C_p-C_V=R$.</p></div>
+<div class="claim" data-k="def"><p>$C_V=\left(\dfrac{\partial U}{\partial T}\right)_V$, $\gamma=\dfrac{C_p}{C_V}$, $R=N_Ak_B$.</p></div>
+
+<h2 id="body">본문 전개</h2>
+
+<h3 class="subhead"><span class="no">19.2.1</span>단원자 기체의 병진 운동</h3>
+<section class="phase" data-step="①" data-phase="상황">
+  <p>헬륨이나 아르곤 같은 단원자 기체를 생각한다. 원자는 상자 안을 날아다니고, 서로나 벽과 부딪히며 속도가 계속 바뀐다. 원자 질량은 헬륨과 제논이 30배 넘게 다르다. 평균 에너지도 질량에 따라 다를까?</p>
+</section>
+<section class="phase" data-step="②" data-phase="관찰">
+  <figure class="sim-fig" id="sim-gas">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>기체 종류(He, Ne, Ar, Kr, Xe), 온도 $T$. ‘평균 병진 에너지와 원자 질량’ 그래프를 누르면 가장 가까운 질량의 기체로 바뀐다.</span></p>
+      <p><b>무엇을 보라</b><span>He는 빠르고 Xe는 느리다. 그런데 $v_x$, $v_y$, $v_z$ 성분별 평균 에너지가 각각 몇 $k_BT$인지, 기체를 바꾸면 그것이 달라지는지 보라.</span></p>
+      <p data-choices="He가 Xe보다 크다|같다|Xe가 He보다 크다" data-answer="같다" data-why="평균 에너지는 성분마다 $\tfrac12k_BT$, 합해서 $\tfrac32k_BT$로 질량과 무관하다. 질량이 다르면 속력이 $\sqrt{3k_BT/m}$로 달라질 뿐이다."><b>먼저 예상해 보라</b><span>같은 온도에서 He 원자와 Xe 원자의 평균 병진 에너지를 비교하면?</span></p>
+    </div>
+    <figcaption><b>그림 19.3(기체 분자의 속도)을 움직이게 다시 그림.</b> 빨간 원자의 속도 $\mathbf v$와 세 성분을 화살표로 보인다. 원자끼리의 충돌은 무작위로 고른 원자의 속도를 그 온도의 분포에서 다시 뽑는 것으로 흉내 냈다(모형 가정). 화면 속도는 실제 속력에 비례한다.</figcaption>
+  </figure>
+</section>
+<section class="phase" data-step="③" data-phase="식 세우기">
+  <div class="claim" data-k="model"><p>원자는 내부 구조가 없는 질점이고, 원자 사이의 퍼텐셜 에너지는 무시한다(이상기체).</p></div>
+  <div class="claim" data-k="model" id="eq-19-14"><div class="eq"><div class="m">$$E=\tfrac12mv_x^2+\tfrac12mv_y^2+\tfrac12mv_z^2$$</div><a class="eqno" href="#eq-19-14">(19.14)</a></div>
+    <p>속도 성분 세 개가 각각 제곱으로 들어가는 독립 모드 3개다.</p></div>
+</section>
+<section class="phase" data-step="④" data-phase="결과">
+  <div class="claim" data-k="derived" id="eq-19-15"><div class="eq"><div class="m">$$\langle E\rangle=3\times\tfrac12k_BT=\tfrac32k_BT$$</div><a class="eqno" href="#eq-19-15">(19.15)</a></div>
+    <p>기체 분자 운동론의 결과(식 5.17)와 같다. 이번에는 분자 운동을 따로 다루지 않고 등분배 정리 하나로 바로 얻었다.</p></div>
+</section>
+
+<h3 class="subhead"><span class="no">19.2.2–19.2.3</span>이원자 기체의 회전과 진동</h3>
+<section class="phase" data-step="①" data-phase="상황">
+  <p>질소나 산소 분자는 원자 두 개가 결합한 아령 모양이다. 분자 전체가 날아다니는 것 말고도 돌 수 있고, 결합이 늘었다 줄었다 할 수 있다. 에너지 식에 제곱항이 몇 개 더 생길까?</p>
+</section>
+<section class="phase" data-step="②" data-phase="관찰">
+  <figure class="sim-fig" id="sim-diatomic">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>회전 모드 2개, 진동 모드 2개를 켜고 끈다. ‘예측 $C_p/R$와 측정값’ 그래프를 누르면 $f=3,5,7$ 가운데 가까운 값으로 바뀐다.</span></p>
+      <p><b>무엇을 보라</b><span>켜진 제곱항마다 막대가 ½ 근처로 모이는지, 예측 $C_p/R$(파란 선 위의 점)이 측정값 점선 가운데 어느 것과 겹치는지 보라.</span></p>
+      <p data-choices="f = 3|f = 5|f = 7" data-answer="f = 5" data-why="N₂, O₂, H₂의 298 K 측정값은 $C_p/R\approx3.5$로 $f=5$(병진 + 회전)와 맞는다. 진동 두 모드는 상온에서 에너지를 거의 받지 않는다. 그 이유가 19.3절의 주제다."><b>먼저 예상해 보라</b><span>N₂의 측정값 $C_p=29.13$ J K⁻¹ mol⁻¹은 어느 $f$와 맞을까?</span></p>
+    </div>
+    <figcaption><b>그림 19.4(회전 운동)와 그림 19.5(용수철로 이은 두 질량)를 함께 움직이게 다시 그림.</b> 점선 축 1, 2는 회전축, 축 3은 결합축이다. 각 제곱항에 열원을 붙였다($k_BT=1$ 단위). 점은 보이는 분자의 지금 값, 막대는 같은 규칙으로 움직이는 분자 60개를 시간에 걸쳐 평균한 값이다. 측정값은 교재 연습문제 19.2(282쪽)의 298 K 값이다.</figcaption>
+  </figure>
+</section>
+<section class="phase" data-step="③" data-phase="식 세우기">
+  <div class="claim" data-k="model"><p>분자는 길이가 고정된 강체 아령이다(진동은 뒤에서 더한다). 회전은 결합축에 수직인 두 주축 1, 2에 대해 생각한다.</p></div>
+  <div class="claim" data-k="derived" id="eq-19-16"><div class="eq"><div class="m">$$\frac{L_1^2}{2I_1}+\frac{L_2^2}{2I_2}$$</div><a class="eqno" href="#eq-19-16">(19.16)</a></div>
+    <p>각운동량 $L_1$, $L_2$가 제곱으로 들어가는 회전 모드 2개가 에너지에 더해진다.</p></div>
+  <div class="claim" data-k="approx" data-cond="결합축 둘레 회전의 들뜸 에너지가 $k_BT$보다 훨씬 클 때 (정당화는 19.3절)"><p>결합축(축 3) 둘레의 회전은 세지 않는다. 그 축에 대한 관성모멘트가 아주 작기 때문이라고 교재는 설명한다(276쪽). 그런데 고전역학만으로는 이상하다. 관성모멘트가 작아도 고전 정리는 그 모드에 $\tfrac12k_BT$를 주기 때문이다. 이 근사가 왜 맞는지는 양자화를 다루는 <a href="19-3.html#assume1">19.3절</a>에서야 설명된다.</p></div>
+  <div class="claim" data-k="model" id="eq-19-17"><div class="eq"><div class="m">$$E=\tfrac12mv_x^2+\tfrac12mv_y^2+\tfrac12mv_z^2+\frac{L_1^2}{2I_1}+\frac{L_2^2}{2I_2}$$</div><a class="eqno" href="#eq-19-17">(19.17)</a></div>
+    <p>병진 3 + 회전 2, 모두 서로 독립이다. 여기서 $m$은 분자 전체의 질량, $\mathbf v$는 질량 중심의 속도다.</p></div>
+  <div class="claim" data-k="model"><p>결합은 평형 길이 $l_0$, 용수철 상수 $k$인 용수철로 모형화한다(그림 19.5). 두 원자의 상대 운동에서 운동 에너지 항 하나, 결합 퍼텐셜 항 하나가 더 생긴다.</p></div>
+  <div class="claim" data-k="model" id="eq-19-19"><div class="eq"><div class="m">$$E=\tfrac12m(v_x^2+v_y^2+v_z^2)+\frac{L_1^2}{2I_1}+\frac{L_2^2}{2I_2}+\tfrac12\mu(\dot r_1-\dot r_2)^2+\tfrac12k(|\mathbf r_1-\mathbf r_2|-l_0)^2$$</div><a class="eqno" href="#eq-19-19">(19.19)</a></div>
+    <p>$\mu=m_1m_2/(m_1+m_2)$는 환산질량이다(교재 부록 G). 넷째 항은 <b>결합 길이가 바뀌는 빠르기</b>, 곧 상대 속도의 결합 방향 성분으로 읽어야 한다. 상대 속도의 수직 성분은 이미 회전 항 $L^2/2I$에 들어 있기 때문이다.</p></div>
+</section>
+<section class="phase" data-step="④" data-phase="결과">
+  <div class="claim" data-k="derived" id="eq-19-18"><div class="eq"><div class="m">$$\langle E\rangle=5\times\tfrac12k_BT=\tfrac52k_BT\quad(\text{병진+회전})$$</div><a class="eqno" href="#eq-19-18">(19.18)</a></div></div>
+  <div class="claim" data-k="derived" id="eq-19-20"><div class="eq"><div class="m">$$\langle E\rangle=7\times\tfrac12k_BT=\tfrac72k_BT\quad(\text{병진+회전+진동})$$</div><a class="eqno" href="#eq-19-20">(19.20)</a></div></div>
+  <p>일반적으로 자유도가 $f$개이면 다음을 얻는다. 1몰은 $N_A$개 분자이고 $N_Ak_B=R$이다.</p>
+  <div class="claim" data-k="derived" id="eq-19-21"><div class="eq"><div class="m">$$\langle E\rangle=\frac f2k_BT$$</div><a class="eqno" href="#eq-19-21">(19.21)</a></div></div>
+  <div class="claim" data-k="derived" id="eq-19-22"><div class="eq"><div class="m">$$C_V\ (\text{몰당})=\frac f2R$$</div><a class="eqno" href="#eq-19-22">(19.22)</a></div></div>
+  <div class="claim" data-k="derived" id="eq-19-23"><div class="eq"><div class="m">$$C_p\ (\text{몰당})=\left(\frac f2+1\right)R$$</div><a class="eqno" href="#eq-19-23">(19.23)</a></div>
+    <p>식 (19.22)에 $C_p-C_V=R$(식 11.27)을 더했다.</p></div>
+  <div class="claim" data-k="derived" id="eq-19-24"><div class="eq"><div class="m">$$\gamma=\frac{C_p}{C_V}=1+\frac2f$$</div><a class="eqno" href="#eq-19-24">(19.24)</a></div></div>
+  <div class="bk-table-wrap" id="table-gas"><table class="bk-table">
+    <caption class="sr">기체별 자유도와 열용량 요약</caption>
+    <thead><tr><th>기체</th><th>세는 모드</th><th>$f$</th><th>분자당 $C_V$</th><th>$\gamma$</th></tr></thead>
+    <tbody>
+      <tr><td>단원자</td><td>병진</td><td class="num">3</td><td class="num">$\tfrac32k_B$</td><td class="num">$\tfrac53=1.667$</td></tr>
+      <tr><td>이원자</td><td>병진, 회전</td><td class="num">5</td><td class="num">$\tfrac52k_B$</td><td class="num">$\tfrac75=1.400$</td></tr>
+      <tr><td>이원자</td><td>병진, 회전, 진동</td><td class="num">7</td><td class="num">$\tfrac72k_B$</td><td class="num">$\tfrac97=1.286$</td></tr>
+    </tbody></table></div>
+  <p>교재 278쪽 표의 셋째 열은 머리글이 $\langle E\rangle$이지만 적힌 값은 $\tfrac32k_B$처럼 $T$가 없다. 바로 앞 문장이 “원자당 혹은 분자당 열용량”을 요약한다고 했으므로, 위 표처럼 분자당 열용량으로 읽으면 된다.</p>
+</section>
+<section class="phase" data-step="⑤" data-phase="확인">
+  <div class="claim" data-k="exp" data-src="교재 연습문제 19.2(282쪽), 298 K·일정 압력에서 잰 몰 열용량"><p>He, Ne, Ar, Xe는 모두 $C_p=20.79$ J K⁻¹ mol⁻¹ $=2.50R$이다. N₂는 29.13 ($3.50R$), O₂는 29.36 ($3.53R$), H₂는 28.82 ($3.47R$)이다.</p></div>
+  <p>단원자 기체는 $f=3$의 예측 $\tfrac52R$과 소수 셋째 자리까지 맞는다. 이원자 기체는 $f=7$의 예측 $\tfrac92R$이 아니라 $f=5$의 예측 $\tfrac72R$과 맞는다. 위 시뮬레이션에서 진동을 끄면 예측 점이 측정 점선에 겹치는 것을 확인하라. 상온의 이원자 분자는 진동 모드 두 개에 에너지를 거의 나눠 주지 않는다. 정리는 모든 제곱항에 $\tfrac12k_BT$를 준다고 했는데, 왜일까? 이것이 다음 절의 질문이다.</p>
+</section>
+
+<h3 class="subhead"><span class="no">19.2.4</span>고체의 열용량</h3>
+<section class="phase" data-step="①" data-phase="상황">
+  <p>고체 속 원자는 격자 자리에 묶여 있어 날아다니지는 못하지만, 자리 둘레에서 떨 수 있다. 원자 사이의 화학 결합을 용수철로 보자. 입방 격자에서 원자 하나는 위·아래·앞·뒤·오른쪽·왼쪽의 이웃 6개와 이어져 있다(그림 19.6).</p>
+</section>
+<section class="phase" data-step="②" data-phase="관찰">
+  <figure class="sim-fig" id="sim-solid">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>온도 $T$, 원자 하나와 이웃 6개만 강조하기. ‘원자당 평균 에너지와 온도’ 그래프를 누르면 그 온도로 이동한다.</span></p>
+      <p><b>무엇을 보라</b><span>원자당 운동 에너지와 퍼텐셜 에너지의 평균이 각각 몇 $k_BT$인지, 합이 3에 가는지 보라. 그 값으로 환산한 몰 열용량을 금속의 측정값과 비교하라.</span></p>
+      <p data-choices="3/2 kBT|3 kBT|6 kBT" data-answer="3 kBT" data-why="원자 하나에 운동 제곱항 3개, 퍼텐셜 제곱항이 원자당 3개 있어 합해서 6개, $6\times\tfrac12k_BT=3k_BT$이다. 기체 원자의 두 배다."><b>먼저 예상해 보라</b><span>원자 하나가 갖는 평균 에너지는?</span></p>
+    </div>
+    <figcaption><b>그림 19.6을 움직이게 다시 그림.</b> 원자 64개(4×4×4)가 가장 가까운 이웃끼리 용수철로 이어져 있고, 바깥 원자는 고정된 벽에 이어져 있다. 진폭은 잘 보이도록 과장했다. 금속 값은 교재 연습문제 19.2(282쪽)의 298 K 측정값이다.</figcaption>
+  </figure>
+</section>
+<section class="phase" data-step="③" data-phase="식 세우기">
+  <div class="claim" data-k="model"><p>원자는 가장 가까운 이웃과만 용수철로 이어져 있고, 원자는 작게 떨기 때문에 용수철은 훅 법칙을 따른다(조화 근사의 조건은 19.3절).</p></div>
+  <div class="claim" data-k="approx" data-cond="표면 원자의 몫을 무시할 만큼 $N\gg1$"><p>원자가 $N$개이면 용수철은 $3N$개다. 용수철 하나가 원자 둘을 잇고 원자마다 6개씩 붙어 있으므로 $6N/2=3N$이다.</p></div>
+  <p>교재는 “용수철 하나마다 운동·퍼텐셜 두 제곱 모드”로 센다. 같은 수를 원자 쪽에서 세면 더 분명하다. 운동 에너지는 원자마다 $\tfrac12mv_x^2,\tfrac12mv_y^2,\tfrac12mv_z^2$의 3개, 전체 $3N$개다. 퍼텐셜 에너지는 변위 $3N$개의 이차식이고, 이것은 서로 독립인 제곱항 $3N$개로 고쳐 쓸 수 있다(정규 모드, <a class="loc" href="../ch24/24-1.html">[24.1절]</a>). 어느 쪽으로 세어도 제곱항은 $6N$개다.</p>
+</section>
+<section class="phase" data-step="④" data-phase="결과">
+  <div class="claim" data-k="derived" id="eq-19-25"><div class="eq"><div class="m">$$\langle E\rangle=6N\times\tfrac12k_BT=3Nk_BT$$</div><a class="eqno" href="#eq-19-25">(19.25)</a></div>
+    <p>따라서 $C=\partial\langle E\rangle/\partial T=3Nk_B$, 1몰이면 $3N_Ak_B=3R=24.94$ J K⁻¹ mol⁻¹이다. 이것이 <b>뒬롱-프티 법칙</b>이다.</p></div>
+</section>
+<section class="phase" data-step="⑤" data-phase="확인">
+  <div class="claim" data-k="exp" data-src="교재 연습문제 19.2(282쪽), 298 K·일정 압력"><p>Al 24.35, Cu 24.44, Fe 25.10, Zn 25.40, Au 25.42, Ag 25.53, Pb 26.44 J K⁻¹ mol⁻¹. $R$로 나누면 2.93–3.18이다.</p></div>
+  <div class="claim" data-k="approx" data-cond="열팽창이 작은 고체"><p>고체에서는 $C_p\approx C_V$로 보고 비교한다.</p></div>
+  <p>상온 금속은 $3R$ 둘레 ±6% 안에 모인다. 다만 이 일치가 저온에서도 계속되는 것은 아니다(교재가 가리키는 <a class="loc" href="../ch24/24-1.html">[24.1절]</a>). Pb처럼 $3R$를 조금 넘는 값은 비조화 효과와 $C_p-C_V$의 차이가 더해진 결과로 볼 수 있다.</p>
+</section>
+
+<h2 id="verdict">결과 판정</h2>
+<ul class="verdict" aria-label="결과 판정">
+  <li><b>해결됨</b>질문이 이 절로 완전히 답해짐</li>
+  <li><b>새 문제 발생</b>해결하면서 새 의문이 생김</li>
+  <li class="on"><b>추후 논의</b>근사·제한이 남아 뒤에서 다룸</li>
+</ul>
+<p>Q2에는 “대부분 그렇다”까지 답했다. 단원자 기체($f=3$)와 상온 금속($3R$)은 잘 맞는다. 그러나 이원자 기체의 측정값은 $f=7$이 아니라 $f=5$에 맞고, H₂는 그보다도 조금 작다. 결합축 둘레 회전을 빼는 근사도 고전 정리 안에서는 설명되지 않았다. 이 두 가지는 한 원인, 곧 에너지 준위의 양자화로 설명된다. 원인은 <a href="19-3.html#assume1">19.3절</a>에서, 온도에 따른 정량적인 계단 모양은 <a class="loc" href="../ch21/21-6.html#fig-21-5">[21.6절 · 그림 21.5]</a>에서, 고체의 저온 행동은 <a class="loc" href="../ch24/24-1.html">[24.1절]</a>에서 다룬다.</p>
+
+<h2 id="examples">예제 평가</h2>
+<p>이 절에는 교재 예제가 없다. 대신 이 절에 바로 기대는 연습문제를 같은 틀로 평가한다.</p>
+<article class="exeval" id="ex-p19-1">
+  <header><h3>연습문제 19.1 · He, Xe, Ar, Kr 원자의 상온 평균 에너지 (282쪽)</h3><span class="stars" aria-label="중요도 2/3">★★<span class="off">★</span></span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>흐름만 따라가도 된다. 힌트 “4가지를 모두 계산해야 할까?”가 핵심이다. 답은 질량과 무관하다는 것, 곧 식 (19.15) 한 줄이다.</dd>
+    <dt>연습문제와의 관계</dt><dd>예제 19.2의 J ↔ eV 환산과 같이 풀 것. 위 기체 시뮬레이션에서 기체를 바꾸어 가며 확인할 수 있다.</dd>
+    <dt>솔직한 평가</dt><dd>계산 연습용으로 가볍다. 다만 “무거운 원자는 에너지도 크다”는 오개념을 고치는 데 좋다.</dd>
+  </dl>
+</article>
+<article class="exeval" id="ex-p19-2">
+  <header><h3>연습문제 19.2 · 14가지 물질의 몰 열용량 해석 (282쪽)</h3><span class="stars" aria-label="중요도 3/3">★★★</span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>반드시 손으로. 이 절 전체를 한 문제로 쓰는 종합 문제다. $R$ 단위로 바꾸고, 고체·단원자·이원자로 나누고, 각각 어떤 $f$와 맞는지 판정해야 한다.</dd>
+    <dt>연습문제와의 관계</dt><dd>이원자 기체가 $f=5$에 맞는다는 결론이 19.3절과 <a class="loc" href="../ch21/21-6.html">[21.6절]</a>의 출발점이 된다. 손으로 풀기 3번이 이 문제의 한 조각이다.</dd>
+    <dt>솔직한 평가</dt><dd>데이터 해석형이라 시험에 자주 나온다. 기체의 값이 $C_p$라는 점($C_V$로 바꾸려면 $R$을 뺀다)을 놓치는 실수가 흔하다.</dd>
+  </dl>
+</article>
+
+<h2 id="selfq">스스로 던질 질문</h2>
+<div class="selfq">
+  <details><summary>결합축 둘레 회전을 빼는 이유가 “관성모멘트가 작아서”라면, 회전 에너지 $L^2/2I$는 $I$가 작을수록 오히려 커지지 않나?</summary><div><p>맞는 지적이다. 고전적으로는 $I$가 아무리 작아도 그 모드는 평균 $\tfrac12k_BT$를 받는다. 이 모드가 빠지는 이유는 양자역학에 있다. 회전 준위 간격은 대략 $\hbar^2/2I$라서 $I$가 작을수록 커지고, 그 간격이 $k_BT$보다 훨씬 크면 첫 들뜬 상태로 올라갈 수 없다. 곧 이 근사는 고전 등분배 밖의 논리이며, <a href="19-3.html#assume1">19.3절</a>에서 다룬다.</p></div></details>
+  <details><summary>진동 모드는 왜 제곱항이 2개인가?</summary><div><p>결합 길이가 바뀌는 빠르기의 제곱(운동 에너지)과, 늘어난 길이의 제곱(퍼텐셜 에너지)이 각각 하나씩이다. 용수철에 매단 질량이 모드 2개인 것과 같다.</p></div></details>
+  <details><summary>고체 원자는 왜 기체 원자의 두 배인 $3k_BT$를 갖는가?</summary><div><p>기체 원자에는 운동 에너지 항 3개만 있다. 고체 원자는 이웃과 이어져 있어 퍼텐셜 에너지 항이 원자당 3개 더 있다. 조화 퍼텐셜의 평균은 운동 에너지의 평균과 같으므로 두 배가 된다.</p></div></details>
+  <details><summary>NaCl처럼 원자 두 종류로 된 고체의 몰 열용량은?</summary><div><p>뒬롱-프티 법칙은 원자 1몰당 $3R$이다. NaCl 1몰(화학식 단위)에는 원자가 2몰 들어 있으므로 화학식 단위 1몰당 $6R$에 가깝다. 질량은 들어가지 않는다.</p></div></details>
+  <details><summary>단원자 기체의 $\gamma=5/3$는 어떻게 잴 수 있을까?</summary><div><p>한 가지 방법은 음속이다. 이상기체의 음속은 $\sqrt{\gamma p/\rho}$이므로 압력, 밀도, 음속을 재면 $\gamma$를 얻는다. 단열 팽창 실험으로 잴 수도 있다.</p></div></details>
+</div>
+
+<h2 id="hand">손으로 풀기</h2>
+<div class="hand" id="h1921" data-answer="1.4" data-tol="0.005">
+  <header><b>문항 1</b><span>이원자 기체의 $\gamma$</span></header>
+  <p>병진과 회전만 들뜬 이원자 기체의 $\gamma=C_p/C_V$를 구하라.</p>
+  <div class="hand-sim" data-sim="diatomic" data-set='{"rot":true,"vib":false}' data-read="gamma" data-label="시뮬레이션의 $\gamma$"></div>
+  <details><summary>풀이</summary><p>$f=5$이므로 $\gamma=1+2/5=7/5=1.4$.</p></details>
+</div>
+<div class="hand" id="h1922" data-answer="24.94" data-tol="0.01" data-unit="J K⁻¹ mol⁻¹">
+  <header><b>문항 2</b><span>뒬롱-프티 값</span></header>
+  <p>뒬롱-프티 법칙이 예측하는 고체의 몰 열용량을 J K⁻¹ mol⁻¹ 단위로 구하라. ($R=8.314462618$ J K⁻¹ mol⁻¹)</p>
+  <div class="hand-sim" data-sim="solid" data-set='{"T":300}' data-read="Cmol" data-label="시뮬레이션에서 환산한 몰 열용량"></div>
+  <details><summary>풀이</summary><p>$3R=3\times8.3145=24.94$ J K⁻¹ mol⁻¹.</p></details>
+</div>
+<div class="hand" id="h1923" data-answer="5.01" data-tol="0.01">
+  <header><b>문항 3</b><span>측정값에서 자유도 읽기</span></header>
+  <p>N₂의 298 K 측정값 $C_p=29.13$ J K⁻¹ mol⁻¹(교재 연습문제 19.2)에서 $f$를 소수 둘째 자리까지 구하라.</p>
+  <div class="hand-sim" data-sim="diatomic" data-set='{"rot":true,"vib":false}' data-read="cp" data-label="f = 5일 때 시뮬레이션의 예측 $C_p$"></div>
+  <details><summary>풀이</summary><p>식 (19.23)에서 $f=2(C_p/R-1)=2(29.13/8.3145-1)=2(3.5035-1)=5.01$. 정수로는 5, 곧 병진 3 + 회전 2이다.</p></details>
+</div>
+
+<h2 id="notation">표기 참고</h2>
+<div class="bk-table-wrap"><table class="bk-table">
+  <thead><tr><th>이 학습서 (교재 한국어판)</th><th>다른 표기</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr><td>뒬롱-프티 법칙 (278쪽)</td><td>듀롱-페티 규칙</td><td>같은 교재 24장(364쪽)은 “듀롱-페티 규칙”으로 쓴다. 이 학습서는 19장에서는 278쪽 표기를 따른다.</td></tr>
+    <tr><td>자유도 수 $f$</td><td>—</td><td>교재 식 19.21부터 쓰는 기호.</td></tr>
+    <tr><td>몰당 $C_V$, $C_p$</td><td>$c_V$, $c_p$ (몰 비열)</td><td>교재 식 19.22–19.23은 “per mole”을 글로 붙여 쓴다.</td></tr>
+    <tr><td>환산질량 $\mu$</td><td>—</td><td>교재 부록 G.</td></tr>
+    <tr><td>278쪽 표의 셋째 열</td><td>—</td><td>머리글은 $\langle E\rangle$이지만 값은 분자당 열용량($\tfrac32k_B$ 등)으로 읽는다.</td></tr>
+  </tbody>
+</table></div>
+</article>
+</main>
+</body>
+</html>

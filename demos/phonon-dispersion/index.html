@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>1차원 사슬의 포논 분산 · Phonon dispersion of a 1D chain</title>
 <meta name="description" content="파수 q를 바꾸며 원자 사슬의 진동과 분산관계를 관찰한다 (Blundell 24.3, 연습문제 24.6)">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<script defer src="../../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../../assets/vendor/katex/contrib/auto-render.min.js"></script>
 <!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
 <script src="../../site-config.js"></script>
+<script src="../../assets/demo-embed.js"></script>
 <style>
 /* =====================================================================
  * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
@@ -164,7 +165,7 @@ canvas.viz.short{height:240px}
 
   <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
   <header class="topbar">
-    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <a class="back bi-inline" href="../../toc.html" data-i18n="back"></a>
     <div class="lang" id="langToggle" role="group" aria-label="Language">
       <button type="button" data-set-lang="ko">한국어</button>
       <button type="button" data-set-lang="en">English</button>
@@ -354,12 +355,12 @@ const I18N = {
 /* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
 const I18N_COMMON = {
   ko: {
-    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    back: '← 전체 목차', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
     hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
     footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
   },
   en: {
-    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    back: '← Contents', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
     hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
     footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
   }

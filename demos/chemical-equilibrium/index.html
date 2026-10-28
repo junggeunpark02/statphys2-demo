@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>화학 평형과 반트호프 식 · Chemical equilibrium and van 't Hoff</title>
 <meta name="description" content="ln K–1/T 직선의 기울기에서 H₂ 해리 엔탈피를 읽어 낸다 (Blundell 22.8, 예제 22.7, 그림 22.4)">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<script defer src="../../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../../assets/vendor/katex/contrib/auto-render.min.js"></script>
 <!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
 <script src="../../site-config.js"></script>
+<script src="../../assets/demo-embed.js"></script>
 <style>
 /* =====================================================================
  * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
@@ -164,7 +165,7 @@ canvas.viz.short{height:240px}
 
   <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
   <header class="topbar">
-    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <a class="back bi-inline" href="../../toc.html" data-i18n="back"></a>
     <div class="lang" id="langToggle" role="group" aria-label="Language">
       <button type="button" data-set-lang="ko">한국어</button>
       <button type="button" data-set-lang="en">English</button>
@@ -309,7 +310,7 @@ const I18N = {
     eq1: 'H₂ ⇌ 2H에서 $K=\\dfrac{(p_{\\rm H}/p^\\ominus)^2}{p_{\\rm H_2}/p^\\ominus}$ — 교재 식 (22.80), $p^\\ominus=1$ bar',
     eq2: '$\\Delta_rG^\\ominus=\\Delta_rH^\\ominus-T\\Delta_rS^\\ominus$이므로 $\\ln K=-\\dfrac{\\Delta_rH^\\ominus}{R}\\dfrac1T+\\dfrac{\\Delta_rS^\\ominus}{R}$ (기울기와 절편)',
     eq3: '분자 하나당 에너지: $\\Delta_rH^\\ominus/(N_Ae)$ (eV)',
-    explain: '$\\ln K$를 $1/T$에 대해 그리면 거의 직선이고, 기울기가 $-\\Delta_rH^\\ominus/R$이다. H₂ 해리 데이터에 직선을 맞추면 $\\Delta_rH^\\ominus\\approx440$ kJ mol$^{-1}$, 곧 분자 하나당 약 4.5 eV로 H–H 결합을 끊는 데 드는 에너지가 나온다. 기울기가 음수, 곧 $\\Delta_rH^\\ominus>0$(흡열)이므로 온도가 오르면 $K$가 커진다. 그래도 $K$가 워낙 작아서 2000 K에서도 해리되는 양은 아주 적다(왼쪽 그림). 맞춤 범위를 바꿔도 기울기가 거의 같으면, 이 온도 구간에서 $\\Delta_rH^\\ominus$가 거의 일정하다는 뜻이다.',
+    explain: '$\\ln K$를 $1/T$에 대해 그리면 거의 직선이고, 기울기가 $-\\Delta_rH^\\ominus/R$이다. H₂ 해리 데이터에 직선을 맞추면 $\\Delta_rH^\\ominus\\approx440$ kJ mol$^{-1}$, 곧 분자 하나당 약 4.5 eV로 H–H 결합을 끊는 데 드는 에너지가 나온다. 기울기가 음수, 곧 $\\Delta_rH^\\ominus>0$(흡열)이므로 온도가 오르면 $K$가 커진다. 그래도 $K$가 워낙 작아서 2000 K에서도 해리되는 양은 아주 적다(“H₂ ⇌ 2H 평형 조성” 그림). 맞춤 범위를 바꿔도 기울기가 거의 같으면, 이 온도 구간에서 $\\Delta_rH^\\ominus$가 거의 일정하다는 뜻이다.',
     src1: '22.8절 화학 퍼텐셜과 화학 반응 (한국어판 326–332쪽), 식 (22.67)–(22.89)',
     src2: '예제 22.7 수소 해리 (한국어판 332쪽) · 그림 22.4',
     src3: '관련: 연습문제 22.3 (Br₂, 그림 22.8)',
@@ -342,7 +343,7 @@ const I18N = {
     eq1: 'For H₂ ⇌ 2H: $K=\\dfrac{(p_{\\rm H}/p^\\ominus)^2}{p_{\\rm H_2}/p^\\ominus}$ — Eq. (22.80), $p^\\ominus=1$ bar',
     eq2: 'Since $\\Delta_rG^\\ominus=\\Delta_rH^\\ominus-T\\Delta_rS^\\ominus$: $\\ln K=-\\dfrac{\\Delta_rH^\\ominus}{R}\\dfrac1T+\\dfrac{\\Delta_rS^\\ominus}{R}$ (slope and intercept)',
     eq3: 'Energy per molecule: $\\Delta_rH^\\ominus/(N_Ae)$ (eV)',
-    explain: 'Plotted against $1/T$, $\\ln K$ is nearly a straight line with slope $-\\Delta_rH^\\ominus/R$. Fitting the H₂ dissociation data gives $\\Delta_rH^\\ominus\\approx440$ kJ mol$^{-1}$, about 4.5 eV per molecule — the energy needed to break the H–H bond. The slope is negative, i.e. $\\Delta_rH^\\ominus>0$ (endothermic), so $K$ grows with temperature. Still, $K$ is so small that very little dissociates even at 2000 K (picture on the left). If the slope barely changes when you move the fit range, $\\Delta_rH^\\ominus$ is nearly constant over that range.',
+    explain: 'Plotted against $1/T$, $\\ln K$ is nearly a straight line with slope $-\\Delta_rH^\\ominus/R$. Fitting the H₂ dissociation data gives $\\Delta_rH^\\ominus\\approx440$ kJ mol$^{-1}$, about 4.5 eV per molecule — the energy needed to break the H–H bond. The slope is negative, i.e. $\\Delta_rH^\\ominus>0$ (endothermic), so $K$ grows with temperature. Still, $K$ is so small that very little dissociates even at 2000 K (“H₂ ⇌ 2H equilibrium composition” panel). If the slope barely changes when you move the fit range, $\\Delta_rH^\\ominus$ is nearly constant over that range.',
     src1: '§22.8 Chemical potential and chemical reactions (Korean ed. pp. 326–332), Eqs. (22.67)–(22.89)',
     src2: 'Example 22.7 dissociation of hydrogen (Korean ed. p. 332) · Fig. 22.4',
     src3: 'Related: Exercise 22.3 (Br₂, Fig. 22.8)',
@@ -355,12 +356,12 @@ const I18N = {
 /* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
 const I18N_COMMON = {
   ko: {
-    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    back: '← 전체 목차', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
     hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
     footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
   },
   en: {
-    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    back: '← Contents', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
     hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
     footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
   }

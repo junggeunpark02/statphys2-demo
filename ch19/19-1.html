@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>19.1 등분배 정리 · 19장 에너지 등분배 · 통계역학 학습서</title>
+<meta name="description" content="볼츠만 인자에서 출발해 제곱항 하나당 평균 에너지가 ½k_BT임을 유도하고 시뮬레이션으로 확인한다. 교재 19.1절(271–275쪽).">
+<link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+<script src="../assets/book.js"></script>
+<script defer src="sim19.js"></script>
+</head>
+<body data-root="../" data-page="19.1">
+<main id="main" class="bk-main" tabindex="-1">
+<article class="bk-page">
+<p class="bk-crumb"><a href="index.html">19장 에너지 등분배</a> › 19.1</p>
+<h1 class="bk-title"><span class="no">19.1</span>등분배 정리</h1>
+<p class="bk-meta">교재 271–275쪽 · 식 19.1–19.13 · 그림 19.1, 19.2 · 예제 19.1, 19.2</p>
+<p class="bk-lang-note" hidden>새로 쓴 본문은 아직 한국어만 있습니다. 본문에 넣은 기존 데모는 고른 언어를 따릅니다. · The new study text is Korean-only for now; embedded demos follow your language choice.</p>
+<ul class="bk-flow" aria-label="이 절의 흐름">
+  <li><a href="#goals">학습 목표</a></li><li><a href="#solves">맡은 질문</a></li><li><a href="#start">출발점</a></li><li><a href="#body">본문 전개</a></li>
+  <li><a href="#verdict">결과 판정</a></li><li><a href="#examples">예제 평가</a></li><li><a href="#selfq">스스로 던질 질문</a></li><li><a href="#hand">손으로 풀기</a></li><li><a href="#notation">표기 참고</a></li>
+</ul>
+
+<h2 id="goals">학습 목표</h2>
+<ol>
+  <li>볼츠만 인자에서 출발해, 에너지가 $\alpha x^2$인 자유도 하나의 평균 에너지가 $\tfrac12k_BT$임을 적분으로 직접 보일 수 있다.</li>
+  <li>결과에서 계수 $\alpha$가 사라지는 이유를 “분포의 폭은 바뀌어도 에너지의 눈금은 $k_BT$로 같다”는 말로 설명할 수 있다.</li>
+  <li>서로 독립인 제곱항 $n$개의 합으로 넓혀 $\langle E\rangle=\tfrac n2k_BT$를 유도할 수 있다(예제 19.1).</li>
+  <li>주어진 에너지 식에서 모드(자유도)의 개수를 셀 수 있다.</li>
+</ol>
+
+<h2 id="solves">이 절이 맡은 질문</h2>
+<p><a class="qchip" href="index.html#q1">Q1</a> 열평형에서 에너지는 자유도마다 어떻게 나뉘는가? 용수철 상수나 질량 같은 세부 사항에 따라 달라지는가?</p>
+<p>이 절은 Q1에 답한다. 답은 “에너지가 어떤 변수의 제곱으로 들어가는 항이라면, 계수와 상관없이 항마다 평균 $\tfrac12k_BT$”이다. 다만 이 답이 기대는 가정 두 개가 있고, 그것은 <a href="19-3.html">19.3절</a>에서 따진다.</p>
+
+<h2 id="start">출발점</h2>
+<p>이 절의 논리는 아래 네 가지 위에 선다. 배지를 누르면 각 진술의 성격이 보인다.</p>
+<div class="claim" data-k="cite" data-ext="4장 · 식 4.13" data-note="교재 272쪽이 이 식을 인용한다.">
+  <p>온도 $T$인 열원과 열평형을 이룬 계가 에너지 $E$인 상태에 있을 확률은 볼츠만 인자 $e^{-E/k_BT}$에 비례한다.</p></div>
+<div class="claim" data-k="def"><p>$\beta\equiv\dfrac{1}{k_BT}$. 식을 짧게 쓰려고 붙인 이름이다.</p></div>
+<div class="claim" data-k="def"><p>확률분포 $P(x)$에 대한 평균은 $\langle f\rangle\equiv\int f(x)P(x)\,dx$이다.</p></div>
+<div class="claim" data-k="cite" data-ext="수학 도구 · 가우스 적분" data-note="교재 앞부분 또는 부록에서 다루는 적분이다. 정확한 식 번호는 확인하지 못했다.">
+  <p>$\displaystyle\int_{-\infty}^{\infty}e^{-u^2}du=\sqrt\pi,\qquad \int_{-\infty}^{\infty}u^2e^{-u^2}du=\frac{\sqrt\pi}{2}$</p></div>
+
+<h2 id="body">본문 전개</h2>
+
+<section class="phase" data-step="①" data-phase="상황">
+  <p>천장에 매단 용수철 끝에 질량 $m$이 달려 있다(그림 19.1). 평형 위치에서 잰 변위를 $x$, 속도를 $v$라 하자.</p>
+  <div class="claim" data-k="def" id="eq-19-1"><div class="eq"><div class="m">$$E_{\rm KE}=\tfrac12mv^2$$</div><a class="eqno" href="#eq-19-1">(19.1)</a></div></div>
+  <div class="claim" data-k="model" id="eq-19-2"><div class="eq"><div class="m">$$E_{\rm PE}=\tfrac12kx^2$$</div><a class="eqno" href="#eq-19-2">(19.2)</a></div>
+    <p>훅 법칙을 따르는 이상적인 용수철을 골랐다. 중력은 평형 위치를 옮길 뿐이므로 $x$를 평형점에서 재면 식에 나타나지 않는다.</p></div>
+  <div class="claim" data-k="def" id="eq-19-3"><div class="eq"><div class="m">$$E=E_{\rm KE}+E_{\rm PE}=\tfrac12mv^2+\tfrac12kx^2$$</div><a class="eqno" href="#eq-19-3">(19.3)</a></div></div>
+  <p>홀로 있는 진동자라면 $E$는 그대로이고, 운동 에너지와 퍼텐셜 에너지가 번갈아 주고받을 뿐이다. 이제 이 장치를 공기 같은 주변 매질 속에 넣어 둔다고 하자.</p>
+  <div class="claim" data-k="model"><p>주변 매질은 아주 큰 열원이어서 온도 $T$가 변하지 않는다. 열원은 진동자와 에너지를 주고받기만 하고, 식 (19.3)의 꼴 자체는 바꾸지 않을 만큼 약하게 연결되어 있다.</p></div>
+  <p>그러면 질량은 주변 분자에 무작위로 떠밀려 에너지를 얻기도 하고 잃기도 한다. 오래 기다린 뒤, <b>평균적으로</b> 운동 에너지와 퍼텐셜 에너지에는 각각 얼마가 들어 있을까?</p>
+</section>
+
+<section class="phase" data-step="②" data-phase="관찰">
+  <figure class="sim-fig" id="sim-spring">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>열원 온도 $T$, 용수철 상수 $k$, 질량 $m$, 시간 빠르기.</span></p>
+      <p><b>무엇을 보라</b><span>옅은 막대(지금 값)는 0과 몇 $k_BT$ 사이를 크게 오간다. 굵은 선(누적 평균)이 어디에 멈추는지, 운동과 퍼텐셜이 서로 같아지는지 보라.</span></p>
+      <p data-choices="4배가 된다|2배가 된다|그대로다|1/4이 된다" data-answer="그대로다" data-why="용수철이 단단해지면 흔들리는 폭 $x_{\rm rms}$가 절반으로 줄어, $\tfrac12kx^2$의 평균은 여전히 $\tfrac12k_BT$이다. 타일의 $x_{\rm rms}$가 줄어드는 것도 확인하라."><b>먼저 예상해 보라</b><span>$k$를 4배로 키우면 $\langle E_{\rm PE}\rangle/k_BT$는?</span></p>
+    </div>
+    <figcaption><b>그림 19.1을 움직이게 다시 그림.</b> 질량은 열원의 무작위 힘과 마찰을 함께 받는다(랑주뱅 동역학). 이 둘의 크기는 서로 맞물리게 정해 두었으므로, 오래 지켜본 시간 평균은 열평형 평균과 같다. 막대의 단위는 그때의 $k_BT$이다.</figcaption>
+  </figure>
+  <p>무엇을 바꾸어도 두 평균이 $\tfrac12$ 근처로 모인다. 특히 $k$나 $m$을 바꾸면 흔들리는 폭과 속력은 크게 달라지는데, 에너지의 평균은 달라지지 않는다. 이 사실을 식으로 설명해 보자.</p>
+</section>
+
+<section class="phase" data-step="③" data-phase="식 세우기">
+  <p>운동 에너지와 퍼텐셜 에너지는 둘 다 “어떤 변수의 제곱 × 양의 상수”이다. 그래서 하나로 묶어 다룬다.</p>
+  <div class="claim" data-k="model" id="eq-19-4"><div class="eq"><div class="m">$$E=\alpha x^2,\qquad \alpha>0$$</div><a class="eqno" href="#eq-19-4">(19.4)</a></div>
+    <p>$x$는 $-\infty$에서 $\infty$까지 끊김 없이(연속으로) 변할 수 있는 변수다. 그림 19.2의 포물선이 이 에너지다.</p></div>
+  <div class="claim" data-k="axiom"><p>$x$의 값은 미리 따질 때 어느 것이나 똑같이 가능하다. 곧 같은 폭 $dx$ 안에는 같은 수의 상태가 있다고 센다. 확률에 차이를 만드는 것은 오직 볼츠만 인자뿐이다.</p></div>
+  <div class="claim" data-k="cite" data-ext="4장 · 식 4.13" data-note="볼츠만 인자"><p>그래서 $x$가 $x$와 $x+dx$ 사이에 있을 확률은 $e^{-\beta\alpha x^2}dx$에 비례한다.</p></div>
+  <div class="claim" data-k="derived" id="eq-19-5"><div class="eq"><div class="m">$$P(x)=\frac{e^{-\beta\alpha x^2}}{\int_{-\infty}^{\infty}e^{-\beta\alpha x^2}\,dx}$$</div><a class="eqno" href="#eq-19-5">(19.5)</a></div>
+    <p>확률을 모두 더하면 1이어야 한다는 조건($\int P\,dx=1$)으로 분모가 정해진다.</p></div>
+  <p>평균의 정의에 넣고, 변수를 $u=\sqrt{\beta\alpha}\,x$로 바꾼다. 그러면 $\alpha x^2=u^2/\beta$이고 $dx=du/\sqrt{\beta\alpha}$인데, $dx$의 인자는 분자와 분모에 똑같이 나타나 약분된다.</p>
+  <div class="claim" data-k="derived"><div class="eq"><div class="m">$$\langle E\rangle=\frac{\int\alpha x^2e^{-\beta\alpha x^2}dx}{\int e^{-\beta\alpha x^2}dx}=\frac1\beta\,\frac{\int u^2e^{-u^2}du}{\int e^{-u^2}du}=\frac1\beta\cdot\frac{\sqrt\pi/2}{\sqrt\pi}$$</div></div>
+    <p>가운데 식에 $\alpha$가 한 번도 남지 않는다. 이것이 결과가 $\alpha$와 무관한 수학적 이유다.</p></div>
+</section>
+
+<section class="phase" data-step="④" data-phase="결과">
+  <div class="claim box key" data-k="derived" id="eq-19-6"><div class="eq"><div class="m">$$\langle E\rangle=\frac{1}{2\beta}=\tfrac12k_BT$$</div><a class="eqno" href="#eq-19-6">(19.6)</a></div>
+    <p>에너지가 한 변수의 제곱인 항은 열평형에서 평균 $\tfrac12k_BT$를 갖는다. 용수철 상수, 질량 같은 계수는 들어가지 않는다.</p></div>
+  <p>물리적으로 보면 이렇다. $\alpha$가 크면(단단한 용수철) 같은 에너지로 갈 수 있는 $x$의 범위가 좁아져 분포가 좁아지고, $\alpha$가 작으면 넓어진다. 폭은 $\alpha$에 따라 바뀌지만, 그 폭을 에너지로 환산하면 언제나 $k_BT$ 규모다. 덧붙여 같은 계산에서 다음도 나온다.</p>
+  <div class="claim" data-k="derived"><p>$\langle x^2\rangle=\dfrac{\langle E\rangle}{\alpha}=\dfrac{k_BT}{2\alpha}$. 단단할수록 덜 흔들린다. (연습문제 19.4가 이것을 여러 변수로 묻는다.)</p></div>
+
+  <h3 class="subhead"><span class="no">예제 19.1</span>제곱항이 여러 개일 때</h3>
+  <div class="claim" data-k="model" id="eq-19-7"><div class="eq"><div class="m">$$E=\sum_{i=1}^{n}\alpha_ix_i^2$$</div><a class="eqno" href="#eq-19-7">(19.7)</a></div>
+    <p>각 $x_i$는 서로 독립이고, 저마다 실수 전체에서 연속으로 변한다.</p></div>
+  <div class="claim" data-k="derived" id="eq-19-11"><p>결정적인 한 단계는 지수함수의 성질 $e^{-\beta\sum_j\alpha_jx_j^2}=\prod_j e^{-\beta\alpha_jx_j^2}$이다. 이 덕분에 $n$겹 적분(식 19.8–19.10)은 1차원 적분의 곱으로 쪼개지고, $i$번째 항에서 $x_i$가 아닌 변수의 적분은 분자와 분모에서 모두 약분된다.</p>
+    <div class="eq"><div class="m">$$\langle E\rangle=\sum_{i=1}^{n}\frac{\int\alpha_ix_i^2e^{-\beta\alpha_ix_i^2}dx_i}{\int e^{-\beta\alpha_ix_i^2}dx_i}$$</div><a class="eqno" href="#eq-19-11">(19.11)</a></div></div>
+  <div class="claim" data-k="derived" id="eq-19-12"><p>합의 각 항은 식 (19.6)과 똑같은 모양이다.</p>
+    <div class="eq"><div class="m">$$\langle E\rangle=\sum_{i=1}^{n}\alpha_i\langle x_i^2\rangle=\sum_{i=1}^{n}\tfrac12k_BT=\frac n2k_BT$$</div><a class="eqno" href="#eq-19-12">(19.12)</a></div></div>
+  <div class="claim" data-k="def"><p>에너지 식에 들어 있는 제곱항 하나를 계의 <b>모드</b>라 하고, 교재는 같은 뜻으로 <b>자유도</b>라고도 부른다(274쪽). 용수철에 매단 질량은 $v$의 제곱과 $x$의 제곱, 모드 2개를 갖는다.</p></div>
+  <div class="claim box key" data-k="derived" id="theorem"><h4>등분배 정리</h4>
+    <p>고전적인 계의 에너지가 서로 독립인 제곱 모드 $n$개의 합이고, 계가 온도 $T$인 열원과 평형을 이루고 있으면, 계의 평균 에너지는 $n\times\tfrac12k_BT$이다. 에너지는 모드 사이에 똑같이 나뉘고, 모드마다 정확히 $\tfrac12k_BT$를 갖는다.</p></div>
+</section>
+
+<section class="phase" data-step="⑤" data-phase="확인">
+  <figure class="sim-fig" id="sim-modes">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>제곱항 수 $n$, 계수 $\alpha_i$ 섞기. ‘평균 에너지와 제곱항 수’ 그래프를 누르면 그 $n$으로 바뀐다.</span></p>
+      <p><b>무엇을 보라</b><span>우물마다 폭이 다르다. 그런데 공이 머무는 높이(에너지)의 평균이 모드마다 같은지, 전체 평균이 $n/2$ 선에 올라오는지 보라.</span></p>
+      <p data-choices="α가 큰 모드|α가 작은 모드|같다" data-answer="같다" data-why="$\alpha$가 큰 우물은 좁아서 공이 덜 벗어나지만, 에너지로 따지면 평균 $\tfrac12k_BT$로 같다(식 19.12). 막대 그래프의 높이를 비교해 보라."><b>먼저 예상해 보라</b><span>계수가 100배 다른 두 모드 가운데 평균 에너지가 큰 쪽은?</span></p>
+    </div>
+    <figcaption><b>예제 19.1을 그림으로.</b> 모드 하나를 작은 포물선 우물 속 공으로 그렸다. 공의 움직임은 볼츠만 분포를 정확히 따르는 무작위 과정이고, 평균은 볼츠만 분포에서 직접 뽑은 표본으로 계산한다. $k_BT=1$ 단위.</figcaption>
+  </figure>
+
+  <figure class="sim-fig" id="fig-19-2">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>에너지의 꼴($\alpha x^2$, $\alpha|x|$, $\alpha x^4$), 계수 $\alpha$, 온도. 아래 두 그래프는 누르면 그 온도·$\alpha$로 이동한다.</span></p>
+      <p><b>무엇을 보라</b><span>$\alpha$를 키우면 히스토그램은 좁아지는데 누적 평균 $\langle E\rangle/k_BT$는 그대로인지 보라. 에너지 꼴을 바꾸면 그 값이 어떻게 달라지는지도 보라.</span></p>
+      <p data-choices="½보다 크다|½이다|½보다 작다" data-answer="½보다 작다" data-why="4차 꼴이면 평균은 $\tfrac14k_BT$이다(교재 280쪽 각주 4, 연습문제 19.6). $\tfrac12$은 제곱 꼴에서만 나오는 값이다."><b>먼저 예상해 보라</b><span>에너지가 $\alpha x^4$ 꼴이면 $\langle E\rangle/k_BT$는?</span></p>
+    </div>
+    <div class="bk-embed" data-demo="equipartition" data-label="기존 데모 #1 · 에너지 등분배 정리 (그림 19.2를 표본과 함께 움직이게 그림)"></div>
+    <figcaption><b>그림 19.2(에너지 $E=\alpha x^2$)의 움직이는 버전.</b> 볼츠만 분포에서 표본을 뽑아 포물선 위에 찍고, 히스토그램을 정확한 $P(x)$와 비교한다.</figcaption>
+  </figure>
+
+  <h3 class="subhead"><span class="no">예제 19.2</span>$k_BT$는 얼마나 큰가</h3>
+  <div class="claim" data-k="derived" id="eq-19-13"><div class="eq"><div class="m">$$\langle E\rangle=2\times\tfrac12k_BT=k_BT$$</div><a class="eqno" href="#eq-19-13">(19.13)</a></div>
+    <p>용수철에 매단 질량은 모드가 2개이므로 평균 에너지는 $k_BT$이다.</p></div>
+  <div class="claim" data-k="def"><p>$k_B=1.380649\times10^{-23}\ \mathrm{J\,K^{-1}}$. 2019년 SI 개정 이후 정의로 정해진 정확한 값이다.</p></div>
+  <div class="claim" data-k="derived"><p>$T=300$ K이면 $k_BT=4.14\times10^{-21}$ J $=0.0259$ eV이다. 교재는 이를 어림해 $4\times10^{-21}$ J, $0.025$ eV로 적었다(275쪽).</p></div>
+  <p>이 값은 손으로 들 수 있는 물체에는 아무것도 아니다. 10 kg짜리 질량이 용수철 방향으로 갖는 열적 속력은 $\sqrt{k_BT/m}\approx2\times10^{-11}$ m/s에 불과하다(손으로 풀기 2번). 하지만 등분배 정리에는 계의 크기가 들어 있지 않으므로, 화학 결합에 매달린 원자 하나도 같은 $k_BT$를 받는다. 원자에게 0.026 eV는 눈에 띄게 흔들릴 만한 에너지다. 이 대비가 <a href="19-4.html">19.4절</a> 브라운 운동의 열쇠다.</p>
+</section>
+
+<h2 id="verdict">결과 판정</h2>
+<ul class="verdict" aria-label="결과 판정">
+  <li><b>해결됨</b>질문이 이 절로 완전히 답해짐</li>
+  <li class="on"><b>새 문제 발생</b>해결하면서 새 의문이 생김</li>
+  <li><b>추후 논의</b>근사·제한이 남아 뒤에서 다룸</li>
+</ul>
+<p>Q1의 답, “제곱항 하나당 $\tfrac12k_BT$”는 얻었다. 그런데 적분을 하면서 두 가지를 조용히 가정했다. 첫째, $x$가 실수 전체에서 연속으로 변한다. 둘째, 에너지가 정확히 제곱 꼴이다. 양자역학에서 진동자의 에너지는 띄엄띄엄하고, 실제 원자 사이의 퍼텐셜은 포물선이 아니다. 그렇다면 이 정리는 언제 깨지는가? 이 의문은 <a href="19-3.html">19.3절</a>에서 다루고, 띄엄띄엄한 준위에서 평균 에너지를 정확히 계산하는 방법은 <a class="loc" href="../ch20/20-2.html#eq-20-29">[20.2절 · 식 20.29]</a>와 <a class="loc" href="../ch20/20-3.html">[20.3절]</a>에서 나온다.</p>
+
+<h2 id="examples">예제 평가</h2>
+<article class="exeval" id="ex-19-1">
+  <header><h3>예제 19.1 · 제곱항 n개의 평균 에너지 (273–274쪽)</h3><span class="stars" aria-label="중요도 3/3">★★★</span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>반드시 손으로. 등분배 정리의 일반형이 바로 이 예제의 결과다. 특히 $n$겹 적분이 지수함수의 곱으로 쪼개져 1차원 적분으로 줄어드는 단계(식 19.9 → 19.11)는 앞으로 분배함수가 곱으로 쪼개지는 논리(<a class="loc" href="../ch20/20-4.html">[20.4절]</a>)와 같은 뿌리다.</dd>
+    <dt>연습문제와의 관계</dt><dd>연습문제 19.4($\langle x_i^2\rangle=k_BT/2\alpha_i$)는 이 예제의 한 줄 변형이므로 바로 이어서 풀 것. 19.5($E=\alpha|x|$), 19.6($E=\alpha|x|^n$)은 같은 적분을 제곱이 아닌 꼴에 적용한다. 세 문제를 한 번에 풀면 “½은 제곱 꼴의 지문”이라는 점이 확실해진다.</dd>
+    <dt>솔직한 평가</dt><dd>개념의 핵심이면서 시험에 자주 나오는 “평균 에너지를 구하라” 유형의 원형이다. 계산 자체는 짧으므로, 변수 치환으로 $\alpha$가 사라지는 과정을 말로 설명할 수 있을 때까지 연습할 것.</dd>
+  </dl>
+</article>
+<article class="exeval" id="ex-19-2">
+  <header><h3>예제 19.2 · 용수철 질량과 상온의 $k_BT$ (275쪽)</h3><span class="stars" aria-label="중요도 2/3">★★<span class="off">★</span></span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>흐름만 따라가도 된다. 계산은 $2\times\tfrac12k_BT$ 한 줄이다. 가치는 크기 감각, 곧 상온에서 $k_BT\approx0.026$ eV라는 숫자와 “등분배는 계의 크기와 무관하다”는 메시지에 있다.</dd>
+    <dt>연습문제와의 관계</dt><dd>연습문제 19.1(기체 원자의 평균 에너지를 eV로)과 같이 풀면 J ↔ eV 환산을 한 번에 익힌다.</dd>
+    <dt>솔직한 평가</dt><dd>계산 연습용으로는 가볍다. 시험에서는 단위 환산이나 “이 에너지로 무엇이 흔들리는가”를 묻는 짧은 서술형으로 나올 수 있다. $k_BT(300\,\mathrm K)$ 값은 외워 둘 것.</dd>
+  </dl>
+</article>
+<p>두 예제의 파이썬 풀이는 <a href="https://colab.research.google.com/github/junggeunpark02/statphys2-demo/blob/main/notebooks/ch19_equipartition.ipynb" target="_blank" rel="noopener">Colab 노트북 (19장)</a>에 있다.</p>
+
+<h2 id="selfq">스스로 던질 질문</h2>
+<div class="selfq">
+  <details><summary>왜 계수 $\alpha$가 결과에서 사라지는가?</summary><div><p>$u=\sqrt{\beta\alpha}\,x$로 치환하면 $\alpha$는 $x$의 눈금을 바꾸는 역할만 한다. 분자와 분모가 같은 인자 $1/\sqrt{\beta\alpha}$를 얻어 약분되고, 남는 것은 $1/\beta$뿐이다. 물리적으로는 단단할수록 덜 흔들려 에너지 규모가 그대로 $k_BT$이기 때문이다.</p></div></details>
+  <details><summary>$x$가 0부터 $\infty$까지만 가능하다면 결과가 바뀌는가?</summary><div><p>바뀌지 않는다. 피적분함수가 짝함수라 분자와 분모가 모두 정확히 절반이 되기 때문이다. 결과를 정하는 것은 적분 범위의 대칭이 아니라 “연속이고 제곱 꼴”이라는 점이다.</p></div></details>
+  <details><summary>평균이 $\tfrac12k_BT$라는 것은 매 순간 그만큼 갖는다는 뜻인가?</summary><div><p>아니다. 한 모드의 에너지는 크게 요동친다. $E=\alpha x^2$의 표준편차는 $k_BT/\sqrt2\approx0.71k_BT$로 평균보다도 크다. 첫 시뮬레이션의 옅은 막대가 0 근처와 2–3 $k_BT$ 사이를 오가는 것이 그 모습이다. 정리가 말하는 것은 시간(또는 앙상블) 평균이다.</p></div></details>
+  <details><summary>에너지가 $\alpha x^4$이면 평균은 얼마일까?</summary><div><p>$\tfrac14k_BT$이다. 같은 치환을 $u=(\beta\alpha)^{1/4}x$로 하면 지수의 거듭제곱이 결과의 분모에 들어간다(연습문제 19.6에서 $\xi=1/n$). 그러므로 “모드당 $\tfrac12k_BT$”는 제곱 꼴에만 쓸 수 있다. 실제 퍼텐셜이 제곱 꼴에 얼마나 가까운지는 19.3절의 질문이다.</p></div></details>
+  <details><summary>두 원자로 된 분자는 모드가 몇 개인가? 5개일까 7개일까?</summary><div><p>분자의 운동을 어떤 제곱항들로 쓰느냐에 달렸다. <a href="19-2.html">19.2절</a>에서 병진·회전·진동 항을 직접 세어 보고, 측정값이 어느 쪽과 맞는지 비교한다. 그 답이 왜 온도에 따라 바뀌는지는 <a href="19-3.html">19.3절</a>에서 다룬다.</p></div></details>
+</div>
+
+<h2 id="hand">손으로 풀기</h2>
+<div class="hand" id="h1911" data-answer="45.5" data-tol="0.02" data-unit="pm">
+  <header><b>문항 1</b><span>용수철의 열적 흔들림</span></header>
+  <p>용수철 상수 $k=2.0$ N/m인 용수철에 매단 질량이 300 K 열원과 평형을 이룬다. 변위의 제곱평균제곱근 $x_{\rm rms}=\sqrt{\langle x^2\rangle}$을 피코미터(pm) 단위로 구하라.</p>
+  <div class="hand-sim" data-sim="spring" data-set='{"T":300,"k":2,"m":1}' data-read="xrms" data-label="시뮬레이션의 $x_{\rm rms}$"></div>
+  <details><summary>풀이</summary><p>$\langle\tfrac12kx^2\rangle=\tfrac12k_BT$이므로 $\langle x^2\rangle=k_BT/k=4.142\times10^{-21}/2.0=2.071\times10^{-21}\ \mathrm{m^2}$. $x_{\rm rms}=4.55\times10^{-11}$ m $=45.5$ pm. 원자 하나의 크기(약 100 pm)보다 작다.</p></details>
+</div>
+<div class="hand" id="h1912" data-answer="2.04e-11" data-tol="0.02" data-unit="m/s">
+  <header><b>문항 2</b><span>예제 19.2의 10 kg 질량</span></header>
+  <p>질량 10 kg이 용수철에 매달려 300 K에서 평형을 이룬다. 용수철 방향 속도의 제곱평균제곱근 $v_{\rm rms}=\sqrt{\langle v^2\rangle}$을 m/s 단위로 구하라.</p>
+  <div class="hand-sim" data-sim="spring" data-set='{"T":300,"k":1,"m":10}' data-read="vrms" data-label="시뮬레이션의 $v_{\rm rms}$"></div>
+  <details><summary>풀이</summary><p>$\tfrac12m\langle v^2\rangle=\tfrac12k_BT$이므로 $v_{\rm rms}=\sqrt{k_BT/m}=\sqrt{4.142\times10^{-21}/10}=2.04\times10^{-11}$ m/s. $k$와는 무관하다. 시뮬레이션에서 $k$를 바꾸어도 이 값이 변하지 않는지 확인하라.</p></details>
+</div>
+<div class="hand" id="h1913" data-answer="40" data-tol="0.03">
+  <header><b>문항 3</b><span>제곱항 세 개</span></header>
+  <p>에너지가 $E=3x^2+0.5y^2+20z^2$(단위는 생략)인 계가 열평형에 있다. 평균의 비 $\langle y^2\rangle/\langle z^2\rangle$을 구하라.</p>
+  <div class="hand-sim" data-sim="modes" data-set='{"alphas":[3,0.5,20]}' data-read="ratio:1:2" data-label="시뮬레이션의 $\langle x_2^2\rangle/\langle x_3^2\rangle$"></div>
+  <details><summary>풀이</summary><p>모드마다 $\alpha_i\langle x_i^2\rangle=\tfrac12k_BT$이므로 $\langle x_i^2\rangle\propto1/\alpha_i$. $\langle y^2\rangle/\langle z^2\rangle=20/0.5=40$. 계수가 작은 방향으로 훨씬 크게 흔들리지만 에너지는 같다.</p></details>
+</div>
+
+<h2 id="notation">표기 참고</h2>
+<div class="bk-table-wrap"><table class="bk-table">
+  <thead><tr><th>이 학습서 (교재 한국어판)</th><th>강의·다른 표기</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr><td>제곱항의 계수 $\alpha$</td><td>$a$</td><td>강의 3주차 부록 표기(기존 데모 #1의 표기 참고에 적힌 내용). 뜻은 같다.</td></tr>
+    <tr><td>제곱항</td><td>이차항</td><td>교재는 “제곱항”으로 쓴다(273–274쪽).</td></tr>
+    <tr><td>모드 = 자유도</td><td>—</td><td>교재 274쪽이 두 말을 같은 뜻으로 쓴다. 19.2절부터는 개수를 $f$로 적는다.</td></tr>
+    <tr><td>열원 (heat bath)</td><td>열저장고</td><td>이 학습서는 교재 272쪽 표기인 ‘열원’을 쓴다. ‘열저장고’는 다른 책의 표기다.</td></tr>
+  </tbody>
+</table></div>
+</article>
+</main>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>19.3 사용된 가정 · 19장 에너지 등분배 · 통계역학 학습서</title>
+<meta name="description" content="등분배 정리의 두 가정(연속 변수, 제곱 꼴)이 언제 깨지는지 양자화된 준위와 비조화 퍼텐셜로 확인한다. 교재 19.3절(278–280쪽).">
+<link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+<script src="../assets/book.js"></script>
+<script defer src="sim19.js"></script>
+</head>
+<body data-root="../" data-page="19.3">
+<main id="main" class="bk-main" tabindex="-1">
+<article class="bk-page">
+<p class="bk-crumb"><a href="index.html">19장 에너지 등분배</a> › 19.3</p>
+<h1 class="bk-title"><span class="no">19.3</span>사용된 가정</h1>
+<p class="bk-meta">교재 278–280쪽 · 식 19.26–19.27 · 그림 19.7 · 교재 예제 없음</p>
+<p class="bk-lang-note" hidden>새로 쓴 본문은 아직 한국어만 있습니다. 본문에 넣은 기존 데모는 고른 언어를 따릅니다. · The new study text is Korean-only for now.</p>
+<ul class="bk-flow" aria-label="이 절의 흐름">
+  <li><a href="#goals">학습 목표</a></li><li><a href="#solves">맡은 질문</a></li><li><a href="#start">출발점</a></li><li><a href="#body">본문 전개</a></li>
+  <li><a href="#verdict">결과 판정</a></li><li><a href="#examples">예제 평가</a></li><li><a href="#selfq">스스로 던질 질문</a></li><li><a href="#hand">손으로 풀기</a></li><li><a href="#notation">표기 참고</a></li>
+</ul>
+
+<h2 id="goals">학습 목표</h2>
+<ol>
+  <li>19.1절의 유도에 숨어 있던 두 가정, 곧 변수가 연속이라는 것과 에너지가 정확히 제곱 꼴이라는 것을 찾아 말할 수 있다.</li>
+  <li>$k_BT$와 준위 간격 $\hbar\omega$를 비교해 어떤 자유도가 “얼어붙었는지” 판정할 수 있다.</li>
+  <li>퍼텐셜을 최솟값 둘레에서 테일러 전개해(식 19.26–19.27) 조화 근사가 성립하는 조건을 설명할 수 있다.</li>
+  <li>등분배 정리를 쓸 수 있는 온도 범위가 아래(양자화)와 위(비조화)에서 각각 어떻게 막히는지 설명할 수 있다.</li>
+</ol>
+
+<h2 id="solves">이 절이 맡은 질문</h2>
+<p><a class="qchip" href="index.html#q3">Q3</a> 그 규칙은 언제, 왜 틀리는가? 어떤 가정 위에 서 있는가?</p>
+<p>19.2절에서 남은 어긋남, 곧 상온의 이원자 기체가 $f=7$이 아니라 $f=5$처럼 행동하는 이유를 이 절에서 설명한다. 다만 “얼마나” 줄어드는지 온도 전체에서 계산하는 일은 분배함수가 필요하므로 20장으로 넘어간다.</p>
+
+<h2 id="start">출발점</h2>
+<div class="claim" data-k="cite" data-ref="19-1.html#eq-19-5" data-ref-label="19.1절 · 식 19.5–19.6"><p>제곱항의 평균 $\tfrac12k_BT$는 $x$에 대한 연속 적분, 그리고 에너지 $\alpha x^2$에서 나왔다.</p></div>
+<div class="claim" data-k="cite" data-ext="양자역학 · 조화 진동자" data-note="교재 279쪽이 결과만 가져다 쓴다."><p>진동수 $\omega$인 양자 조화 진동자의 에너지 준위는 $E_n=(n+\tfrac12)\hbar\omega$, $n=0,1,2,\dots$이다.</p></div>
+<div class="claim" data-k="cite" data-ext="부록 B · 테일러 전개" data-note="교재 279쪽 각주 3이 가리킨다."><p>매끄러운 함수는 한 점 둘레에서 거듭제곱 급수로 전개할 수 있다.</p></div>
+<div class="claim" data-k="cite" data-ref="19-2.html#verdict" data-ref-label="19.2절 · 결과 판정"><p>298 K에서 N₂, O₂, H₂의 $C_p$는 $f=5$에 맞는다.</p></div>
+
+<h2 id="body">본문 전개</h2>
+
+<h3 class="subhead" id="assume1"><span class="no">가정 1</span>변수는 연속으로 변한다</h3>
+<section class="phase" data-step="①" data-phase="상황">
+  <p>19.1절의 적분은 $x$가 실수 전체를 빈틈없이 지난다고 보았다. 그런데 양자역학에서 용수철에 매단 질량의 에너지는 $\hbar\omega$ 간격으로만 있을 수 있다. 계단의 한 칸이 열에너지 $k_BT$보다 훨씬 낮으면 계단은 비탈처럼 느껴질 것이다. 반대로 한 칸이 $k_BT$보다 훨씬 높으면?</p>
+</section>
+<section class="phase" data-step="②" data-phase="관찰">
+  <figure class="sim-fig" id="sim-ladder">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>열에너지와 준위 간격의 비 $k_BT/\hbar\omega$. 아래 두 그래프를 누르면 그 값으로 이동한다.</span></p>
+      <p><b>무엇을 보라</b><span>공이 첫 칸 위로 얼마나 자주 올라가는지, 양자 평균 에너지(실선)가 고전값 $k_BT$(점선)에서 언제 벗어나는지, 열용량이 언제 1에서 0으로 떨어지는지 보라.</span></p>
+      <p data-choices="거의 100%|약 58%|약 10%" data-answer="약 58%" data-why="$x=\hbar\omega/k_BT=1$이면 영점 위의 열에너지는 고전값의 $x/(e^x-1)=1/(e-1)\approx0.58$배다. 간격과 $k_BT$가 같기만 해도 벌써 40% 넘게 모자란다."><b>먼저 예상해 보라</b><span>$k_BT=\hbar\omega$일 때, 열로 얻은 평균 에너지($\langle E\rangle-\tfrac12\hbar\omega$)는 고전값 $k_BT$의 몇 %일까?</span></p>
+    </div>
+    <figcaption><b>가정 1을 눈으로.</b> 공은 한 칸씩 오르내리며, 올라갈 때는 확률 $e^{-\hbar\omega/k_BT}$로만 성공한다(메트로폴리스 규칙). 오래 지켜보면 공이 머문 비율(점)이 볼츠만 확률(막대)에 맞는다. 오른쪽 띠는 같은 온도에서 연속 에너지를 가정한 고전 분포다.</figcaption>
+  </figure>
+</section>
+<section class="phase" data-step="③" data-phase="식 세우기">
+  <div class="claim" data-k="cite" data-ext="양자역학 · 조화 진동자"><p>$E_n=(n+\tfrac12)\hbar\omega$, $n=0,1,2,\dots$</p></div>
+  <div class="claim" data-k="cite" data-ext="4장 · 식 4.13"><p>준위 $n$에 있을 확률은 $e^{-\beta E_n}$에 비례한다. 19.1절과 같은 출발점이며, 바뀐 것은 적분이 합으로 바뀐 것뿐이다.</p></div>
+  <p>$q=e^{-\beta\hbar\omega}$라 두면 $P_n=(1-q)q^n$이다. 등비급수 $\sum_nq^n=1/(1-q)$를 $q$로 미분하면 $\sum_nnq^n=q/(1-q)^2$이므로</p>
+  <div class="claim" data-k="derived" id="eq-q-mean"><div class="eq"><div class="m">$$\langle n\rangle=\frac{q}{1-q}=\frac{1}{e^{\beta\hbar\omega}-1},\qquad \langle E\rangle=\hbar\omega\left(\frac12+\frac{1}{e^{\beta\hbar\omega}-1}\right)$$</div><span class="eqno site">교재 식 20.29와 같은 결과</span></div>
+    <p>20장은 같은 식을 분배함수로 다시 얻는다(<a class="loc" href="../ch20/20-2.html#eq-20-29">[20.2절 · 식 20.29]</a>). 여기서는 등비급수만으로 충분하다.</p></div>
+</section>
+<section class="phase" data-step="④" data-phase="결과">
+  <div class="claim" data-k="approx" data-cond="$k_BT\gg\hbar\omega$"><p>$\dfrac{1}{e^x-1}\approx\dfrac1x-\dfrac12+\dfrac{x}{12}$ ($x=\beta\hbar\omega\ll1$)을 넣으면 $\langle E\rangle\approx k_BT\left(1+\dfrac{x^2}{12}\right)\to k_BT$. 모드 2개의 등분배 값이 돌아온다.</p></div>
+  <div class="claim" data-k="approx" data-cond="$k_BT\ll\hbar\omega$"><p>$\langle E\rangle\approx\tfrac12\hbar\omega+\hbar\omega e^{-\hbar\omega/k_BT}$. 열로 얻는 몫이 지수적으로 0에 가고, 열용량도 0으로 간다. 이 자유도는 <b>얼어붙었다</b>.</p></div>
+  <div class="claim box key" data-k="derived" id="highT"><h4>등분배 정리는 고온 극한이다</h4>
+    <p>등분배 정리는 양자화된 에너지 준위 사이의 간격보다 열에너지 $k_BT$가 클 때만 맞는다. 더 정확한 이론의 고온 극한으로 보아야 한다(교재 279쪽 상자의 내용).</p></div>
+  <p>이것으로 19.2절의 두 수수께끼가 풀린다. 이원자 분자의 진동 간격은 상온 $k_BT$보다 훨씬 커서 진동 두 모드가 얼어 있고, 그래서 $f=5$로 행동한다. 결합축 둘레의 회전은 관성모멘트가 아주 작아 준위 간격이 아주 크고, 그래서 처음부터 셀 필요가 없었다.</p>
+</section>
+<section class="phase" data-step="⑤" data-phase="확인">
+  <figure class="sim-fig" id="fig-diatomic-demo">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>온도 $T$, 회전·진동 특성온도 $\theta_{\rm rot}$, $\theta_{\rm vib}$. 그래프를 누르면 그 온도로 이동한다.</span></p>
+      <p><b>무엇을 보라</b><span>$C_V/R$가 $\tfrac32\to\tfrac52\to\tfrac72$로 계단을 이루는지, 계단이 각 특성온도 근처에서 오르는지 보라.</span></p>
+      <p data-choices="3/2|5/2|7/2" data-answer="5/2" data-why="$T=300$ K는 $\theta_{\rm vib}=3000$ K보다 훨씬 낮아 진동은 얼어 있고, 회전은 $\theta_{\rm rot}$보다 충분히 높아 다 들떠 있다. 그래서 $\tfrac52$이다."><b>먼저 예상해 보라</b><span>$\theta_{\rm rot}$가 수 K, $\theta_{\rm vib}=3000$ K인 기체의 300 K에서 $C_V/R$는?</span></p>
+    </div>
+    <div class="bk-embed" data-demo="diatomic-heat-capacity" data-label="기존 데모 #7 · 이원자 기체의 열용량 (21.6절 그림 21.5 미리 보기)"></div>
+    <figcaption><b>얼어붙음이 만드는 계단.</b> 이 데모의 계산식(분배함수의 곱)은 <a class="loc" href="../ch21/21-6.html">[21.6절]</a>에서 정식으로 유도한다. 여기서는 “간격 대 $k_BT$”라는 판정 기준만 확인하면 된다.</figcaption>
+  </figure>
+  <div class="claim" data-k="exp" data-src="교재 그림 21.6(314쪽), H₂의 측정값"><p>H₂의 $C_V$는 저온에서 $\tfrac32R$ 근처에 있다가, 온도가 오르며 300 K 부근에서 $\tfrac52R$에 다가간다. 수소 분자는 관성모멘트가 가장 작아 회전마저 저온에서 얼어붙는 예다.</p></div>
+</section>
+
+<h3 class="subhead" id="assume2"><span class="no">가정 2</span>에너지는 정확히 제곱 꼴이다</h3>
+<section class="phase" data-step="①" data-phase="상황">
+  <p>원자 사이의 실제 퍼텐셜은 포물선이 아니다. 그림 19.7처럼 최솟값 $x_0$ 한쪽은 가파르고 다른 쪽은 완만하며, 멀리 가면 다른 모양이 나타난다. 이런 우물에 갇힌 원자는 평균 퍼텐셜 에너지로 $\tfrac12k_BT$를 받을까?</p>
+</section>
+<section class="phase" data-step="②" data-phase="관찰">
+  <figure class="sim-fig" id="sim-well">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>퍼텐셜 모양(조화, 그림 19.7 꼴, 4차), 열에너지 $k_BT$. 아래 그래프를 누르면 그 $k_BT$로 이동한다.</span></p>
+      <p><b>무엇을 보라</b><span>공이 바닥에서 얼마나 멀리 나가는지, 그리고 $\langle V-V_{\min}\rangle/k_BT$가 언제 ½에서 벗어나는지 보라. 평균 위치 $\langle x\rangle$가 옮겨 가는 것도 보라.</span></p>
+      <p data-choices="½에 가까워진다|0에 가까워진다|1에 가까워진다" data-answer="½에 가까워진다" data-why="온도가 낮으면 공은 바닥 근처에만 머물고, 바닥 근처의 우물은 포물선(점선)과 거의 같다. 그래서 등분배 값 ½이 돌아온다. 4차 우물만은 바닥조차 포물선이 아니라 ¼에 머문다."><b>먼저 예상해 보라</b><span>그림 19.7 꼴 우물에서 $k_BT$를 아주 낮추면 $\langle V-V_{\min}\rangle/k_BT$는?</span></p>
+    </div>
+    <figcaption><b>그림 19.7을 움직이게 다시 그림.</b> 그림 19.7 꼴 우물은 $V(x)=\varepsilon[(x/a)^2-(x/a)^3+0.27(x/a)^4]$로 만들었다. 이 우물은 $x=0$의 바닥 말고도 오른쪽 $x=\tfrac53a$에 얕은 두 번째 우물($V=0.23\varepsilon$)이 있고, 둘 사이에 $x=\tfrac{10}{9}a$의 낮은 장벽($V=0.27\varepsilon$)이 있다. 공은 열원과 맞닿은 입자의 움직임(랑주뱅 동역학)이고, 정확한 평균은 수치 적분으로 계산한다. 점선은 식 (19.27)의 제곱 근사다.</figcaption>
+  </figure>
+</section>
+<section class="phase" data-step="③" data-phase="식 세우기">
+  <div class="claim" data-k="def"><p>$x_0$는 퍼텐셜의 최솟값이다. 곧 $(\partial V/\partial x)_{x_0}=0$, $(\partial^2V/\partial x^2)_{x_0}>0$이다.</p></div>
+  <div class="claim" data-k="cite" data-ext="부록 B · 테일러 전개" id="eq-19-26"><div class="eq"><div class="m">$$V(x)=V(x_0)+\left(\frac{\partial V}{\partial x}\right)_{x_0}(x-x_0)+\frac12\left(\frac{\partial^2V}{\partial x^2}\right)_{x_0}(x-x_0)^2+\cdots$$</div><a class="eqno" href="#eq-19-26">(19.26)</a></div></div>
+  <div class="claim" data-k="approx" data-cond="$|x-x_0|$가 작아 3차 이상 항을 무시할 수 있을 때, 곧 $k_BT$가 비조화가 드러나는 에너지 규모보다 훨씬 작을 때" id="eq-19-27"><div class="eq"><div class="m">$$V(x)\approx\text{상수}+\frac12\left(\frac{\partial^2V}{\partial x^2}\right)_{x_0}(x-x_0)^2$$</div><a class="eqno" href="#eq-19-27">(19.27)</a></div>
+    <p>일차 항은 최솟값 조건 때문에 사라진다. 남는 것은 다시 제곱 꼴이다. 이것을 <b>조화 근사</b>라 한다. 유효 용수철 상수는 $k_{\rm eff}=(\partial^2V/\partial x^2)_{x_0}$이다.</p></div>
+  <div class="claim" data-k="derived"><p>조화 근사가 성립하면 $\langle V-V(x_0)\rangle=\tfrac12k_BT$, $\langle(x-x_0)^2\rangle=k_BT/k_{\rm eff}$이다(19.1절 결과에 $\alpha=k_{\rm eff}/2$를 넣었다).</p></div>
+</section>
+<section class="phase" data-step="④" data-phase="결과">
+  <p>거의 모든 퍼텐셜 우물의 바닥은 제곱 꼴로 근사된다. 이 근사가 깨지는 경우는 두 가지다.</p>
+  <ul>
+    <li><b>온도가 너무 높을 때.</b> 입자가 바닥에서 멀리 나가 3차, 4차 항(비조화 항)을 느낀다. 그림 19.7 꼴 우물에서는 $k_BT=0.02\varepsilon$에서 0.52, $0.05\varepsilon$에서 0.63으로 ½에서 벗어난다. 이때 두 가지 효과를 구별해야 한다. $k_BT\lesssim0.02\varepsilon$에서는 입자가 바닥 근처에 머물며 3차 항 때문에 평균 위치가 완만한 쪽으로 조금 옮겨 간다($k_BT=0.01\varepsilon$에서 $\langle x\rangle=0.0078a$, 3차 항으로 어림한 값 $0.0075a$). $k_BT$가 장벽 높이에 가까워지면 입자가 장벽을 넘어 두 번째 우물에 들어가는 비율이 늘어난다($0.05\varepsilon$에서 1.4%, $0.1\varepsilon$에서 11%). $0.05\varepsilon$에서는 두 효과가 섞여 있고, $0.1\varepsilon$ 이상에서는 두 번째 우물의 몫이 평균을 좌우한다.</li>
+    <li><b>바닥의 곡률이 0일 때.</b> $(\partial^2V/\partial x^2)_{x_0}=0$이면 바닥부터 제곱 꼴이 아니다. 교재 280쪽 각주 4의 예 $V=\alpha(x-x_0)^4$에서는 평균이 $\tfrac14k_BT$이다.</li>
+  </ul>
+  <div class="claim box key" data-k="derived" id="window"><h4>등분배가 쓸모 있는 온도 창</h4>
+    <p>아래로는 양자화 때문에 막힌다($k_BT\gg\hbar\omega$이어야 한다). 위로는 비조화 때문에 막힌다($k_BT$가 비조화 에너지 규모보다 작아야 한다). 교재는 많은 계에서 이 두 경계 사이가 넉넉하다고 말한다(280쪽).</p></div>
+</section>
+<section class="phase" data-step="⑤" data-phase="확인">
+  <p>위 시뮬레이션에서 확인하라. ① 조화 우물은 모든 온도에서 정확히 ½이다. ② 그림 19.7 꼴 우물은 저온에서 ½로 돌아오고, $k_BT\approx0.1\varepsilon$에서 0.8 가까이 커졌다가(두 번째 우물로 넘어간 입자의 몫) 고온에서는 4차 항이 지배해 다시 ¼ 근처로 작아진다. ③ 4차 우물은 언제나 ¼이다. 타일의 $\langle x^2\rangle$를 조화 근사 $k_BT/V''(0)$와 비교하면 근사가 언제 깨지는지 숫자로 보인다.</p>
+</section>
+
+<h2 id="verdict">결과 판정</h2>
+<ul class="verdict" aria-label="결과 판정">
+  <li><b>해결됨</b>질문이 이 절로 완전히 답해짐</li>
+  <li class="on"><b>새 문제 발생</b>해결하면서 새 의문이 생김</li>
+  <li><b>추후 논의</b>근사·제한이 남아 뒤에서 다룸</li>
+</ul>
+<p>Q3에는 “언제, 왜”까지 답했다. 그러나 새 질문이 생겼다. 준위가 띄엄띄엄하고 $k_BT$가 간격과 비슷한 중간 온도에서, 계의 에너지·엔트로피·열용량을 일반적으로 계산하는 방법은 무엇인가? 등비급수가 통한 것은 준위가 등간격인 진동자뿐이다. 모든 준위의 볼츠만 인자를 더한 하나의 함수에서 모든 열역학량을 끌어내는 도구가 <a class="loc" href="../ch20/index.html">[20장 · 분배 함수]</a>이고, “$k_BT$ 대 준위 간격”이라는 판정 기준은 <a class="loc" href="../ch20/20-3.html">[20.3절 · 빅 아이디어]</a>에서 일반화된다. 이원자 기체의 계단은 <a class="loc" href="../ch21/21-6.html#fig-21-5">[21.6절 · 그림 21.5]</a>, 고체의 저온 열용량은 <a class="loc" href="../ch24/24-1.html">[24.1절]</a>, 전자기파의 모드에 고전 등분배를 적용했을 때의 파탄은 <a class="loc" href="../ch23/23-6.html#eq-23-48">[23.6절 · 식 23.48]</a>에서 다룬다.</p>
+
+<h2 id="examples">예제 평가</h2>
+<p>이 절에는 교재 예제가 없다. 이 절의 두 가정을 직접 연습하는 연습문제를 평가한다.</p>
+<article class="exeval" id="ex-p19-3">
+  <header><h3>연습문제 19.3 · $V(r)=A/r^n-B/r$ 우물의 바닥 (282쪽)</h3><span class="stars" aria-label="중요도 3/3">★★★</span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>반드시 손으로. 최솟값을 찾고 이차 미분으로 유효 용수철 상수를 구한 뒤 $\tfrac12k_BT$를 쓰는, 가정 2의 교과서적 연습이다.</dd>
+    <dt>연습문제와의 관계</dt><dd>식 (19.26)–(19.27)을 그대로 쓴다. 손으로 풀기 3번이 같은 순서의 짧은 판이다.</dd>
+    <dt>솔직한 평가</dt><dd>분자 결합(레너드-존스 꼴 등) 문제로 시험에 자주 나오는 유형이다. 미분 계산에서 실수하기 쉬우니 $r_0$를 먼저 구해 두고 $V''(r_0)$를 정리할 것.</dd>
+  </dl>
+</article>
+<article class="exeval" id="ex-p19-5">
+  <header><h3>연습문제 19.5–19.6 · $E=\alpha|x|$, $E=\alpha|x|^n$ (282쪽)</h3><span class="stars" aria-label="중요도 2/3">★★<span class="off">★</span></span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>흐름을 따라가며 한 번은 풀 것. 제곱이 아니면 ½이 아니라는 것을 일반식 $\xi=1/n$으로 확인한다. 감마함수 적분 연습도 된다.</dd>
+    <dt>연습문제와의 관계</dt><dd>예제 19.1과 같은 치환을 쓴다. 19.1절의 기존 데모 #1에서 $\alpha|x|$, $\alpha x^4$를 고르면 답을 수치로 볼 수 있다.</dd>
+    <dt>솔직한 평가</dt><dd>개념 확인용이다. 시험에서는 “4차 퍼텐셜의 평균 에너지” 같은 짧은 계산으로 나올 수 있다.</dd>
+  </dl>
+</article>
+<article class="exeval" id="ex-p19-7">
+  <header><h3>연습문제 19.7 · 단진자의 $\langle\theta^2\rangle$ (282쪽)</h3><span class="stars" aria-label="중요도 2/3">★★<span class="off">★</span></span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>작은 각 근사($\theta\ll1$)가 곧 조화 근사라는 것을 실제 계에서 확인하는 문제다.</dd>
+    <dt>연습문제와의 관계</dt><dd>퍼텐셜 $mgl(1-\cos\theta)$를 식 (19.27)처럼 전개하면 유효 용수철 상수가 나온다.</dd>
+    <dt>솔직한 평가</dt><dd>계산은 쉽다. 근사의 조건을 함께 적는 습관을 들이기에 좋다.</dd>
+  </dl>
+</article>
+
+<h2 id="selfq">스스로 던질 질문</h2>
+<div class="selfq">
+  <details><summary>H₂의 측정값 $C_p=3.47R$가 $3.5R$보다 조금 작은 이유는 무엇일까?</summary><div><p>수소 분자는 관성모멘트가 가장 작아 회전 준위 간격이 가장 크다. 그래서 298 K에서도 회전이 완전히 고전적으로 들떠 있지 않다. 교재 그림 21.6(314쪽)에서 H₂의 $C_V$는 300 K 근처에서야 $\tfrac52R$에 다가간다.</p></div></details>
+  <details><summary>온도를 아주 높이면 이원자 기체의 $C_V$는 $\tfrac72R$에 머물까?</summary><div><p>그 전에 분자가 쪼개질 수 있다. 결합이 끊어지면 입자 수가 바뀌므로 화학 평형 문제가 된다(<a class="loc" href="../ch22/22-8.html">[22.8절 · 예제 22.7]</a>의 H₂ 해리). 또 높은 온도에서는 진동이 비조화가 되어 가정 2도 흔들린다.</p></div></details>
+  <details><summary>얼어붙은 진동의 영점 에너지 $\tfrac12\hbar\omega$는 열용량에 기여하는가?</summary><div><p>기여하지 않는다. 온도와 무관한 상수이므로 $T$로 미분하면 0이다. 열용량을 만드는 것은 $\langle E\rangle-\tfrac12\hbar\omega$, 곧 열로 얻은 몫뿐이다.</p></div></details>
+  <details><summary>그림 19.7처럼 비대칭인 우물에서 온도가 오르면 평균 위치는 어떻게 되는가?</summary><div><p>완만한 쪽으로 옮겨 간다. 낮은 온도($k_BT\lesssim0.02\varepsilon$)에서 바닥 근처의 비대칭(3차 항) 때문에 평균 위치가 조금씩 옮겨 가는 것, 곧 원자 사이 거리의 평균이 늘어나는 것이 열팽창의 미시적 기원이다. 조화 근사에서는 우물이 대칭이라 열팽창이 없다. 다만 이 시뮬레이션의 우물은 오른쪽에 두 번째 우물이 있어서, $k_BT\gtrsim0.05\varepsilon$에서 $\langle x\rangle$가 크게 뛰는 것은 열팽창이 아니라 입자가 장벽을 넘어 두 번째 우물로 들어간 결과다. 시뮬레이션의 $\langle x\rangle$ 표시로 두 영역을 비교해 보라.</p></div></details>
+  <details><summary>거의 모든 온도에서 등분배가 정확히 맞는 자유도가 있을까?</summary><div><p>단원자 기체의 병진 운동이다. 상자 속 입자의 준위 간격은 매우 작아서, 아주 낮은 온도나 아주 높은 밀도가 아니면 연속으로 보아도 된다. 그 정량적 기준이 양자 농도다(<a class="loc" href="../ch21/21-2.html">[21.2절]</a>).</p></div></details>
+</div>
+
+<h2 id="hand">손으로 풀기</h2>
+<div class="hand" id="h1931" data-answer="4.54e-4" data-tol="0.02">
+  <header><b>문항 1</b><span>얼어붙은 진동</span></header>
+  <p>어떤 이원자 분자의 진동에서 $\hbar\omega/k_B=3000$ K라고 하자(질소 분자 N₂의 실제 값은 진동 파수 2359 cm⁻¹에서 환산해 약 3400 K이다). 300 K에서 열로 얻은 평균 진동 에너지 $\langle E\rangle-\tfrac12\hbar\omega$는 고전값 $k_BT$의 몇 배인가?</p>
+  <div class="hand-sim" data-sim="ladder" data-set='{"t":0.1}' data-read="ratio" data-label="사다리 시뮬레이션의 값"></div>
+  <details><summary>풀이</summary><p>$x=\hbar\omega/k_BT=10$. 비는 $x/(e^x-1)=10/(e^{10}-1)=10/22025=4.54\times10^{-4}$. 사실상 0이므로 이 진동은 얼어 있다.</p></details>
+</div>
+<div class="hand" id="h1932" data-answer="0.582" data-tol="0.01">
+  <header><b>문항 2</b><span>간격과 열에너지가 같을 때</span></header>
+  <p>$k_BT=\hbar\omega$일 때 같은 비 $(\langle E\rangle-\tfrac12\hbar\omega)/k_BT$를 소수 셋째 자리까지 구하라.</p>
+  <div class="hand-sim" data-sim="ladder" data-set='{"t":1}' data-read="ratio" data-label="사다리 시뮬레이션의 값"></div>
+  <details><summary>풀이</summary><p>$x=1$이므로 $1/(e-1)=0.582$.</p></details>
+</div>
+<div class="hand" id="h1933" data-answer="0.005" data-tol="0.08">
+  <header><b>문항 3</b><span>조화 근사로 흔들림 폭 어림하기</span></header>
+  <p>그림 19.7 꼴 우물 $V(x)=x^2-x^3+0.27x^4$(단위 $\varepsilon$, $a$)에서 $k_BT=0.01\varepsilon$일 때, 조화 근사로 $\langle x^2\rangle$을 $a^2$ 단위로 구하라.</p>
+  <div class="hand-sim" data-sim="well" data-set='{"pot":"fig7","T":0.01}' data-read="x2" data-label="수치 적분으로 구한 정확한 $\langle x^2\rangle$"></div>
+  <details><summary>풀이</summary><p>$V'(0)=0$, $V''(0)=2$이므로 $k_{\rm eff}=2$. $\langle x^2\rangle\approx k_BT/k_{\rm eff}=0.01/2=0.005$. 정확한 값은 약 0.0053으로, 이 온도에서도 비조화 효과가 5%쯤 보인다.</p></details>
+</div>
+
+<h2 id="notation">표기 참고</h2>
+<div class="bk-table-wrap"><table class="bk-table">
+  <thead><tr><th>이 학습서 (교재 한국어판)</th><th>다른 표기</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr><td>조화 근사 (harmonic approximation)</td><td>—</td><td>교재 280쪽.</td></tr>
+    <tr><td>비조화 항 (anharmonic terms)</td><td>—</td><td>교재 280쪽.</td></tr>
+    <tr><td>얼어붙음</td><td>동결(freezing out)</td><td>교재 19장은 이 말을 쓰지 않는다. 이 학습서에서 붙인 이름이다.</td></tr>
+    <tr><td>$\theta_{\rm rot}$, $\theta_{\rm vib}$</td><td>회전·진동 특성온도</td><td>기존 데모 #7의 기호. 교재 21.6절은 $\hbar^2/2Ik_B$, $\hbar\omega/k_B$로 쓴다.</td></tr>
+  </tbody>
+</table></div>
+</article>
+</main>
+</body>
+</html>

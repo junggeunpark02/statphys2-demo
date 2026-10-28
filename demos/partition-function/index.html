@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>분배함수: 네 가지 계 · Partition function</title>
 <meta name="description" content="2준위계, 조화진동자, N준위계, 회전자의 분배함수와 U, S, C_V (Blundell 20.1–20.3)">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<script defer src="../../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../../assets/vendor/katex/contrib/auto-render.min.js"></script>
 <!-- 사이트 공통 설정 (없으면 아래 FALLBACK 사용) -->
 <script src="../../site-config.js"></script>
+<script src="../../assets/demo-embed.js"></script>
 <style>
 /* =====================================================================
  * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
@@ -141,7 +142,7 @@ footer{border-top:1px solid var(--line); margin-top:24px; padding:16px 0 36px; c
 
   <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
   <header class="topbar">
-    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <a class="back bi-inline" href="../../toc.html" data-i18n="back"></a>
     <div class="lang" id="langToggle" role="group" aria-label="Language">
       <button type="button" data-set-lang="ko">한국어</button>
       <button type="button" data-set-lang="en">English</button>
@@ -288,7 +289,7 @@ footer{border-top:1px solid var(--line); margin-top:24px; padding:16px 0 36px; c
 /* ===== (1) 문구 사전 / UI strings ===================================== */
 const I18N = {
   ko: {
-    back: '← 허브로',
+    back: '← 전체 목차',
     chipSec: '교재 20.1–20.3절',
     title: '분배함수: 네 가지 계',
     summary: '에너지 준위만 알면 분배함수 $Z$ 하나에서 내부에너지·엔트로피·열용량이 모두 나온다. 네 가지 계에서 온도를 바꾸며 확인해 보자.',
@@ -341,7 +342,7 @@ const I18N = {
     footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
   },
   en: {
-    back: '← Home',
+    back: '← Contents',
     chipSec: 'Textbook §20.1–20.3',
     title: 'Partition function: four model systems',
     summary: 'Once you know the energy levels, one function — the partition function $Z$ — gives the internal energy, entropy and heat capacity. Check it on four systems as the temperature changes.',

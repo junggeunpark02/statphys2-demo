@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>19.4 브라운 운동 · 19장 에너지 등분배 · 통계역학 학습서</title>
+<meta name="description" content="무거운 입자와 가벼운 분자가 충돌만으로 같은 평균 운동 에너지에 이르는 것을 확인하고, 브라운 입자의 열적 속력을 어림한다. 교재 19.4절(280–281쪽).">
+<link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+<script src="../assets/book.js"></script>
+<script defer src="sim19.js"></script>
+</head>
+<body data-root="../" data-page="19.4">
+<main id="main" class="bk-main" tabindex="-1">
+<article class="bk-page">
+<p class="bk-crumb"><a href="index.html">19장 에너지 등분배</a> › 19.4</p>
+<h1 class="bk-title"><span class="no">19.4</span>브라운 운동</h1>
+<p class="bk-meta">교재 280–281쪽 · 예제 19.3 · 요약 281쪽 · 연습문제 282쪽</p>
+<p class="bk-lang-note" hidden>새로 쓴 본문은 아직 한국어만 있습니다. · The new study text is Korean-only for now.</p>
+<ul class="bk-flow" aria-label="이 절의 흐름">
+  <li><a href="#goals">학습 목표</a></li><li><a href="#solves">맡은 질문</a></li><li><a href="#start">출발점</a></li><li><a href="#body">본문 전개</a></li>
+  <li><a href="#verdict">결과 판정</a></li><li><a href="#examples">예제 평가</a></li><li><a href="#selfq">스스로 던질 질문</a></li><li><a href="#hand">손으로 풀기</a></li><li><a href="#notation">표기 참고</a></li>
+</ul>
+
+<h2 id="goals">학습 목표</h2>
+<ol>
+  <li>무거운 입자와 가벼운 분자가 충돌로 평형에 이르면 평균 운동 에너지가 같아진다는 것을 시뮬레이션으로 확인하고 등분배로 설명할 수 있다.</li>
+  <li>등분배로 브라운 입자의 열적 속력 $v_{\rm rms}=\sqrt{3k_BT/m}$을 구하고 크기를 어림할 수 있다.</li>
+  <li>현미경에서 보이는 떨림이 순간 속도가 아니라 수많은 충돌이 쌓인 위치 변화라는 점을 시간 규모로 설명할 수 있다.</li>
+</ol>
+
+<h2 id="solves">이 절이 맡은 질문</h2>
+<p><a class="qchip" href="index.html#q4">Q4</a> $\tfrac12k_BT$라는 아주 작은 에너지가 눈에 보이는 효과를 낼 수 있는가?</p>
+<p>이 절은 Q4에 “그렇다, 입자가 충분히 작다면”이라고 답한다. 다만 현미경으로 보는 움직임을 정량적으로 다루는 이론은 이 장 밖에 있다.</p>
+
+<h2 id="start">출발점</h2>
+<div class="claim" data-k="cite" data-ref="19-1.html#theorem" data-ref-label="19.1절 · 등분배 정리"><p>제곱항마다 평균 $\tfrac12k_BT$. 계의 크기나 질량은 들어가지 않는다.</p></div>
+<div class="claim" data-k="cite" data-ref="19-2.html#eq-19-15" data-ref-label="19.2절 · 식 19.15"><p>자유롭게 병진 운동하는 입자의 평균 운동 에너지는 $\tfrac32k_BT$이다.</p></div>
+<div class="claim" data-k="cite" data-ext="고전역학 · 탄성 충돌"><p>두 물체가 탄성 충돌하면 운동량과 운동 에너지가 보존된다.</p></div>
+
+<h2 id="body">본문 전개</h2>
+<section class="phase" data-step="①" data-phase="상황">
+  <div class="claim" data-k="exp" data-src="교재 예제 19.3(280–281쪽)"><p>1827년 브라운은 현미경으로 물에 뜬 꽃가루 입자에서 나온 아주 작은 입자들이 쉬지 않고 불규칙하게 움직이는 것을 보았다. 이 운동은 병진과 회전이 섞여 있고, 바로 옆의 입자끼리도 서로 상관없이 움직인다. 입자가 작을수록, 유체의 점성이 작을수록 더 활발하다.</p></div>
+  <p>물 분자 하나의 에너지는 $k_BT$ 규모로 아주 작다. 그런데 물 분자보다 수십억 배 무거운 입자가 그 충돌만으로 눈에 보일 만큼 움직인다면, 그 입자는 얼마만큼의 에너지를 받는 것일까?</p>
+</section>
+<section class="phase" data-step="②" data-phase="관찰">
+  <figure class="sim-fig" id="sim-brown">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>질량비 $M/m$, 작은 원판 수, 시간 빠르기. ‘속력 비와 질량비’ 그래프를 누르면 그 질량비로 다시 시작한다.</span></p>
+      <p><b>무엇을 보라</b><span>처음에 멈춰 있던 큰 원판 4개가 충돌만으로 움직이기 시작한다. 큰 원판 하나의 평균 운동 에너지가 작은 원판 하나의 평균과 어떤 비로 모이는지 보라. 질량비를 바꿔도 그 비가 같은지도 보라.</span></p>
+      <p data-choices="1/50배|1/√50배|같다|50배" data-answer="같다" data-why="충돌로 평형에 이르면 큰 원판도 제곱항마다 $\tfrac12k_BT$를 받는다. 무거운 만큼 속력이 $\sqrt{m/M}$배로 작아질 뿐이다. 오른쪽 아래 그래프의 비가 1 근처로 모인다."><b>먼저 예상해 보라</b><span>$M/m=50$이면 큰 원판의 평균 운동 에너지는 작은 원판 하나의 몇 배일까?</span></p>
+    </div>
+    <figcaption><b>예제 19.3을 그림으로.</b> 2차원 상자 속 원판들의 탄성 충돌만 계산한다. 큰 원판은 질량이 같은 4개이고, 진하게 칠한 하나의 자취를 선으로 남긴다. 열원도, 무작위 힘도 따로 넣지 않았다(모형 가정: 단단한 원판, 2차원). 질량비가 클수록 평균이 모이는 데 오래 걸리므로 빠르기를 ×4로 두고 기다려 보라.</figcaption>
+  </figure>
+</section>
+<section class="phase" data-step="③" data-phase="식 세우기">
+  <div class="claim" data-k="model"><p>입자(질량 $m$)는 유체 분자와 끊임없이 부딪혀 열평형을 이룬다. 입자의 병진 운동은 자유로운 질점처럼 다룬다.</p></div>
+  <div class="claim" data-k="derived" id="eq-brown"><div class="eq"><div class="m">$$\tfrac12m\langle v^2\rangle=\tfrac32k_BT\quad\Longrightarrow\quad v_{\rm rms}=\sqrt{\frac{3k_BT}{m}}$$</div><span class="eqno site">교재 281쪽 본문 식</span></div>
+    <p>병진 제곱항 3개에 등분배를 적용했다. 시뮬레이션은 2차원이라 제곱항이 2개이지만, 큰 입자와 작은 입자의 평균이 같다는 결론은 같다.</p></div>
+  <div class="claim" data-k="model"><p>입자를 밀도 $\rho$, 반지름 $r$인 공으로 보면 $m=\tfrac43\pi r^3\rho$이다.</p></div>
+  <div class="claim" data-k="derived"><p>$v_{\rm rms}\propto m^{-1/2}\propto r^{-3/2}$. 반지름이 절반이면 열적 속력은 약 2.8배가 된다.</p></div>
+</section>
+<section class="phase" data-step="④" data-phase="결과">
+  <div class="claim" data-k="derived"><p>반지름 1 μm, 밀도 1000 kg/m³인 입자는 $m=4.19\times10^{-15}$ kg이고, 300 K에서 $v_{\rm rms}=1.7$ mm/s이다(손으로 풀기 1번). 에너지는 물 분자와 똑같이 $\tfrac32k_BT$이지만, 그 에너지가 현미경 배율로 보이는 크기의 움직임으로 나타난다.</p></div>
+  <p>그런데 여기서 한 가지를 조심해야 한다. 이 속력은 매우 짧은 시간만 유지된다. 유체의 점성 마찰이 속도를 빠르게 지워 버리기 때문이다.</p>
+  <div class="claim" data-k="cite" data-ext="유체역학 · 스토크스 법칙" data-note="낮은 레이놀즈 수에서 구에 작용하는 끌림힘 F = 6πηrv."><p>점성 $\eta$인 유체 속에서 반지름 $r$인 구가 속도 $v$로 움직이면 끌림힘 $6\pi\eta rv$를 받는다.</p></div>
+  <div class="claim" data-k="approx" data-cond="구형 입자, 낮은 레이놀즈 수, 물의 점성 $\eta\approx1.0\times10^{-3}$ Pa·s (20 °C 부근)"><p>속도가 잊히는 시간은 $\tau=m/(6\pi\eta r)\approx2\times10^{-7}$ s이다. 1초 동안 입자의 속도 방향은 수백만 번 바뀐다.</p></div>
+  <p>그래서 현미경에서 보는 것은 1.7 mm/s로 곧게 달리는 입자가 아니라, 아주 짧게 달렸다 꺾이기를 수없이 되풀이해 쌓인 위치 변화다. 등분배는 순간 속도의 크기를 정해 주고, 점성은 그 속도가 얼마나 빨리 꺾이는지를 정한다. 두 효과가 함께 “작을수록, 점성이 작을수록 활발하다”는 관찰을 만든다.</p>
+</section>
+<section class="phase" data-step="⑤" data-phase="확인">
+  <p>위 시뮬레이션의 ‘누적 평균 운동 에너지 비’ 그래프에서 운동 에너지 비가 1로 모이는 것, ‘속력 비와 질량비’ 그래프에서 속력 비가 $\sqrt{m/M}$ 선에 올라오는 것을 확인하라. 진하게 칠한 큰 원판의 자취는 짧게 달렸다 꺾이기를 반복하는 모양이다.</p>
+  <div class="claim" data-k="exp" data-src="T. Li, S. Kheifets, D. Medellin, M. G. Raizen, Science 328, 1673 (2010)"><p>브라운 입자의 순간 속도는 오랫동안 직접 잴 수 없었다. 공기 중에 광학적으로 붙잡은 미세 입자의 순간 속도를 재어, 그 분포가 등분배가 예측하는 맥스웰-볼츠만 분포와 맞음을 확인한 실험이 보고되어 있다.</p></div>
+</section>
+
+<h2 id="verdict">결과 판정</h2>
+<ul class="verdict" aria-label="결과 판정">
+  <li><b>해결됨</b>질문이 이 절로 완전히 답해짐</li>
+  <li><b>새 문제 발생</b>해결하면서 새 의문이 생김</li>
+  <li class="on"><b>추후 논의</b>근사·제한이 남아 뒤에서 다룸</li>
+</ul>
+<p>Q4에는 “작은 입자에서는 그렇다”고 답했고, 그 속력의 크기도 구했다. 하지만 현미경으로 실제 측정하는 양, 곧 시간에 따라 입자가 얼마나 멀리 퍼져 나가는지는 등분배만으로는 나오지 않는다. 점성 마찰과 무작위 힘의 관계를 다루는 이론이 필요하고, 교재는 그것을 33장에서 다룬다고 밝힌다(281쪽). 33장은 이 학습서의 범위(19–24장) 밖이다 <span class="loc ext" tabindex="0" role="button" data-note="교재 281쪽이 브라운 운동의 완전한 논의를 33장으로 미룬다.">[33장 · 브라운 운동]</span>.</p>
+
+<h2 id="examples">예제 평가</h2>
+<article class="exeval" id="ex-19-3">
+  <header><h3>예제 19.3 · 브라운 운동 (280–281쪽)</h3><span class="stars" aria-label="중요도 1/3">★<span class="off">★★</span></span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>읽고 넘어가도 된다. 계산이 거의 없는 서술형 예제이고, 역사(브라운 1827, 비너 1863, 아인슈타인 1905)와 정성적 설명이 중심이다. 다만 핵심 메시지 “에너지는 같은 $\tfrac32k_BT$, 질량이 작으면 $\langle v^2\rangle$가 크다”는 반드시 기억할 것.</dd>
+    <dt>연습문제와의 관계</dt><dd>직접 이어지는 연습문제는 없다. 계산 구조는 연습문제 19.1(평균 에너지)과 같고, 손으로 풀기 1–3번이 그 변형이다.</dd>
+    <dt>솔직한 평가</dt><dd>시험에는 “반지름 $r$인 입자의 $v_{\rm rms}$를 구하라” 같은 어림 계산으로 바뀌어 나오기 쉽다. 순간 속도와 관찰되는 떨림을 구별하는 질문도 개념 문제로 좋다.</dd>
+  </dl>
+</article>
+<p>이 예제의 수치 계산(반지름에 따른 $v_{\rm rms}$)은 <a href="https://colab.research.google.com/github/junggeunpark02/statphys2-demo/blob/main/notebooks/ch19_equipartition.ipynb" target="_blank" rel="noopener">Colab 노트북 (19장)</a>에도 있다.</p>
+
+<h2 id="selfq">스스로 던질 질문</h2>
+<div class="selfq">
+  <details><summary>큰 입자의 평균 운동 에너지가 물 분자와 같다면, 왜 큰 입자는 느리게 보이는가?</summary><div><p>에너지가 같으면 $\langle v^2\rangle\propto1/m$이기 때문이다. 질량이 $10^{11}$배면 속력은 약 $3\times10^5$배 작다. 그래도 물 분자 속력(수백 m/s)에서 출발하면 mm/s 규모가 남는다.</p></div></details>
+  <details><summary>점성은 입자의 평균 운동 에너지를 바꾸는가?</summary><div><p>바꾸지 않는다. 등분배에는 마찰 계수가 들어 있지 않다. 점성이 바꾸는 것은 속도가 얼마나 빨리 잊히는지, 그래서 위치가 얼마나 빨리 퍼져 나가는지다. 19.1절의 용수철 시뮬레이션도 마찰의 크기와 무관하게 같은 평균에 모인다.</p></div></details>
+  <details><summary>현미경으로 브라운 입자의 순간 속도를 볼 수 있을까?</summary><div><p>보통의 현미경으로는 볼 수 없다. 속도가 유지되는 시간이 $10^{-7}$ s 규모라서, 한 장면을 찍는 동안 방향이 수없이 바뀐다. 보이는 것은 그것들이 쌓인 위치의 변화다.</p></div></details>
+  <details><summary>시뮬레이션에서 큰 원판은 왜 처음에 멈춰 있는데도 결국 같은 평균 에너지에 이르는가?</summary><div><p>충돌 하나하나는 결정론적이지만, 많은 충돌이 이어지면 에너지가 모든 자유도로 고르게 퍼진다. 상자 전체의 에너지가 일정할 때, 오래 지켜본 평균에서는 원판마다 같은 몫을 받는다. 19.1절에서 가정한 “열원”이 여기서는 작은 원판들 자체다.</p></div></details>
+  <details><summary>공기 중에 떠 있는 먼지에도 같은 일이 일어나는가?</summary><div><p>그렇다. 물리는 같다. 공기의 점성은 물보다 약 50배 작아 속도가 더 오래 유지된다. 그래서 순간 속도를 재는 실험은 공기 중에서 먼저 이루어졌다.</p></div></details>
+</div>
+
+<h2 id="hand">손으로 풀기</h2>
+<div class="hand" id="h1941" data-answer="1.72" data-tol="0.02" data-unit="mm/s">
+  <header><b>문항 1</b><span>브라운 입자의 열적 속력</span></header>
+  <p>반지름 1.0 μm, 밀도 1000 kg/m³인 공 모양 입자가 300 K의 물에 떠 있다. $v_{\rm rms}=\sqrt{\langle v^2\rangle}$을 mm/s 단위로 구하라.</p>
+  <details><summary>풀이</summary><p>$m=\tfrac43\pi(10^{-6})^3\times1000=4.19\times10^{-15}$ kg. $v_{\rm rms}=\sqrt{3\times4.142\times10^{-21}/4.19\times10^{-15}}=1.72\times10^{-3}$ m/s $=1.72$ mm/s.</p></details>
+</div>
+<div class="hand" id="h1942" data-answer="0.2" data-tol="0.03">
+  <header><b>문항 2</b><span>질량비와 속력비</span></header>
+  <p>질량비 $M/m=25$일 때, 평형에서 큰 입자와 작은 입자의 속력비 $V_{\rm rms}/v_{\rm rms}$를 구하라.</p>
+  <div class="hand-sim" data-sim="brown" data-set='{"ratio":25}' data-read="vratio" data-label="충돌 시뮬레이션의 측정값"></div>
+  <details><summary>풀이</summary><p>평균 운동 에너지가 같으므로 $MV_{\rm rms}^2=mv_{\rm rms}^2$, $V_{\rm rms}/v_{\rm rms}=\sqrt{m/M}=1/5=0.2$. 시뮬레이션 값은 큰 원판 4개의 유한한 시간 평균이라 5% 안팎으로 흔들린다(운동 에너지 비로는 10% 안팎). 시작 직후 몇 초는 평균에서 뺀다.</p></details>
+</div>
+<div class="hand" id="h1943" data-answer="2.2e-7" data-tol="0.03" data-unit="s">
+  <header><b>문항 3</b><span>속도가 잊히는 시간</span></header>
+  <p>문항 1의 입자가 점성 $\eta=1.0\times10^{-3}$ Pa·s인 물 속에서 스토크스 끌림을 받는다. $\tau=m/(6\pi\eta r)$를 초 단위로 구하라.</p>
+  <details><summary>풀이</summary><p>$6\pi\eta r=6\pi\times10^{-3}\times10^{-6}=1.885\times10^{-8}$ kg/s. $\tau=4.19\times10^{-15}/1.885\times10^{-8}=2.2\times10^{-7}$ s.</p></details>
+</div>
+
+<h2 id="notation">표기 참고</h2>
+<div class="bk-table-wrap"><table class="bk-table">
+  <thead><tr><th>이 학습서 (교재 한국어판)</th><th>다른 표기</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr><td>브라운 운동 (Brownian motion)</td><td>—</td><td>교재 280쪽.</td></tr>
+    <tr><td>크리스찬 비너 (Christian Wiener)</td><td>—</td><td>교재 281쪽 표기.</td></tr>
+    <tr><td>281쪽 “생명적인 설명을 할 수 있었는데”</td><td>—</td><td>읽을 때 주의. 역사적으로 브라운은 살아 있지 않은 입자에서도 같은 운동을 보고 “살아 있어서 움직인다”는 설명을 받아들이지 않았다. 브라운이 내놓지 못한 것은 올바른 설명이다.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="summary">19장 요약</h2>
+<div class="claim" data-k="derived"><p>계의 에너지가 서로 독립인 제곱항 $n$개의 합이고 계가 온도 $T$인 열원과 평형이면, 평균 에너지는 $n\times\tfrac12k_BT$이다(<a href="19-1.html#theorem">19.1절</a>).</p></div>
+<div class="claim" data-k="approx" data-cond="$k_BT$가 준위 간격보다 클 때"><p>등분배 정리는 고온의 결과이며, 에너지 준위의 띄엄띄엄함이 드러나는 저온에서는 틀린 값을 준다(<a href="19-3.html#highT">19.3절</a>).</p></div>
+<p>다음은 <a href="../ch20/index.html">20장 분배 함수</a>다. 띄엄띄엄한 준위에서 모든 열역학량을 계산하는 도구를 만든다.</p>
+</article>
+</main>
+</body>
+</html>

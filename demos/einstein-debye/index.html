@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>아인슈타인 모형과 데바이 모형 · Einstein and Debye models</title>
 <meta name="description" content="고체 열용량을 두 모형으로 비교하고 저온의 T³ 법칙을 확인한다 (Blundell 24.1–24.2, 그림 24.3)">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<script defer src="../../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../../assets/vendor/katex/contrib/auto-render.min.js"></script>
 <!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
 <script src="../../site-config.js"></script>
+<script src="../../assets/demo-embed.js"></script>
 <style>
 /* =====================================================================
  * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
@@ -164,7 +165,7 @@ canvas.viz.short{height:240px}
 
   <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
   <header class="topbar">
-    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <a class="back bi-inline" href="../../toc.html" data-i18n="back"></a>
     <div class="lang" id="langToggle" role="group" aria-label="Language">
       <button type="button" data-set-lang="ko">한국어</button>
       <button type="button" data-set-lang="en">English</button>
@@ -304,7 +305,7 @@ const I18N = {
     eq2: '데바이 상태밀도: $g(\\omega)=\\dfrac{9N\\omega^2}{\\omega_D^3}$ ($\\omega\\le\\omega_D$), $\\int_0^{\\omega_D}g\\,d\\omega=3N$ — 교재 식 (24.15), (24.17)',
     eq3: '고온 $C_V\\to3R$, 저온 $C_V\\to\\dfrac{12\\pi^4R}{5}\\left(\\dfrac{T}{\\Theta_D}\\right)^3$ — 교재 식 (24.26)–(24.28), 예제 24.3',
     eq4: '$\\Theta_D=\\hbar\\omega_D/k_B$, $\\Theta_E=\\hbar\\omega_E/k_B$ — 교재 식 (24.18)',
-    explain: '고온에서는 $3N$개 모드가 모두 깨어나 각각 $k_B$씩 기여하므로 두 모형 모두 $3R$이 된다. 온도를 낮추면 $k_BT$보다 에너지 간격이 큰 모드부터 얼어붙는다. 아인슈타인 모형은 모든 모드가 같은 진동수 $\\omega_E$를 가져서 한꺼번에 얼어붙고 $C_V$가 지수적으로 줄어든다. 데바이 모형에는 $\\omega\\to0$까지 이어지는 음향 모드가 있어서, 깨어 있는 모드 수가 $(k_BT/\\hbar)^3$에 비례하고 $C_V\\propto T^3$이 된다. 왼쪽 음영의 넓이가 곧 $C_V/3R$이다.',
+    explain: '고온에서는 $3N$개 모드가 모두 깨어나 각각 $k_B$씩 기여하므로 두 모형 모두 $3R$이 된다. 온도를 낮추면 $k_BT$보다 에너지 간격이 큰 모드부터 얼어붙는다. 아인슈타인 모형은 모든 모드가 같은 진동수 $\\omega_E$를 가져서 한꺼번에 얼어붙고 $C_V$가 지수적으로 줄어든다. 데바이 모형에는 $\\omega\\to0$까지 이어지는 음향 모드가 있어서, 깨어 있는 모드 수가 $(k_BT/\\hbar)^3$에 비례하고 $C_V\\propto T^3$이 된다. “상태밀도와 열적으로 깨어난 모드” 그림에서 음영의 넓이가 곧 $C_V/3R$이다.',
     src1: '24.1절 아인슈타인 모델, 24.2절 데바이 모델 (한국어판 362–369쪽)',
     src2: '예제 24.1, 24.2, 24.3 · 그림 24.1–24.3 · 366쪽 데바이 온도 표',
     src3: '관련: 데모 12(포논 분산), 19.2.4절 고체의 열용량',
@@ -332,7 +333,7 @@ const I18N = {
     eq2: 'Debye density of states: $g(\\omega)=\\dfrac{9N\\omega^2}{\\omega_D^3}$ ($\\omega\\le\\omega_D$), $\\int_0^{\\omega_D}g\\,d\\omega=3N$ — Eqs. (24.15), (24.17)',
     eq3: 'High $T$: $C_V\\to3R$; low $T$: $C_V\\to\\dfrac{12\\pi^4R}{5}\\left(\\dfrac{T}{\\Theta_D}\\right)^3$ — Eqs. (24.26)–(24.28), Example 24.3',
     eq4: '$\\Theta_D=\\hbar\\omega_D/k_B$, $\\Theta_E=\\hbar\\omega_E/k_B$ — Eq. (24.18)',
-    explain: 'At high temperature all $3N$ modes are active and each contributes $k_B$, so both models give $3R$. As the temperature drops, modes whose spacing exceeds $k_BT$ freeze out. In the Einstein model every mode has the same frequency $\\omega_E$, so they all freeze together and $C_V$ falls exponentially. The Debye model keeps acoustic modes all the way down to $\\omega\\to0$; the number of active modes scales as $(k_BT/\\hbar)^3$, giving $C_V\\propto T^3$. The shaded area on the left is exactly $C_V/3R$.',
+    explain: 'At high temperature all $3N$ modes are active and each contributes $k_B$, so both models give $3R$. As the temperature drops, modes whose spacing exceeds $k_BT$ freeze out. In the Einstein model every mode has the same frequency $\\omega_E$, so they all freeze together and $C_V$ falls exponentially. The Debye model keeps acoustic modes all the way down to $\\omega\\to0$; the number of active modes scales as $(k_BT/\\hbar)^3$, giving $C_V\\propto T^3$. The shaded area in the “density of states and thermally active modes” panel is exactly $C_V/3R$.',
     src1: '§24.1 The Einstein model, §24.2 The Debye model (Korean ed. pp. 362–369)',
     src2: 'Examples 24.1, 24.2, 24.3 · Figs. 24.1–24.3 · Debye temperature table, p. 366',
     src3: 'Related: demo 12 (phonon dispersion), §19.2.4 heat capacity of a solid',
@@ -344,12 +345,12 @@ const I18N = {
 /* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
 const I18N_COMMON = {
   ko: {
-    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    back: '← 전체 목차', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
     hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
     footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
   },
   en: {
-    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    back: '← Contents', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
     hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
     footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
   }

@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>구별가능성과 깁스 역설 · Gibbs paradox</title>
 <meta name="description" content="같은 기체와 다른 기체를 섞을 때 혼합 엔트로피를 1/N! 유무로 비교한다 (Blundell 21.3, 21.5, 예제 21.2)">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<script defer src="../../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../../assets/vendor/katex/contrib/auto-render.min.js"></script>
 <!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
 <script src="../../site-config.js"></script>
+<script src="../../assets/demo-embed.js"></script>
 <style>
 /* =====================================================================
  * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
@@ -164,7 +165,7 @@ canvas.viz.short{height:240px}
 
   <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
   <header class="topbar">
-    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <a class="back bi-inline" href="../../toc.html" data-i18n="back"></a>
     <div class="lang" id="langToggle" role="group" aria-label="Language">
       <button type="button" data-set-lang="ko">한국어</button>
       <button type="button" data-set-lang="en">English</button>
@@ -317,16 +318,16 @@ const I18N = {
     thCase: '경우', thStates: '미시상태',
     rowDist: '구별 가능', rowIndist: '구별 불가능 (정확)', rowApprox: '$Z_1^2/2!$ (근사)',
     exNote: '$Z_1^2/2!$은 두 입자가 같은 상태에 있는 항을 반으로 줄여 버리므로 정확한 값과 다르다. 대부분의 입자가 서로 다른 상태에 있는 $n\\ll n_Q$에서만 $1/N!$ 보정이 맞다(교재 식 21.26, 21.27).',
-    eqMainNote: '교재 식 (21.28), (21.37) — 사쿠르–테트로드 식',
+    eqMainNote: '교재 식 (21.28), (21.37) — 자쿠어-테트로드 식',
     hEqMore: '이 데모가 함께 쓰는 식',
     eq1: '구별 가능 $Z_N=Z_1^N$, 구별 불가능 $Z_N=Z_1^N/N!$ — 교재 식 (21.25), (21.26)',
     eq2: '서로 다른 두 기체의 혼합: $\\Delta S=2Nk_B\\ln2$ — 교재 식 (21.40). 줄 팽창 $\\Delta S=Nk_B\\ln2$ — 식 (21.39)',
     eq3: '$1/N!$ 없이 쓰면 $S=Nk_B\\left[\\tfrac32-\\ln(\\lambda_{th}^3/V)\\right]$ — 교재 연습문제 21.2 (식 21.44), 크기변수가 아니다',
-    explain: '서로 다른 기체를 섞으면 각 기체가 차지하는 부피가 두 배가 되므로 $\\Delta S=2Nk_B\\ln2$만큼 엔트로피가 는다. 같은 기체를 섞으면 칸막이를 다시 넣어 원래 상태로 되돌릴 수 있으므로 거시적으로 $\\Delta S=0$이어야 한다. $1/N!$을 빼면 같은 기체에서도 $2Nk_B\\ln2$가 나오는데, 이것이 깁스 역설이다. $1/N!$을 넣으면 $\\Delta S$가 정확히 계산해도 $\\tfrac12\\ln(\\pi N)$ 정도로 남을 뿐이라 입자 하나당 값은 $N$이 커지면 0으로 간다. 아래 그래프처럼 $1/N!$이 있어야 엔트로피가 입자 수에 비례하는 크기변수가 된다.',
+    explain: '서로 다른 기체를 섞으면 각 기체가 차지하는 부피가 두 배가 되므로 $\\Delta S=2Nk_B\\ln2$만큼 엔트로피가 는다. 같은 기체를 섞으면 칸막이를 다시 넣어 원래 상태로 되돌릴 수 있으므로 거시적으로 $\\Delta S=0$이어야 한다. $1/N!$을 빼면 같은 기체에서도 $2Nk_B\\ln2$가 나오는데, 이것이 깁스 역설이다. $1/N!$을 넣고 정확히 계산하면 $\\Delta S/k_B$가 $\\tfrac12\\ln(\\pi N)$ 정도만 남으므로 입자 하나당 값은 $N$이 커지면 0으로 간다. 아래 그래프처럼 $1/N!$이 있어야 엔트로피가 입자 수에 비례하는 크기변수가 된다.',
     src1: '21.3절 구별가능 (한국어판 305–308쪽), 예제 21.2',
     src2: '21.4절 이상기체의 상태함수, 21.5절 깁스 패러독스 (한국어판 308–311쪽), 식 (21.35)–(21.40)',
     src3: '연습문제 21.2 (크기변수 검사)',
-    note1: '강의(3주차 부록)는 "깁스 역설", 교재 번역본은 "깁스 패러독스"로 쓴다. 같은 내용이다.',
+    note1: '강의(3주차 부록)는 "깁스 역설", 교재 번역본은 "깁스 패러독스"로 쓴다. 같은 내용이다. Sackur–Tetrode 식은 교재 309쪽 표기 "자쿠어-테트로드"를 따랐다(다른 표기: 사쿠르–테트로드).',
     note2: '$\\ln N!$은 스털링 근사 대신 $\\ln\\Gamma(N+1)$로 정확히 계산했다. 그래서 같은 기체·$1/N!$ 포함인 경우 $\\Delta S/k_B=2N\\ln2-\\ln(2N)!+2\\ln N!\\approx\\tfrac12\\ln(\\pi N)$이 작게 남는다.'
   },
   en: {
@@ -370,12 +371,12 @@ const I18N = {
 /* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
 const I18N_COMMON = {
   ko: {
-    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    back: '← 전체 목차', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
     hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
     footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
   },
   en: {
-    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    back: '← Contents', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
     hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
     footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
   }

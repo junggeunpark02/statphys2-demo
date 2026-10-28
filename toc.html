@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ko" data-lang="both">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전체 목차 · 통계역학 학습서 · 열및통계물리2</title>
+<meta name="description" content="열및통계물리2 강의보조: 교재 19–24장 통계역학 인터랙티브 시뮬레이션과 Colab 예제 풀이 노트북">
+<link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/vendor/katex/katex.min.js"></script>
+<script defer src="assets/vendor/katex/contrib/auto-render.min.js"></script>
+<script src="assets/book.js"></script>
+<script src="site-config.js"></script>
+<style>
+/* ---------- 디자인 토큰 / design tokens ---------- */
+:root{
+  color-scheme: light;
+  --bg:#f6f6f3; --surface:#fcfcfb; --surface-2:#f0efeb;
+  --text:#0b0b0b; --text-2:#52514e; --muted:#7d7c76; --line:#e2e1dc;
+  --accent:#2a78d6; --accent-ink:#1c5cab; --accent-weak:#e6effa;
+  --radius:14px;
+  --font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#121211; --surface:#1a1a19; --surface-2:#232321;
+    --text:#f0efec; --text-2:#c3c2b7; --muted:#8f8e86; --line:#2f2e2b;
+    --accent:#3987e5; --accent-ink:#86b6ef; --accent-weak:#1b2a3d;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#121211; --surface:#1a1a19; --surface-2:#232321;
+  --text:#f0efec; --text-2:#c3c2b7; --muted:#8f8e86; --line:#2f2e2b;
+  --accent:#3987e5; --accent-ink:#86b6ef; --accent-weak:#1b2a3d;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg); color:var(--text); font-family:var(--font); line-height:1.6; -webkit-text-size-adjust:100%}
+a{color:var(--accent-ink)}
+.wrap{max-width:1120px; margin:0 auto; padding:0 16px}
+
+/* ---------- 언어 표시 규칙 / language display ---------- */
+html[data-lang="ko"] .t-en, html[data-lang="en"] .t-ko{display:none}
+html[data-lang="both"] .bi-inline .t-en::before{content:" · "; color:var(--muted)}
+html[data-lang="both"] .bi-block .t-en{display:block; color:var(--text-2); font-size:.9em; margin-top:.15em}
+html[data-lang="both"] .bi-slash .t-en::before{content:" / "; color:var(--muted)}
+html[data-lang="both"] .bi-sub .t-en{display:block; color:var(--muted); font-size:.82em; font-weight:400}
+
+/* ---------- 상단 / header ---------- */
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 0}
+.brand{font-weight:700; font-size:.95rem; color:var(--text-2)}
+.lang{display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:3px; background:var(--surface)}
+.lang button{border:0; background:transparent; color:var(--text-2); font:inherit; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; min-height:32px}
+.lang button[aria-pressed="true"]{background:var(--accent); color:#fff}
+.lang button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.hero{padding:28px 0 18px}
+.hero .term{display:inline-block; font-size:.8rem; color:var(--accent-ink); background:var(--accent-weak); padding:3px 10px; border-radius:999px; margin-bottom:10px}
+.hero h1{font-size:clamp(1.6rem, 4.5vw, 2.4rem); line-height:1.25; margin:0 0 8px; letter-spacing:-.01em}
+.hero p{margin:0; color:var(--text-2); max-width:760px}
+
+/* ---------- 섹션 / sections ---------- */
+section{padding:18px 0}
+h2{font-size:1.25rem; margin:0 0 4px}
+.sec-sub{color:var(--text-2); margin:0 0 16px; font-size:.95rem}
+
+/* ---------- 카드 / cards ---------- */
+.grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:14px}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 16px 14px; display:flex; flex-direction:column; gap:8px; min-width:0}
+.card.ready{border-color:color-mix(in srgb, var(--accent) 45%, var(--line))}
+.card .meta{display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:.78rem; color:var(--muted)}
+.chip{font-size:.74rem; padding:2px 8px; border-radius:999px; background:var(--surface-2); color:var(--text-2); white-space:nowrap}
+.chip.ok{background:var(--accent-weak); color:var(--accent-ink)}
+.card h3{margin:0; font-size:1.05rem; line-height:1.35}
+.card .eq .katex{white-space:nowrap}
+.card .eq{background:var(--surface-2); border-radius:10px; padding:8px 10px; overflow-x:auto; font-size:.95rem; min-height:44px; display:flex; align-items:center; justify-content:center}
+.card .desc{margin:0; font-size:.88rem; color:var(--text-2)}
+.card .go{margin-top:auto; align-self:flex-start; text-decoration:none; font-size:.88rem; font-weight:600; padding:7px 12px; border-radius:9px; background:var(--accent); color:#fff}
+.card .go[aria-disabled="true"]{background:var(--surface-2); color:var(--muted); pointer-events:none}
+
+/* ---------- 노트북 표 / notebooks ---------- */
+.nb{display:grid; gap:10px}
+.nb-row{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px; display:grid; grid-template-columns:100px 1fr auto; gap:12px; align-items:center}
+.nb-row .ch{font-weight:700; color:var(--accent-ink); white-space:nowrap}
+.nb-row .t{font-weight:600}
+.nb-row .ex{font-size:.84rem; color:var(--text-2)}
+.badge img{height:22px; display:block}
+.badge{text-decoration:none}
+.badge .colab{display:inline-block; font-size:.8rem; font-weight:700; color:#fff; background:#e8710a; border-radius:5px; padding:2px 9px; white-space:nowrap}
+.badge.off{opacity:.45; filter:grayscale(1); pointer-events:none}
+.badge-wrap{display:flex; flex-direction:column; align-items:flex-end; gap:2px; font-size:.72rem; color:var(--muted)}
+@media (max-width:600px){
+  .nb-row{grid-template-columns:1fr; gap:6px}
+  .badge-wrap{align-items:flex-start}
+}
+
+/* ---------- 하단 / footer ---------- */
+footer{border-top:1px solid var(--line); margin-top:28px; padding:22px 0 40px; color:var(--text-2); font-size:.88rem}
+footer h2{font-size:1rem; color:var(--text)}
+footer ol{padding-left:1.2em; margin:6px 0 18px}
+footer li{margin:4px 0}
+.credit{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px}
+.howto{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-size:.9rem; color:var(--text-2)}
+.howto ul{margin:4px 0; padding-left:1.2em}
+</style>
+</head>
+<body data-root="" data-page="toc">
+<main id="main" tabindex="-1">
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand bi-inline" id="brand"></div>
+    <div class="lang" id="langToggle" role="group" aria-label="Language">
+      <button type="button" data-set-lang="ko">한국어</button>
+      <button type="button" data-set-lang="en">English</button>
+      <button type="button" data-set-lang="both">한·EN</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <span class="term bi-inline" id="term"></span>
+    <h1 class="bi-sub" data-i18n="heroTitle"></h1>
+    <p class="bi-block" data-i18n="heroLead"></p>
+  </div>
+
+  <section aria-labelledby="h-book">
+    <h2 id="h-book">장·절 목차 (학습서)</h2>
+    <p class="sec-sub">19장은 완성, 20–24장은 작성 예정입니다. 절 제목은 교재 한국어판 목차 표기를 따릅니다.</p>
+    <div id="bookToc" class="grid"></div>
+  </section>
+
+  <section aria-labelledby="h-demos">
+    <h2 id="h-demos" class="bi-inline" data-i18n="demosTitle"></h2>
+    <p class="sec-sub bi-block" data-i18n="demosSub"></p>
+    <div class="grid" id="cards"></div>
+  </section>
+
+  <section aria-labelledby="h-nb">
+    <h2 id="h-nb" class="bi-inline" data-i18n="nbTitle"></h2>
+    <p class="sec-sub bi-block" data-i18n="nbSub"></p>
+    <div class="nb" id="notebooks"></div>
+  </section>
+
+  <section aria-labelledby="h-how">
+    <h2 id="h-how" class="bi-inline" data-i18n="howTitle"></h2>
+    <div class="howto bi-block" data-i18n="howBody"></div>
+  </section>
+
+  <footer>
+    <h2 class="bi-inline" data-i18n="refTitle"></h2>
+    <ol>
+      <li class="bi-block" data-i18n="ref1"></li>
+      <li class="bi-block" id="ref2"></li>
+    </ol>
+    <h2 class="bi-inline" data-i18n="creditTitle"></h2>
+    <div class="credit bi-block" data-i18n="creditBody"></div>
+  </footer>
+</div>
+</main>
+
+<script>
+/* =====================================================================
+ * 1) 문구 사전 / UI strings  — 한국어(ko)와 영어(en)를 분리해서 관리
+ * ===================================================================== */
+const I18N = {
+  ko: {
+    heroTitle: '전체 목차: 학습서 · 시뮬레이션 · 노트북',
+    heroLead: '교재 19–24장을 장·절 단위 학습서로 다시 구성했습니다(왼쪽 목차). 이 페이지는 장·절 목록과 기존 시뮬레이션 12개, Colab 노트북 6개를 한곳에 모은 전체 목차입니다.',
+    demosTitle: '시뮬레이션',
+    demosSub: '카드마다 핵심 수식 하나와 해당 교재 절이 있습니다. 설치 없이 브라우저에서 바로 실행됩니다.',
+    nbTitle: 'Colab 예제 풀이 노트북',
+    nbSub: '교재 예제를 Python으로 풉니다. 위에서부터 순서대로 실행하면 됩니다. 교재에 답이 있는 예제는 계산값과 교재 답을 나란히 출력합니다.',
+    howTitle: '사용 안내',
+    howBody: '<ul><li>상단 버튼으로 언어(한국어 / English / 병기)를 바꿀 수 있습니다.</li><li>교재 쪽수는 한국어판 기준입니다.</li><li>기호는 강의자료를 따르고, 교재 기호가 다르면 괄호 안에 함께 적었습니다. 예: 큰분배함수 $\\Xi\\,(\\mathcal Z)$.</li><li>모바일에서도 사용할 수 있습니다. 그래프를 누르면 그 값으로 매개변수가 이동합니다(일부 데모). 새 학습서 페이지에서는 ‘누르면 이동’ 표시가 붙은 모든 그래프가 이렇게 동작합니다.</li></ul>',
+    open: '시뮬레이션 열기',
+    soon: '준비 중',
+    ready: '공개',
+    nbSoon: '준비 중',
+    examples: '예제',
+    extra: '추가 문제',
+    refTitle: '참고문헌',
+    ref1: 'S. J. Blundell, K. M. Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. (Oxford University Press, 2010). 쪽수는 한국어 번역판 기준.',
+    ref2: '강의 슬라이드 및 보조자료',
+    creditTitle: '만든 사람들',
+    creditBody: '이 사이트는 {COURSE} 수업의 복습을 돕기 위한 학습 보조 자료입니다. 모든 시뮬레이션은 교재의 식을 브라우저에서 그대로 수치 계산한 결과이며, 수업과 교재를 대신하지 않습니다. 오류나 개선 의견은 수업 시간 또는 저장소 이슈로 알려 주세요.<br><br>제작: {COURSE} 강의보조 프로젝트 · 코드 작성 지원: Claude (Anthropic) · 수식 렌더링: KaTeX'
+  },
+  en: {
+    heroTitle: 'Contents: study pages, simulations, notebooks',
+    heroLead: 'Chapters 19–24 are being rebuilt as section-by-section study pages (sidebar; Korean first). This page collects the chapter list, the 12 original simulations and the 6 Colab notebooks.',
+    demosTitle: 'Simulations',
+    demosSub: 'Each card shows one key equation and the textbook section. Everything runs in the browser — nothing to install.',
+    nbTitle: 'Colab notebooks: worked examples',
+    nbSub: 'Textbook examples solved in Python. Run the cells from top to bottom. Where the book gives an answer, the notebook prints it next to the computed value.',
+    howTitle: 'How to use',
+    howBody: '<ul><li>Switch the language (Korean / English / both) with the buttons at the top.</li><li>Page numbers refer to the Korean edition of the textbook.</li><li>Symbols follow the lecture notes; where the textbook differs, its symbol is given in parentheses, e.g. grand partition function $\\Xi\\,(\\mathcal Z)$.</li><li>Works on mobile. Tapping a graph moves the parameter to that value (in some demos). On the new study pages every graph marked ‘누르면 이동’ (tap to move) behaves this way.</li></ul>',
+    open: 'Open simulation',
+    soon: 'Coming soon',
+    ready: 'Live',
+    nbSoon: 'Coming soon',
+    examples: 'Examples',
+    extra: 'Extra problems',
+    refTitle: 'References',
+    ref1: 'S. J. Blundell and K. M. Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. (Oxford University Press, 2010). Page numbers refer to the Korean translation.',
+    ref2: 'Lecture slides and supplementary notes',
+    creditTitle: 'Credits',
+    creditBody: 'This site is a study aid for {COURSE}. Every simulation evaluates the textbook equations numerically in your browser; it complements, and does not replace, the lectures and the textbook. Please report errors or suggestions in class or as a repository issue.<br><br>Made by the {COURSE} course-support project · Code assistance: Claude (Anthropic) · Math rendering: KaTeX'
+  }
+};
+
+/* =====================================================================
+ * 2) 데모 카드 목록 / demo cards   (ready:true 이면 링크 활성화)
+ * ===================================================================== */
+const DEMOS = [
+  { id:1,  path:'demos/equipartition/', ready:true, sec:'19.1',
+    title:{ko:'에너지 등분배 정리', en:'The equipartition theorem'},
+    eq:'\\langle \\alpha x^2\\rangle=\\tfrac12 k_BT',
+    desc:{ko:'α와 T를 바꾸며 볼츠만 분포에서 뽑은 표본의 평균 에너지를 관찰합니다.', en:'Vary α and T and watch the mean energy of samples drawn from the Boltzmann distribution.'} },
+  { id:2,  path:'demos/partition-function/', ready:true, sec:'20.1–20.3',
+    title:{ko:'분배함수: 네 가지 계', en:'Partition function: four model systems'},
+    eq:'U=-\\dfrac{\\partial \\ln Z}{\\partial \\beta}',
+    desc:{ko:'2준위계·조화진동자·N준위계·회전자의 준위 점유와 $U$, $S$, $C_V$를 온도에 따라 비교합니다.', en:'Compare level populations and $U$, $S$, $C_V$ versus temperature for a two-level system, an oscillator, an N-level system and a rotor.'} },
+  { id:3,  path:'demos/paramagnet/', ready:true, sec:'20.4',
+    title:{ko:'스핀-½ 상자성체', en:'Spin-½ paramagnet'},
+    eq:'m=N\\mu_B\\tanh(\\beta\\mu_B B)',
+    desc:{ko:'자기장과 온도를 바꾸며 자기모멘트와 큐리 법칙을 확인합니다.', en:'Change field and temperature; see the magnetic moment saturate and Curie’s law emerge.'} },
+  { id:4,  path:'demos/density-of-states/', ready:true, sec:'21.1',
+    title:{ko:'상태밀도 세기', en:'Counting the density of states'},
+    eq:'g(k)\\,dk=\\dfrac{Vk^2\\,dk}{2\\pi^2}',
+    desc:{ko:'k-공간 격자점을 직접 세어 상자가 커질수록 공식에 다가가는 것을 봅니다.', en:'Count k-space lattice points and watch them approach the formula as the box grows.'} },
+  { id:5,  path:'demos/quantum-concentration/', ready:true, sec:'21.2',
+    title:{ko:'양자 농도와 열적 파장', en:'Quantum concentration and thermal wavelength'},
+    eq:'n_Q=\\lambda_{th}^{-3}=\\left(\\dfrac{2\\pi m k_BT}{h^2}\\right)^{3/2}',
+    desc:{ko:'입자의 질량과 온도를 바꾸며 고전 근사 조건 $n\\ll n_Q$를 점검합니다.', en:'Vary mass and temperature to test the classical condition $n\\ll n_Q$.'} },
+  { id:6,  path:'demos/gibbs-paradox/', ready:true, sec:'21.3, 21.5',
+    title:{ko:'구별가능성과 깁스 역설', en:'Distinguishability and the Gibbs paradox'},
+    eq:'Z_N=\\dfrac{Z_1^N}{N!}',
+    desc:{ko:'같은 기체와 다른 기체를 섞을 때 혼합 엔트로피를 1/N! 유무로 비교합니다.', en:'Compare the entropy of mixing for identical and different gases, with and without 1/N!.'} },
+  { id:7,  path:'demos/diatomic-heat-capacity/', ready:true, sec:'19.2, 21.6',
+    title:{ko:'이원자 기체의 열용량', en:'Heat capacity of a diatomic gas'},
+    eq:'Z=Z_{\\rm trans}Z_{\\rm rot}Z_{\\rm vib}',
+    desc:{ko:'회전·진동 특성온도를 바꾸며 $C_V/R$의 계단 구조를 관찰합니다.', en:'Tune the rotational and vibrational temperatures and watch the steps in $C_V/R$.'} },
+  { id:8,  path:'demos/chemical-potential/', ready:true, sec:'22.1–22.2',
+    title:{ko:'화학퍼텐셜과 입자 흐름', en:'Chemical potential and particle flow'},
+    eq:'\\mu=k_BT\\ln(n\\lambda_{th}^3)',
+    desc:{ko:'두 상자 사이에서 입자가 μ가 같아질 때까지 이동하는 과정을 봅니다.', en:'Watch particles move between two boxes until their chemical potentials match.'} },
+  { id:9,  path:'demos/chemical-equilibrium/', ready:true, sec:'22.8',
+    title:{ko:'화학 평형과 반트호프 식', en:'Chemical equilibrium and the van ’t Hoff equation'},
+    eq:'\\dfrac{d\\ln K}{d(1/T)}=-\\dfrac{\\Delta_r H^\\ominus}{R}',
+    desc:{ko:'ln K–1/T 직선의 기울기에서 H₂ 해리 엔탈피를 읽어 냅니다.', en:'Read the H₂ dissociation enthalpy from the slope of ln K versus 1/T.'} },
+  { id:10, path:'demos/blackbody/', ready:true, sec:'23.5–23.6',
+    title:{ko:'흑체 복사 스펙트럼', en:'Black-body spectrum'},
+    eq:'u_\\omega=\\dfrac{\\hbar}{\\pi^2c^3}\\dfrac{\\omega^3}{e^{\\beta\\hbar\\omega}-1}',
+    desc:{ko:'온도를 바꾸며 플랑크 분포와 레일리–진스 극한, 빈 법칙을 비교합니다.', en:'Vary the temperature; compare Planck’s law with the Rayleigh–Jeans limit and Wien’s law.'} },
+  { id:11, path:'demos/einstein-debye/', ready:true, sec:'24.1–24.2',
+    title:{ko:'아인슈타인 모형과 데바이 모형', en:'Einstein and Debye models'},
+    eq:'g(\\omega)=\\dfrac{9N\\omega^2}{\\omega_D^3}\\ \\ (\\omega\\le\\omega_D)',
+    desc:{ko:'두 모형의 고체 열용량을 비교하고 저온의 $T^3$ 법칙을 확인합니다.', en:'Compare the heat capacity of a solid in both models and check the low-$T$ $T^3$ law.'} },
+  { id:12, path:'demos/phonon-dispersion/', ready:true, sec:'24.3',
+    title:{ko:'1차원 사슬의 포논 분산', en:'Phonon dispersion of a 1D chain'},
+    eq:'\\omega=\\sqrt{4K/m}\\,\\left|\\sin\\tfrac{qa}{2}\\right|',
+    desc:{ko:'파수 q를 바꾸며 원자의 진동 모습과 분산관계를 관찰합니다.', en:'Change the wavevector q and watch the lattice vibrate along the dispersion curve.'} }
+];
+
+/* =====================================================================
+ * 3) Colab 노트북 목록 / notebooks   (ready:true 이면 배지 활성화)
+ * ===================================================================== */
+const NOTEBOOKS = [
+  { ch:19, file:'ch19_equipartition.ipynb', ready:true,
+    title:{ko:'에너지 등분배', en:'Equipartition of energy'}, ex:'19.1, 19.2, 19.3', extra:'' },
+  { ch:20, file:'ch20_partition_function.ipynb', ready:true,
+    title:{ko:'분배함수', en:'The partition function'}, ex:'20.1, 20.2, 20.3, 20.4, 20.5', extra:'20.8' },
+  { ch:21, file:'ch21_ideal_gas.ipynb', ready:true,
+    title:{ko:'이상기체의 통계역학', en:'Statistical mechanics of an ideal gas'}, ex:'21.1, 21.2, 21.3', extra:'' },
+  { ch:22, file:'ch22_chemical_potential.ipynb', ready:true,
+    title:{ko:'화학퍼텐셜', en:'The chemical potential'}, ex:'22.1–22.8', extra:'22.6, 22.7' },
+  { ch:23, file:'ch23_photons.ipynb', ready:true,
+    title:{ko:'광자', en:'Photons'}, ex:'23.1, 23.2, 23.3, 23.4', extra:'23.3, 23.7' },
+  { ch:24, file:'ch24_phonons.ipynb', ready:true,
+    title:{ko:'포논', en:'Phonons'}, ex:'24.1, 24.2, 24.3', extra:'24.1' }
+];
+
+/* =====================================================================
+ * 4) 언어 처리 공통 코드 / i18n core  (모든 페이지에 같은 코드)
+ * ===================================================================== */
+const CFG = Object.assign({
+  DEFAULT_LANG:'both', SHOW_LANG_TOGGLE:true,
+  GITHUB_USER:'GITHUB_USER', REPO_NAME:'REPO_NAME', BRANCH:'main', NOTEBOOK_DIR:'notebooks',
+  COURSE:{ko:'열및통계물리2', en:'Thermal and Statistical Physics 2'},
+  TERM:{ko:'2026-2학기', en:'Fall Semester 2026'}, ORG:{ko:'', en:''}
+}, window.SITE_CONFIG || {});
+const LANGS = ['ko','en','both'];
+const LS_KEY = 'statphys2-lang';
+
+function resolveLang(){
+  if (!CFG.SHOW_LANG_TOGGLE) return LANGS.includes(CFG.DEFAULT_LANG) ? CFG.DEFAULT_LANG : 'both';
+  const q = new URLSearchParams(location.search).get('lang');
+  if (LANGS.includes(q)) return q;
+  try { const s = localStorage.getItem(LS_KEY); if (LANGS.includes(s)) return s; } catch(e){}
+  return LANGS.includes(CFG.DEFAULT_LANG) ? CFG.DEFAULT_LANG : 'both';
+}
+/* 한·영 문자열 쌍을 언어별 span 두 개로 만든다 */
+function bi(ko, en){
+  if (ko == null) ko = en; if (en == null) en = ko;
+  return `<span class="t-ko" lang="ko">${ko}</span><span class="t-en" lang="en">${en}</span>`;
+}
+function biKey(key, vars){
+  const sub = (s, l) => s == null ? s : s.replace(/\{(\w+)\}/g, (m,k)=> vars && vars[k] ? vars[k][l] : m);
+  return bi(sub(I18N.ko[key],'ko'), sub(I18N.en[key],'en'));
+}
+function setLang(lang, save){
+  document.documentElement.dataset.lang = lang;
+  document.documentElement.lang = (lang === 'en') ? 'en' : 'ko';
+  document.querySelectorAll('[data-set-lang]').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.dataset.setLang === lang)));
+  if (save) { try { localStorage.setItem(LS_KEY, lang); } catch(e){} }
+}
+function renderMath(root){
+  if (window.renderMathInElement) {
+    renderMathInElement(root, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false});
+  }
+}
+function texInline(tex){
+  if (window.katex) { try { return katex.renderToString(tex, {throwOnError:false}); } catch(e){} }
+  return `<code>${tex}</code>`;
+}
+
+/* =====================================================================
+ * 5) 페이지 구성 / build page
+ * ===================================================================== */
+function colabURL(file){
+  return `https://colab.research.google.com/github/${CFG.GITHUB_USER}/${CFG.REPO_NAME}/blob/${CFG.BRANCH}/${CFG.NOTEBOOK_DIR}/${file}`;
+}
+function build(){
+  const vars = { COURSE: CFG.COURSE };
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = biKey(el.dataset.i18n, vars); });
+  document.getElementById('brand').innerHTML = bi(CFG.COURSE.ko, CFG.COURSE.en);
+  const orgK = CFG.ORG && CFG.ORG.ko ? ` · ${CFG.ORG.ko}` : '', orgE = CFG.ORG && CFG.ORG.en ? ` · ${CFG.ORG.en}` : '';
+  document.getElementById('term').innerHTML = bi(CFG.TERM.ko + orgK, CFG.TERM.en + orgE);
+  document.getElementById('ref2').innerHTML = bi(
+    `${CFG.COURSE.ko} ${I18N.ko.ref2}, ${CFG.TERM.ko}${orgK}.`,
+    `${CFG.COURSE.en}, ${I18N.en.ref2}, ${CFG.TERM.en}${orgE}.`);
+
+  const cards = document.getElementById('cards');
+  cards.innerHTML = DEMOS.map(d => `
+    <article class="card ${d.ready ? 'ready' : ''}">
+      <div class="meta">
+        <span class="bi-slash">#${d.id} · ${bi('교재 '+d.sec+'절', 'Sec. '+d.sec)}</span>
+        <span class="chip bi-slash ${d.ready ? 'ok' : ''}">${d.ready ? biKey('ready') : biKey('soon')}</span>
+      </div>
+      <h3 class="bi-sub">${bi(d.title.ko, d.title.en)}</h3>
+      <div class="eq">${texInline(d.eq)}</div>
+      <p class="desc bi-block">${bi(d.desc.ko, d.desc.en)}</p>
+      <a class="go bi-inline" href="${d.ready ? d.path : '#'}" ${d.ready ? '' : 'aria-disabled="true" tabindex="-1"'}>${d.ready ? biKey('open') : biKey('soon')}</a>
+    </article>`).join('');
+
+  const nb = document.getElementById('notebooks');
+  nb.innerHTML = NOTEBOOKS.map(n => `
+    <div class="nb-row">
+      <div class="ch bi-slash">${bi(n.ch+'장', 'Ch. '+n.ch)}</div>
+      <div>
+        <div class="t bi-inline">${bi(n.title.ko, n.title.en)}</div>
+        <div class="ex bi-slash">${biKey('examples')} ${n.ex}${n.extra ? ' · '+biKey('extra')+' '+n.extra : ''}</div>
+      </div>
+      <div class="badge-wrap">
+        <a class="badge ${n.ready ? '' : 'off'}" href="${n.ready ? colabURL(n.file) : '#'}" target="_blank" rel="noopener"
+           ${n.ready ? '' : 'aria-disabled="true" tabindex="-1"'} title="${n.file}">
+          <span class="colab">Colab에서 열기</span>
+        </a>
+        ${n.ready ? '' : `<span class="bi-slash">${biKey('nbSoon')}</span>`}
+      </div>
+    </div>`).join('');
+
+  const toggle = document.getElementById('langToggle');
+  if (!CFG.SHOW_LANG_TOGGLE) toggle.hidden = true;
+  toggle.addEventListener('click', e => {
+    const b = e.target.closest('[data-set-lang]'); if (b) setLang(b.dataset.setLang, true);
+  });
+  setLang(resolveLang(), false);
+  renderMath(document.body);
+}
+/* 학습서 장·절 목록 (assets/book.js 의 Book.TOC) */
+function buildBookToc(){
+  const el = document.getElementById('bookToc'); if (!el || !window.Book) return;
+  el.innerHTML = Book.TOC.map(c => `<article class="card ${c.ready ? 'ready' : ''}">
+      <div class="meta"><span>교재 ${c.p}쪽</span><span class="chip ${c.ready ? 'ok' : ''}">${c.ready ? '완성' : '작성 예정'}</span></div>
+      <h3><a href="${Book.href('ch' + c.ch)}">${c.ch}장 ${c.t}</a></h3>
+      <ul style="margin:0;padding-left:1.1em;font-size:.88rem">${c.secs.map(s => `<li><a href="${Book.href(s[0])}">${s[0]} ${s[1]}</a></li>`).join('')}</ul>
+    </article>`).join('');
+}
+document.addEventListener('DOMContentLoaded', buildBookToc);
+/* KaTeX(defer)가 로드된 뒤 구성 */
+document.addEventListener('DOMContentLoaded', build);
+</script>
+</body>
+</html>

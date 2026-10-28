@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>양자 농도와 열적 파장 · Quantum concentration</title>
 <meta name="description" content="입자의 질량과 온도, 수밀도를 바꾸며 고전 이상기체 조건 n ≪ n_Q를 점검한다 (Blundell 21.2, 그림 21.3)">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<script defer src="../../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../../assets/vendor/katex/contrib/auto-render.min.js"></script>
 <!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
 <script src="../../site-config.js"></script>
+<script src="../../assets/demo-embed.js"></script>
 <style>
 /* =====================================================================
  * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
@@ -166,7 +167,7 @@ canvas.viz.short{height:240px}
 
   <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
   <header class="topbar">
-    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <a class="back bi-inline" href="../../toc.html" data-i18n="back"></a>
     <div class="lang" id="langToggle" role="group" aria-label="Language">
       <button type="button" data-set-lang="ko">한국어</button>
       <button type="button" data-set-lang="en">English</button>
@@ -293,7 +294,7 @@ const I18N = {
     okClassic: '고전 근사 성립: $n\\ll n_Q$', midClassic: '경계 영역: $n$이 $n_Q$에 가까워짐', noClassic: '양자 효과 중요: $n\\gtrsim n_Q$',
     lblPart: '입자', pE: '전자', pP: '양성자',
     lblT: '온도 $T$ (K)', lblN: '수밀도 $n$ (m$^{-3}$)',
-    preAir: '공기 분자 (N₂, 300 K, $n\\approx10^{25}$)', preMetal: '금속 속 전자 (300 K, $n\\sim10^{29}$)',
+    preAir: '공기 분자 (N₂, 300 K·1기압, $n\\approx2.4\\times10^{25}$)', preMetal: '금속 속 전자 (300 K, $n\\sim10^{29}$)',
     pPlots: '양자 농도와 고전 근사의 조건',
     plotQ: '$n_Q$ (m$^{-3}$) — 온도에 따라 (로그-로그, 교재 그림 21.3)',
     legN: '지금의 수밀도 $n$',
@@ -306,7 +307,7 @@ const I18N = {
     eq1: '$Z_1=Vn_Q=V/\\lambda_{th}^3$ — 교재 식 (21.17), (21.19)',
     eq2: '고전(볼츠만) 통계와 $Z_N=Z_1^N/N!$이 성립하는 조건: $n\\ll n_Q$ — 교재 식 (21.27)',
     eq3: '$n=n_Q$인 온도: $T^*=\\dfrac{2\\pi\\hbar^2}{mk_B}\\,n^{2/3}$ (위 식을 $T$에 대해 푼 것)',
-    explain: '$n_Q$는 $T^{3/2}$와 $m^{3/2}$에 비례하므로 무겁고 뜨거운 입자일수록 크다. 상온 공기 분자는 $n/n_Q$가 $10^{-7}$ 정도라 고전 이상기체로 충분하다. 같은 온도에서도 질량이 작은 전자는 $n_Q$가 $10^{25}$ m$^{-3}$ 정도라, 금속의 전자 밀도($\\sim10^{29}$ m$^{-3}$)에서는 $n\\gg n_Q$가 되어 양자 효과를 무시할 수 없다. 왼쪽 그림에서 파속이 겹치기 시작하는 순간이 오른쪽 아래 그래프에서 $n/n_Q=1$을 넘는 순간과 같다. 온도를 낮추거나 밀도를 높이면 어떤 입자든 결국 이 경계를 넘는다.',
+    explain: '$n_Q$는 $T^{3/2}$와 $m^{3/2}$에 비례하므로 무겁고 뜨거운 입자일수록 크다. 상온 공기 분자는 $n/n_Q$가 $10^{-7}$ 정도라 고전 이상기체로 충분하다. 같은 온도에서도 질량이 작은 전자는 $n_Q$가 $10^{25}$ m$^{-3}$ 정도라, 금속의 전자 밀도($\\sim10^{29}$ m$^{-3}$)에서는 $n\\gg n_Q$가 되어 양자 효과를 무시할 수 없다. “입자와 열적 파속” 그림에서 파속이 겹치기 시작하는 순간이 “$n/n_Q$” 그래프에서 $n/n_Q=1$을 넘는 순간과 같다. 온도를 낮추거나 밀도를 높이면 어떤 입자든 결국 이 경계를 넘는다.',
     src1: '21.2절 양자 농도 (한국어판 304–305쪽), 식 (21.14)–(21.19) · 그림 21.3',
     src2: '21.3절 구별가능, 조건 $n\\ll n_Q$ (식 21.27)',
     note1: '열적 파장은 $\\lambda_{th}=n_Q^{-1/3}$이다(교재 식 21.18). 강의 3주차 부록은 같은 양을 $\\lambda_T$로 쓴다.',
@@ -321,7 +322,7 @@ const I18N = {
     okClassic: 'Classical limit holds: $n\\ll n_Q$', midClassic: 'Borderline: $n$ approaching $n_Q$', noClassic: 'Quantum effects matter: $n\\gtrsim n_Q$',
     lblPart: 'Particle', pE: 'Electron', pP: 'Proton',
     lblT: 'Temperature $T$ (K)', lblN: 'Number density $n$ (m$^{-3}$)',
-    preAir: 'Air molecules (N₂, 300 K, $n\\approx10^{25}$)', preMetal: 'Electrons in a metal (300 K, $n\\sim10^{29}$)',
+    preAir: 'Air molecules (N₂, 300 K, 1 atm, $n\\approx2.4\\times10^{25}$)', preMetal: 'Electrons in a metal (300 K, $n\\sim10^{29}$)',
     pPlots: 'Quantum concentration and the classical condition',
     plotQ: '$n_Q$ (m$^{-3}$) versus temperature (log–log, textbook Fig. 21.3)',
     legN: 'Current number density $n$',
@@ -334,7 +335,7 @@ const I18N = {
     eq1: '$Z_1=Vn_Q=V/\\lambda_{th}^3$ — Eqs. (21.17), (21.19)',
     eq2: 'Classical (Boltzmann) statistics and $Z_N=Z_1^N/N!$ require $n\\ll n_Q$ — Eq. (21.27)',
     eq3: 'Temperature at which $n=n_Q$: $T^*=\\dfrac{2\\pi\\hbar^2}{mk_B}\\,n^{2/3}$ (the formula above solved for $T$)',
-    explain: '$n_Q$ grows as $T^{3/2}$ and $m^{3/2}$, so heavy, hot particles have large quantum concentrations. Air molecules at room temperature have $n/n_Q$ of order $10^{-7}$ — a classical ideal gas is fine. Electrons are so light that $n_Q\\sim10^{25}$ m$^{-3}$ at the same temperature, so at metallic densities ($\\sim10^{29}$ m$^{-3}$) $n\\gg n_Q$ and quantum effects cannot be ignored. The moment the packets on the left begin to overlap is the moment $n/n_Q$ crosses 1 in the lower graph. Cool any gas enough, or compress it enough, and it crosses this line.',
+    explain: '$n_Q$ grows as $T^{3/2}$ and $m^{3/2}$, so heavy, hot particles have large quantum concentrations. Air molecules at room temperature have $n/n_Q$ of order $10^{-7}$ — a classical ideal gas is fine. Electrons are so light that $n_Q\\sim10^{25}$ m$^{-3}$ at the same temperature, so at metallic densities ($\\sim10^{29}$ m$^{-3}$) $n\\gg n_Q$ and quantum effects cannot be ignored. The moment the packets in the “particles and thermal wave packets” panel begin to overlap is the moment $n/n_Q$ crosses 1 in the “$n/n_Q$” graph. Cool any gas enough, or compress it enough, and it crosses this line.',
     src1: '§21.2 Quantum concentration (Korean ed. pp. 304–305), Eqs. (21.14)–(21.19) · Fig. 21.3',
     src2: '§21.3 Distinguishability, condition $n\\ll n_Q$ (Eq. 21.27)',
     note1: 'The thermal wavelength is $\\lambda_{th}=n_Q^{-1/3}$ (Eq. 21.18). The week-3 lecture appendix writes the same quantity as $\\lambda_T$.',
@@ -345,12 +346,12 @@ const I18N = {
 /* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
 const I18N_COMMON = {
   ko: {
-    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    back: '← 전체 목차', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
     hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
     footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
   },
   en: {
-    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    back: '← Contents', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
     hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
     footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
   }
@@ -648,7 +649,7 @@ function init(){
   tS.addEventListener('input', () => { S.T = tMap.to(+tS.value); render(); });
   nS.addEventListener('input', () => { S.n = nMap.to(+nS.value); render(); });
   const mark = segInit('partSeg', 'part', S.part, v => { S.part = v; render(); });
-  document.getElementById('presetAir').addEventListener('click', () => { S.part = 'N2'; S.T = 300; S.n = 1e25; sync(); });
+  document.getElementById('presetAir').addEventListener('click', () => { S.part = 'N2'; S.T = 300; S.n = 101325 / (1.380649e-23 * 300); sync(); });
   document.getElementById('presetMetal').addEventListener('click', () => { S.part = 'e'; S.T = 300; S.n = 1e29; sync(); });
   sync();
 }

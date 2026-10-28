@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>상태밀도 세기 · Counting the density of states</title>
 <meta name="description" content="k-공간 격자점을 직접 세어 g(k)dk = Vk²dk/2π²와 비교한다 (Blundell 21.1, 예제 21.1)">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<script defer src="../../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../../assets/vendor/katex/contrib/auto-render.min.js"></script>
 <!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
 <script src="../../site-config.js"></script>
+<script src="../../assets/demo-embed.js"></script>
 <style>
 /* =====================================================================
  * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
@@ -164,7 +165,7 @@ canvas.viz.short{height:240px}
 
   <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
   <header class="topbar">
-    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <a class="back bi-inline" href="../../toc.html" data-i18n="back"></a>
     <div class="lang" id="langToggle" role="group" aria-label="Language">
       <button type="button" data-set-lang="ko">한국어</button>
       <button type="button" data-set-lang="en">English</button>
@@ -308,7 +309,7 @@ const I18N = {
     src2: '예제 21.1 주기 경계조건 (한국어판 303쪽), 식 (21.10)–(21.13)',
     src3: '관련: 23장 광자(편광 2개 → 계수 2), 24장 포논(편광 3개 → 계수 3)에서 같은 방법을 쓴다',
     note1: '그림의 점은 3차원 격자의 한 단면이다. 개수는 3차원 전체를 센 값이다.',
-    note2: '7주차 퀴즈처럼 주기 경계조건으로 세면 $\\pm\\mathbf k$가 이미 구 전체에 포함되어 있으므로, 이 계수를 따로 곱하지 않는다.'
+    note2: '7주차 퀴즈처럼 주기 경계조건으로 세면 $\\pm\\mathbf k$가 이미 구 전체에 포함되어 있으므로, 고정 경계조건에서 양의 8분원만 남기려고 곱하던 $\\tfrac18$을 곱하지 않는다.'
   },
   en: {
     chipSec: 'Textbook §21.1 · Example 21.1',
@@ -339,19 +340,19 @@ const I18N = {
     src2: 'Example 21.1 periodic boundary conditions (Korean ed. p. 303), Eqs. (21.10)–(21.13)',
     src3: 'Related: Ch. 23 photons (2 polarizations → factor 2) and Ch. 24 phonons (3 polarizations → factor 3) use the same counting',
     note1: 'The picture shows one slice of the 3D lattice; the counts are for the full 3D lattice.',
-    note2: 'As in the week-7 quiz: with periodic boundary conditions $\\pm\\mathbf k$ are already part of the full sphere, so no extra factor is applied for them.'
+    note2: 'As in the week-7 quiz: with periodic boundary conditions $\\pm\\mathbf k$ are already part of the full sphere, so the factor $\\tfrac18$ used with fixed boundaries (to keep only the positive octant) is not applied.'
   }
 };
 
 /* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
 const I18N_COMMON = {
   ko: {
-    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    back: '← 전체 목차', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
     hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
     footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
   },
   en: {
-    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    back: '← Contents', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
     hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
     footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
   }

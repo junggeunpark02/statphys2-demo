@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>19장 에너지 등분배 · 통계역학 학습서</title>
+<meta name="description" content="왜 등분배 정리를 공부하는가: 기체와 고체의 열용량이 2.5R, 3.5R, 3R로 모이는 이유와 그 규칙의 한계. 교재 19장(271–282쪽).">
+<link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+<script src="../assets/book.js"></script>
+<script defer src="sim19.js"></script>
+</head>
+<body data-root="../" data-page="ch19">
+<main id="main" class="bk-main" tabindex="-1">
+<article class="bk-page">
+<p class="bk-crumb"><a href="../toc.html">전체 목차</a> › 19장</p>
+<h1 class="bk-title"><span class="no">19장</span>에너지 등분배</h1>
+<p class="bk-meta">교재 271–282쪽 · 절 4개 · 예제 3개 · 연습문제 7개</p>
+<p class="bk-lang-note" hidden>새로 쓴 본문은 아직 한국어만 있습니다. · The new study text is Korean-only for now.</p>
+<ul class="bk-flow" aria-label="이 장의 흐름">
+  <li><a href="#failed">지금까지 무엇이 안 됐나</a></li><li><a href="#questions">이 장의 질문</a></li><li><a href="#map">장 지도</a></li><li><a href="#cando">끝내면 할 수 있는 것</a></li><li><a href="#left">남는 문제</a></li>
+</ul>
+<p class="bk-lead">이 장은 “왜 이걸 공부하는가”에 답한다. 열역학으로 잰 숫자 몇 개가 이상할 만큼 깔끔하게 모인다. 분자 하나하나의 운동을 몰라도 그 이유를 설명하는 규칙이 하나 있고, 그 규칙이 어디서 깨지는지가 20–24장 전체를 이끈다.</p>
+
+<h2 id="failed">지금까지 무엇이 안 됐나</h2>
+<p>일반물리에서 단원자 이상기체의 내부 에너지를 $U=\tfrac32nRT$로 외웠다. 기체 분자 운동론(교재 5장, 식 5.17)은 기체 분자 하나의 평균 병진 운동 에너지가 $\tfrac32k_BT$임을 보였다. 하지만 그것은 날아다니는 병진 운동만의 결과였다. 분자가 돌거나 떨면 어떻게 되는지, 고체 속 원자는 어떻게 되는지에 대해서는 아무 말도 하지 못했다.</p>
+<p>측정값을 보면 의문이 더 커진다. 아래는 교재 연습문제 19.2에 실린, 298 K와 일정 압력에서 잰 몰 열용량을 기체상수 $R$로 나눈 값이다.</p>
+<figure class="data-fig" id="fig-cp">
+  <div class="plot-mount"></div>
+  <figcaption><b>측정값이 세 무리로 모인다.</b> He·Ne·Ar·Xe는 모두 정확히 $2.50R$, N₂·O₂·H₂는 $3.5R$ 근처, 금속 일곱 가지는 $3R$ 근처다. 출처: 교재 연습문제 19.2(282쪽). 점에 마우스를 올리면 값이 보인다.</figcaption>
+</figure>
+<div class="claim" data-k="exp" data-src="교재 연습문제 19.2(282쪽)"><p>He와 Xe는 원자 질량이 30배 넘게 다른데 몰 열용량은 20.79 J K⁻¹ mol⁻¹로 소수 둘째 자리까지 같다. Cu(24.44)와 Pb(26.44)처럼 전혀 다른 금속도 $3R=24.94$ 근처에 있다.</p></div>
+<p>질량도, 결합의 세기도, 원소의 종류도 다른데 왜 이런 “반정수 × $R$” 값이 나올까? 그리고 거꾸로, 분자 구조를 직접 보지 않고 열용량만으로 분자가 원자 하나인지 둘인지 알아낼 수 있을까? 또 하나, 상온의 $k_BT\approx0.026$ eV는 너무 작아서 우리 눈에 보이는 일을 아무것도 못 할 것 같은데, 1827년 브라운이 현미경으로 본 작은 입자들의 쉼 없는 떨림은 무엇이었을까?</p>
+
+<h2 id="questions">이 장이 답하려는 질문</h2>
+<ol class="qlist">
+  <li id="q1"><span class="qn">Q1</span>열평형에서 에너지는 계의 운동 방식(자유도)마다 어떻게 나뉘는가? 용수철 상수나 질량 같은 세부 사항에 따라 달라지는가?</li>
+  <li id="q2"><span class="qn">Q2</span>그 규칙만으로 기체(단원자·이원자)와 고체의 몰 열용량, 그리고 $\gamma=C_p/C_V$를 예측할 수 있는가?</li>
+  <li id="q3"><span class="qn">Q3</span>그 규칙은 언제, 왜 틀리는가? 어떤 가정 위에 서 있는가?</li>
+  <li id="q4"><span class="qn">Q4</span>$\tfrac12k_BT$라는 아주 작은 에너지가 눈에 보이는 효과를 낼 수 있는가?</li>
+</ol>
+
+<h2 id="map">장 지도</h2>
+<ol class="chmap">
+  <li><span class="sec"><a href="19-1.html">19.1</a></span><span><span class="qs"><a class="qchip" href="#q1">Q1</a></span>등분배 정리. 볼츠만 인자 하나로 “제곱항 하나당 $\tfrac12k_BT$”를 증명한다. 규칙을 만드는 절.</span></li>
+  <li><span class="sec"><a href="19-2.html">19.2</a></span><span><span class="qs"><a class="qchip" href="#q2">Q2</a></span>응용. 규칙을 “제곱항 세기”로 바꾸어 단원자·이원자 기체와 고체에 쓴다. 규칙을 쓰는 절이며, 이원자 기체에서 첫 어긋남을 만난다.</span></li>
+  <li><span class="sec"><a href="19-3.html">19.3</a></span><span><span class="qs"><a class="qchip" href="#q3">Q3</a></span>사용된 가정. 19.1의 증명에 숨은 두 가정(연속 변수, 제곱 꼴)을 꺼내, 19.2의 어긋남이 양자화 때문임을 보인다. 규칙의 한계를 긋는 절.</span></li>
+  <li><span class="sec"><a href="19-4.html">19.4</a></span><span><span class="qs"><a class="qchip" href="#q4">Q4</a></span>브라운 운동. 같은 규칙이 무거운 입자에도 적용되어 현미경으로 보이는 움직임을 만든다는 것을 본다. 규칙이 만든 관측 가능한 현상.</span></li>
+</ol>
+<p>흐름: 19.1에서 만든 규칙을 19.2에서 쓰다가 어긋남을 발견하고, 19.3에서 그 원인을 찾는다. 19.4는 규칙이 맞는 영역에서 그것이 만드는 눈에 보이는 결과를 확인한다.</p>
+
+<h2 id="cando">이 장을 끝내면 할 수 있는 것</h2>
+<ul>
+  <li>에너지가 $E=\sum_i\alpha_ix_i^2$ 꼴인 계의 평균 에너지를 적분 없이 쓰고, 그것이 $\alpha_i$와 무관한 이유를 설명한다.</li>
+  <li>분자 모형에서 제곱항을 세어 $C_V$, $C_p$, $\gamma$를 예측하고, 연습문제 19.2의 측정값과 비교해 어느 자유도가 살아 있는지 판정한다.</li>
+  <li>고체의 몰 열용량 $3R$(뒬롱-프티 법칙)을 유도한다.</li>
+  <li>$k_BT$와 준위 간격 $\hbar\omega$를 비교해 등분배를 쓸 수 있는 온도인지 판정하고, 퍼텐셜을 테일러 전개해 조화 근사의 조건을 말한다.</li>
+  <li>브라운 입자의 열적 속력을 어림하고, 그것이 현미경으로 보이는 움직임과 어떻게 다른지 설명한다.</li>
+</ul>
+
+<h2 id="left">남는 문제</h2>
+<p>이 장의 도구로는 다음을 해결하지 못한다. 각각 어디서 다루는지 적었다.</p>
+<ul>
+  <li><b>준위 간격과 $k_BT$가 비슷한 온도에서 열용량을 정확히 계산하기.</b> 등분배는 고온 극한만 준다. 모든 준위의 볼츠만 인자를 더한 분배함수가 필요하다 → <a class="loc" href="../ch20/index.html">[20장 머릿글]</a>, <a class="loc" href="../ch20/20-2.html#eq-20-29">[20.2절 · 식 20.29]</a>, <a class="loc" href="../ch20/20-3.html">[20.3절 · 빅 아이디어]</a></li>
+  <li><b>이원자 기체 열용량의 계단</b>($\tfrac32R\to\tfrac52R\to\tfrac72R$)과 수소의 측정값 → <a class="loc" href="../ch21/21-6.html#fig-21-5">[21.6절 · 그림 21.5]</a>, <a class="loc" href="../ch21/21-6.html#fig-21-6">[21.6절 · 그림 21.6]</a></li>
+  <li><b>고체의 열용량이 저온에서 0으로 가는 현상</b> → <a class="loc" href="../ch24/24-1.html">[24.1절 · 아인슈타인 모델]</a>, <a class="loc" href="../ch24/24-2.html">[24.2절 · 데바이 모델]</a></li>
+  <li><b>공동 속 전자기파에 등분배를 적용하면 에너지가 무한대가 되는 문제</b>(자외선 파탄) → <a class="loc" href="../ch23/23-6.html#eq-23-48">[23.6절 · 식 23.48]</a></li>
+  <li><b>브라운 입자가 시간에 따라 퍼져 나가는 법칙</b> → <span class="loc ext" tabindex="0" role="button" data-note="교재 281쪽이 완전한 논의를 33장으로 미룬다.">[33장 · 브라운 운동]</span></li>
+</ul>
+
+<h2 id="tools">이 장에서 쓰는 도구</h2>
+<ul>
+  <li>시뮬레이션 9개(교재 그림 19.1–19.7을 모두 움직이는 버전으로 다시 그림)와 기존 데모 2개(#1 등분배 정리, #7 이원자 기체의 열용량)를 각 절 본문에 넣었다.</li>
+  <li>예제 19.1–19.3의 파이썬 풀이: <a href="https://colab.research.google.com/github/junggeunpark02/statphys2-demo/blob/main/notebooks/ch19_equipartition.ipynb" target="_blank" rel="noopener">Colab 노트북 (19장)</a></li>
+  <li>각 식과 문장 앞의 배지는 그 진술이 정의인지, 가정인지, 증명한 결과인지를 알려 준다. 위의 “진술 배지 읽는 법”을 열어 보라.</li>
+</ul>
+</article>
+</main>
+</body>
+</html>

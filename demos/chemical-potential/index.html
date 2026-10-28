@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>화학퍼텐셜과 입자 흐름 · Chemical potential and particle flow</title>
 <meta name="description" content="두 상자 사이에서 입자가 화학퍼텐셜이 같아질 때까지 이동하는 과정을 본다 (Blundell 22.1–22.2, 예제 22.1)">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<script defer src="../../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../../assets/vendor/katex/contrib/auto-render.min.js"></script>
 <!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
 <script src="../../site-config.js"></script>
+<script src="../../assets/demo-embed.js"></script>
 <style>
 /* =====================================================================
  * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
@@ -164,7 +165,7 @@ canvas.viz.short{height:240px}
 
   <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
   <header class="topbar">
-    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <a class="back bi-inline" href="../../toc.html" data-i18n="back"></a>
     <div class="lang" id="langToggle" role="group" aria-label="Language">
       <button type="button" data-set-lang="ko">한국어</button>
       <button type="button" data-set-lang="en">English</button>
@@ -293,13 +294,13 @@ const I18N = {
     eqMainNote: '교재 식 (22.6), (22.12), (22.15)',
     hEqMore: '이 데모가 함께 쓰는 식',
     eq1: '$F=Nk_BT[\\ln(n\\lambda_{th}^3)-1]$을 $N$으로 미분하면 $\\mu=k_BT\\ln(n\\lambda_{th}^3)$ — 예제 22.1, 식 (22.13)–(22.15)',
-    eq2: '$S=Nk_B\\left[\\tfrac52-\\ln(n\\lambda_{th}^3)\\right]$ (사쿠르–테트로드) — 교재 식 (21.37)',
+    eq2: '$S=Nk_B\\left[\\tfrac52-\\ln(n\\lambda_{th}^3)\\right]$ (자쿠어-테트로드) — 교재 식 (21.37)',
     eq3: '$\\left(\\partial S/\\partial N\\right)_{U,V}=-\\mu/T$ — 교재 식 (22.10)',
     explain: '입자는 수밀도가 높아 화학퍼텐셜 $\\mu=k_BT\\ln(n\\lambda_{th}^3)$이 큰 상자에서 작은 상자로 흐른다. 한 입자가 1에서 2로 옮겨 가면 전체 엔트로피가 $(\\mu_1-\\mu_2)/T$만큼 바뀌므로, 흐름의 방향은 언제나 엔트로피가 느는 쪽이다. 두 $\\mu$가 같아지는 곳, 곧 $n_1=n_2$에서 아래 그래프의 전체 엔트로피가 최대가 된다. 평형에 이른 뒤에도 입자는 계속 오가며, 점의 수가 적어서 $\\mu$와 $\\Delta S$가 평균값 주위로 조금씩 요동한다. 고전 기체는 $n\\ll n_Q$이므로 $\\mu$는 음수이다.',
     src1: '22.1절 화학 퍼텐셜의 정의, 22.2절 화학 퍼텐셜의 의미 (한국어판 315–319쪽)',
     src2: '예제 22.1 이상기체의 화학 퍼텐셜 (한국어판 318쪽)',
-    src3: '관련: 데모 5(양자 농도), 데모 6(사쿠르–테트로드 식)',
-    note1: '강의 슬라이드는 화학퍼텐셜을 붙여 쓰고, 교재 번역본은 "화학 퍼텐셜"로 띄어 쓴다.',
+    src3: '관련: 데모 5(양자 농도), 데모 6(자쿠어-테트로드 식)',
+    note1: '강의 슬라이드는 화학퍼텐셜을 붙여 쓰고, 교재 번역본은 "화학 퍼텐셜"로 띄어 쓴다. Sackur–Tetrode는 교재 309쪽 표기 "자쿠어-테트로드"를 따랐다(다른 표기: 사쿠르–테트로드).',
     note2: '구멍을 지나는 빈도는 $\\tfrac14n\\langle v\\rangle$에 비례하는데, 두 상자의 온도가 같으므로 $\\langle v\\rangle$는 같고 수밀도만 다르다.'
   },
   en: {
@@ -335,12 +336,12 @@ const I18N = {
 /* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
 const I18N_COMMON = {
   ko: {
-    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    back: '← 전체 목차', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
     hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
     footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
   },
   en: {
-    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    back: '← Contents', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
     hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
     footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
   }

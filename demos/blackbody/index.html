@@ -4,12 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>흑체 복사 스펙트럼 · Black-body spectrum</title>
-<meta name="description" content="온도를 바꾸며 플랑크 분포, 레일리–진스 극한, 빈 법칙, 스테판–볼츠만 법칙을 비교한다 (Blundell 23.5–23.6, 그림 23.4, 23.6)">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<meta name="description" content="온도를 바꾸며 플랑크 분포, 레일리–진스 극한, 빈 법칙, 슈테판–볼츠만 법칙을 비교한다 (Blundell 23.5–23.6, 그림 23.4, 23.6)">
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<script defer src="../../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../../assets/vendor/katex/contrib/auto-render.min.js"></script>
 <!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
 <script src="../../site-config.js"></script>
+<script src="../../assets/demo-embed.js"></script>
 <style>
 /* =====================================================================
  * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
@@ -164,7 +165,7 @@ canvas.viz.short{height:240px}
 
   <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
   <header class="topbar">
-    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <a class="back bi-inline" href="../../toc.html" data-i18n="back"></a>
     <div class="lang" id="langToggle" role="group" aria-label="Language">
       <button type="button" data-set-lang="ko">한국어</button>
       <button type="button" data-set-lang="en">English</button>
@@ -294,7 +295,7 @@ const I18N = {
     pViz: '모드 하나의 평균 에너지',
     plotMode: '$\\langle E\\rangle/k_BT$ — $x=\\hbar\\omega/k_BT$에 따라 (영점에너지 제외)',
     legPlanckMode: '플랑크: $x/(e^x-1)$', legClassMode: '고전 등분배: 1',
-    vizNote: '진동수가 높은 모드($x\\gg1$)는 평균 광자 수 $1/(e^x-1)$이 지수적으로 작아져 에너지를 거의 갖지 못한다. 모드 수는 $g(\\omega)\\propto\\omega^2$으로 늘지만 이 억제가 이긴다. 점은 지금 온도에서 스펙트럼 봉우리의 위치이다.',
+    vizNote: '진동수가 높은 모드($x\\gg1$)는 평균 광자 수 $1/(e^x-1)$이 지수적으로 작아져 에너지를 거의 갖지 못한다. 모드 수는 $g(\\omega)\\propto\\omega^2$으로 늘지만 이 억제가 이긴다. 점은 지금 고른 변수($u_\\nu$ 또는 $u_\\lambda$) 스펙트럼의 봉우리 위치이며, $x=\\hbar\\omega/k_BT$ 축에서는 온도와 무관하다($u_\\nu$: 2.82, $u_\\lambda$: 4.97).',
     lblPreset: '자주 쓰는 온도', preCMB: '우주배경복사 2.725 K', preRoom: '실온 300 K', preSun: '태양 표면 5800 K',
     lblT: '온도 $T$ (K)', lblVar: '그릴 변수',
     chkRJ: '레일리–진스 곡선 겹치기',
@@ -313,7 +314,7 @@ const I18N = {
     explain: '온도를 올리면 스펙트럼 전체의 넓이는 $T^4$로 커지고, 봉우리는 높은 진동수(짧은 파장) 쪽으로 옮겨 간다. 레일리–진스 곡선은 낮은 진동수에서 플랑크 분포와 일치하지만 높은 진동수에서는 언제나 위에 있고, $u_\\lambda\\propto\\lambda^{-4}$이라 적분하면 발산한다(자외선 파탄). 플랑크 분포에서는 평균 광자 수 $1/(e^{\\beta\\hbar\\omega}-1)$이 높은 진동수를 억제해 적분이 유한하다. 봉우리 위치는 어떤 변수로 그리는지에 따라 다르다. $u_\\nu$의 봉우리 $\\nu_{\\rm max}$를 파장으로 바꾼 $c/\\nu_{\\rm max}$는 $u_\\lambda$의 봉우리 $\\lambda_{\\rm max}$보다 약 1.76배 길다.',
     src1: '23.5절 광자 기체의 통계 역학, 23.6절 흑체 분포 (한국어판 348–355쪽)',
     src2: '그림 23.4 (200–300 K의 $u_\\nu$, $u_\\lambda$), 그림 23.5, 23.6 (레일리–진스 비교)',
-    src3: '관련: 23.1절 (스테판–볼츠만 법칙), 23.7절 우주 배경 복사',
+    src3: '관련: 23.1절 (슈테판–볼츠만 법칙), 23.7절 우주 배경 복사',
     note1: '방출 일률은 강의(6주차)의 기호 $j^\\star$로 쓰고, 교재 기호는 $F$이다($F$는 자유에너지와 겹치므로).',
     note2: '광자의 화학퍼텐셜은 $\\mu_\\gamma=0$이다(광자 수가 보존되지 않음).',
     note3: '영점에너지 $\\tfrac12\\hbar\\omega$는 모든 모드에 대해 더하면 발산하므로 열복사에서는 뺀다(교재 식 23.35).'
@@ -325,7 +326,7 @@ const I18N = {
     pViz: 'Mean energy of one mode',
     plotMode: '$\\langle E\\rangle/k_BT$ versus $x=\\hbar\\omega/k_BT$ (zero-point energy excluded)',
     legPlanckMode: 'Planck: $x/(e^x-1)$', legClassMode: 'Classical equipartition: 1',
-    vizNote: 'High-frequency modes ($x\\gg1$) have an exponentially small mean photon number $1/(e^x-1)$ and hold almost no energy. The number of modes grows as $g(\\omega)\\propto\\omega^2$, but the suppression wins. The dot marks the spectrum’s peak at the current temperature.',
+    vizNote: 'High-frequency modes ($x\\gg1$) have an exponentially small mean photon number $1/(e^x-1)$ and hold almost no energy. The number of modes grows as $g(\\omega)\\propto\\omega^2$, but the suppression wins. The dot marks the peak of the spectrum in the chosen variable ($u_\\nu$ or $u_\\lambda$); on the $x=\\hbar\\omega/k_BT$ axis it does not depend on temperature ($u_\\nu$: 2.82, $u_\\lambda$: 4.97).',
     lblPreset: 'Common temperatures', preCMB: 'Cosmic background 2.725 K', preRoom: 'Room 300 K', preSun: 'Sun’s surface 5800 K',
     lblT: 'Temperature $T$ (K)', lblVar: 'Variable to plot',
     chkRJ: 'Overlay the Rayleigh–Jeans curve',
@@ -354,12 +355,12 @@ const I18N = {
 /* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
 const I18N_COMMON = {
   ko: {
-    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    back: '← 전체 목차', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
     hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
     footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
   },
   en: {
-    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    back: '← Contents', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
     hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
     footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
   }

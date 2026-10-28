@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>스핀-½ 상자성체 · Spin-½ paramagnet</title>
 <meta name="description" content="자기장과 온도를 바꾸며 자기모멘트의 포화와 큐리 법칙을 확인한다 (Blundell 예제 20.5, 그림 20.6)">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<script defer src="../../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../../assets/vendor/katex/contrib/auto-render.min.js"></script>
 <!-- 사이트 공통 설정 (없으면 아래 기본값 사용) -->
 <script src="../../site-config.js"></script>
+<script src="../../assets/demo-embed.js"></script>
 <style>
 /* =====================================================================
  * 디자인 토큰 / design tokens  (허브와 동일 + 그래프 색)
@@ -164,7 +165,7 @@ canvas.viz.short{height:240px}
 
   <!-- ===== 상단: 허브 링크 + 언어 전환 ===== -->
   <header class="topbar">
-    <a class="back bi-inline" href="../../" data-i18n="back"></a>
+    <a class="back bi-inline" href="../../toc.html" data-i18n="back"></a>
     <div class="lang" id="langToggle" role="group" aria-label="Language">
       <button type="button" data-set-lang="ko">한국어</button>
       <button type="button" data-set-lang="en">English</button>
@@ -279,7 +280,7 @@ canvas.viz.short{height:240px}
 /* ===== (1) 문구 사전 / UI strings ===================================== */
 const I18N = {
   ko: {
-    chipSec: '교재 20.5절 예제 20.5 · 그림 20.6',
+    chipSec: '교재 20.4절 예제 20.5 · 그림 20.6',
     title: '스핀-½ 상자성체',
     summary: '자기장은 자기모멘트를 한 방향으로 정렬시키고, 열운동은 그 정렬을 흩트린다. 두 효과의 경쟁이 $x=\\mu_BB/k_BT$ 하나로 정해진다.',
     pViz: '자기모멘트 100개 (열평형 표본)',
@@ -301,7 +302,7 @@ const I18N = {
     eq1: '약한 장 $\\beta\\mu_BB\\ll1$: $M\\approx\\dfrac{N\\mu_B^2B}{Vk_BT}$, $\\chi\\approx\\dfrac{N\\mu_0\\mu_B^2}{Vk_BT}\\propto\\dfrac1T$ (큐리 법칙) — 교재 식 (20.46), (20.48)',
     eq2: '$U=-N\\mu_BB\\tanh x$, $C/Nk_B=x^2\\,\\mathrm{sech}^2x$ — 교재 연습문제 20.5 (식 20.52, 20.53)',
     eq3: '$S/Nk_B=\\ln(2\\cosh x)-x\\tanh x$ — 교재 식 (20.54)',
-    explain: '$x=\\mu_BB/k_BT$가 작으면(약한 장, 고온) 모멘트는 거의 무작위이고, $m$은 $x$에 비례한다. 그래서 감수율이 $\\chi\\propto1/T$가 되며 $1/\\chi$가 온도에 정비례하는 직선이 된다(큐리 법칙). $x$가 커지면(강한 장, 저온) 거의 모든 모멘트가 정렬해 $m$이 $N\\mu_B$에서 포화하고, 큐리 직선에서 벗어난다. $B$와 $T$를 함께 두 배로 바꾸면 $x$가 그대로이므로 표본의 모습도 그대로임을 확인하자. 오른쪽 아래 그래프에서 약한 장일수록 실선이 큐리 직선에 붙는다.',
+    explain: '$x=\\mu_BB/k_BT$가 작으면(약한 장, 고온) 모멘트는 거의 무작위이고, $m$은 $x$에 비례한다. 그래서 감수율이 $\\chi\\propto1/T$가 되며 $1/\\chi$가 온도에 정비례하는 직선이 된다(큐리 법칙). $x$가 커지면(강한 장, 저온) 거의 모든 모멘트가 정렬해 $m$이 $N\\mu_B$에서 포화하고, 큐리 직선에서 벗어난다. $B$와 $T$를 함께 두 배로 바꾸면 $x$가 그대로이므로 표본의 모습도 그대로임을 확인하자. “$1/\\chi$ — 온도에 따라” 그래프에서 약한 장일수록 실선이 큐리 직선에 붙는다.',
     src1: '20.4절 분배함수 통합, 예제 20.5 스핀-½ 상자성체 (한국어판 296–298쪽) · 그림 20.6',
     src2: '연습문제 20.5 ($U$, $C$, $S$)',
     src3: '관련: 강의 3주차 앙상블 (두 방향 자기모멘트)',
@@ -309,7 +310,7 @@ const I18N = {
     note2: '약한 장 근사의 조건은 $\\beta\\mu_BB\\ll1$이다.'
   },
   en: {
-    chipSec: 'Textbook Example 20.5 · Fig. 20.6',
+    chipSec: 'Textbook §20.4, Example 20.5 · Fig. 20.6',
     title: 'Spin-½ paramagnet',
     summary: 'A magnetic field lines the moments up; thermal motion scrambles them. The contest is decided by a single number, $x=\\mu_BB/k_BT$.',
     pViz: '100 magnetic moments (equilibrium sample)',
@@ -331,7 +332,7 @@ const I18N = {
     eq1: 'Weak field $\\beta\\mu_BB\\ll1$: $M\\approx\\dfrac{N\\mu_B^2B}{Vk_BT}$, $\\chi\\approx\\dfrac{N\\mu_0\\mu_B^2}{Vk_BT}\\propto\\dfrac1T$ (Curie law) — Eqs. (20.46), (20.48)',
     eq2: '$U=-N\\mu_BB\\tanh x$, $C/Nk_B=x^2\\,\\mathrm{sech}^2x$ — Exercise 20.5 (Eqs. 20.52, 20.53)',
     eq3: '$S/Nk_B=\\ln(2\\cosh x)-x\\tanh x$ — Eq. (20.54)',
-    explain: 'For small $x=\\mu_BB/k_BT$ (weak field, high temperature) the moments are nearly random and $m$ grows in proportion to $x$. The susceptibility is then $\\chi\\propto1/T$, so $1/\\chi$ is a straight line through the origin — Curie’s law. For large $x$ (strong field, low temperature) almost every moment lines up, $m$ saturates at $N\\mu_B$, and the curve leaves the Curie line. Doubling both $B$ and $T$ keeps $x$ fixed, and the sample looks the same. In the lower-right graph, the weaker the field, the closer the solid curve hugs the Curie line.',
+    explain: 'For small $x=\\mu_BB/k_BT$ (weak field, high temperature) the moments are nearly random and $m$ grows in proportion to $x$. The susceptibility is then $\\chi\\propto1/T$, so $1/\\chi$ is a straight line through the origin — Curie’s law. For large $x$ (strong field, low temperature) almost every moment lines up, $m$ saturates at $N\\mu_B$, and the curve leaves the Curie line. Doubling both $B$ and $T$ keeps $x$ fixed, and the sample looks the same. In the “$1/\\chi$ versus temperature” graph, the weaker the field, the closer the solid curve hugs the Curie line.',
     src1: '§20.4 Combining partition functions, Example 20.5 spin-½ paramagnet (Korean ed. pp. 296–298) · Fig. 20.6',
     src2: 'Exercise 20.5 ($U$, $C$, $S$)',
     src3: 'Related: lecture week 3, ensembles (two-orientation moments)',
@@ -343,12 +344,12 @@ const I18N = {
 /* ===== (2) 언어 공통 코드 / i18n core (허브·데모 2와 같은 규칙) ============ */
 const I18N_COMMON = {
   ko: {
-    back: '← 허브로', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
+    back: '← 전체 목차', pControls: '매개변수', hEq: '핵심 수식', hExplain: '해설',
     hSource: '교재 해당 절', hNote: '표기 참고', axLin: '선형', axLog: '로그',
     footer: '{COURSE} · {TERM} 강의보조 시뮬레이션. 교재: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. 수식 렌더링: KaTeX.'
   },
   en: {
-    back: '← Home', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
+    back: '← Contents', pControls: 'Parameters', hEq: 'Key equations', hExplain: 'What to notice',
     hSource: 'Textbook sections', hNote: 'Notation notes', axLin: 'Linear', axLog: 'Log',
     footer: '{COURSE} · {TERM} course-support simulation. Textbook: Blundell & Blundell, <i>Concepts in Thermal Physics</i>, 2nd ed. Math rendering: KaTeX.'
   }
