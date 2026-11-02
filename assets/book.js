@@ -16,7 +16,7 @@ const Book = window.Book = window.Book || {};
  * 1. 목차 데이터 (교재 한국어판 장 첫 쪽 여백 목차와 같은 표기)
  * ------------------------------------------------------------------- */
 const TOC = [
-  { ch:19, t:'에너지 등분배', p:'271–282', ready:true, secs:[
+  { ch:19, part:'Part VII · 통계역학', t:'에너지 등분배', p:'271–282', ready:true, secs:[
       ['19.1','등분배 정리','271–275'], ['19.2','응용','275–278'], ['19.3','사용된 가정','278–280'], ['19.4','브라운 운동','280–281'] ] },
   { ch:20, t:'분배 함수', p:'283–300', secs:[
       ['20.1','분배 함수 쓰기'], ['20.2','상태 함수 구하기'], ['20.3','빅 아이디어'], ['20.4','분배 함수 통합'] ] },
@@ -29,7 +29,20 @@ const TOC = [
       ['23.1','전자기 복사의 고전 열역학'], ['23.2','스펙트럼 에너지 밀도'], ['23.3','키르히호프 법칙'], ['23.4','복사 압력'],
       ['23.5','광자 기체의 통계역학'], ['23.6','흑체 분포'], ['23.7','우주 배경복사'], ['23.8','아인슈타인 A와 B 계수'] ] },
   { ch:24, t:'포논', p:'362–372', secs:[
-      ['24.1','아인슈타인 모델'], ['24.2','데바이 모델'], ['24.3','포논 분산'] ] }
+      ['24.1','아인슈타인 모델'], ['24.2','데바이 모델'], ['24.3','포논 분산'] ] },
+  { ch:25, part:'Part VIII · 이상기체를 넘어서', t:'상대론적 기체', p:'375–381', ready:true, secs:[
+      ['25.1','질량이 있는 입자의 상대론적 분산관계','375–376'], ['25.2','초상대론적 기체','376–379'], ['25.3','초상대론적 기체의 단열 팽창','379–381'] ] },
+  { ch:26, t:'실제 기체', p:'382–401', ready:true, secs:[
+      ['26.1','반데르발스 기체','383–392'], ['26.2','디테리치(Dieterici) 방정식','392–393'], ['26.3','비리알 전개','394–398'], ['26.4','대응상태의 법칙','399–400'] ] },
+  { ch:27, t:'실제 기체의 냉각', p:'402–412', secs:[
+      ['27.1','줄 팽창'], ['27.2','등온 팽창'], ['27.3','줄-켈빈 팽창'], ['27.4','기체의 액화'] ] },
+  { ch:28, t:'상전이', p:'413–441', secs:[
+      ['28.1','잠열'], ['28.2','화학퍼텐셜과 상변화'], ['28.3','클라우지우스-클라페이롱 방정식'], ['28.4','안정성과 준안정성'],
+      ['28.5','깁스 상 법칙'], ['28.6','총괄성'], ['28.7','상전이의 분류'], ['28.8','이징모형'] ] },
+  { ch:29, t:'보즈-아인슈타인과 페르미-디락 분포', p:'442–456', secs:[
+      ['29.1','교환과 대칭'], ['29.2','동일한 입자의 파동함수'], ['29.3','동일한 입자의 통계'] ] },
+  { ch:30, t:'양자기체와 응축', p:'457–', secs:[
+      ['30.1','상호작용이 없는 양자유체'], ['30.2','페르미 기체'], ['30.3','보즈 기체'], ['30.4','보즈-아인슈타인 응축(BEC)'] ] }
 ];
 Book.TOC = TOC;
 const body = document.body || document.documentElement;
@@ -86,13 +99,13 @@ function buildShell(){
     const cur = page === cid ? ' aria-current="page"' : '';
     const soon = c.ready ? '' : '<span class="soon">작성 예정</span>';
     const kids = c.secs.map(s => `<li><div class="bk-row"><a href="${esc(Book.href(s[0]))}"${page === s[0] ? ' aria-current="page"' : ''} data-id="${s[0]}"><span class="no">${s[0]}</span><span class="tt">${esc(s[1])}</span></a></div></li>`).join('');
-    return `<li><div class="bk-row ch"><button class="bk-tog" type="button" aria-expanded="${open}" aria-controls="bk-sub-${c.ch}" aria-label="${c.ch}장 절 목록 ${open ? '접기' : '펼치기'}" data-ch="${c.ch}">${ICON_CHEV}</button>`
+    return (c.part ? `<li class="bk-part" aria-hidden="true">${esc(c.part)}</li>` : '') + `<li><div class="bk-row ch"><button class="bk-tog" type="button" aria-expanded="${open}" aria-controls="bk-sub-${c.ch}" aria-label="${c.ch}장 절 목록 ${open ? '접기' : '펼치기'}" data-ch="${c.ch}">${ICON_CHEV}</button>`
       + `<a href="${esc(Book.href(cid))}"${cur} data-id="${cid}"><span class="no">${c.ch}</span><span class="tt">${esc(c.t)}</span>${soon}</a></div>`
       + `<ul id="bk-sub-${c.ch}"${open ? '' : ' hidden'}>${kids}</ul></li>`;
   }).join('');
   const side = document.createElement('nav');
   side.className = 'bk-side'; side.id = 'bk-side'; side.setAttribute('aria-label', '장·절 목차');
-  side.innerHTML = `<div class="bk-side-head"><a class="bk-brand" href="${esc(Book.href('ch19'))}">통계역학 학습서<small>Blundell &amp; Blundell 19–24장 · 열및통계물리2</small></a></div>
+  side.innerHTML = `<div class="bk-side-head"><a class="bk-brand" href="${esc(Book.href('ch19'))}">통계역학 학습서<small>Blundell &amp; Blundell 19–30장 · 열및통계물리2</small></a></div>
     <div class="bk-side-scroll"><ul class="bk-tree" role="list">${tree}</ul></div>
     <div class="bk-side-foot">
       <a class="toc" href="${esc(Book.href('toc'))}"${page === 'toc' ? ' aria-current="page"' : ''}>전체 목차 · 데모 · 노트북</a>
@@ -346,7 +359,6 @@ function parseNum(raw){
 }
 Book.parseNum = parseNum;
 const sims = Book.sims = {};
-const handGroups = {};
 function buildHands(root){
   root.querySelectorAll('.hand[data-answer]').forEach((h, idx) => {
     if (h.dataset.done) return; h.dataset.done = '1';
@@ -386,33 +398,12 @@ function buildHands(root){
       hs.innerHTML = `<button type="button" class="sim-btn">시뮬레이션을 이 조건으로 맞추기</button><span>${hs.dataset.label || '시뮬레이션 값'}: <output>—</output></span>`;
       renderMath(hs);
       const out = hs.querySelector('output');
-      /* 문제 조건으로 맞춘 뒤에만 값을 보인다. 사용자가 그 시뮬레이션의 조절기나 그래프를 직접 건드리면
-         조건이 달라졌을 수 있으므로 다시 숨긴다(프로그램이 바꾼 값은 isTrusted가 false라 무시). */
-      const IDLE = '— (‘이 조건으로 맞추기’를 누르면 표시)';
-      let armed = !set, watched = false;
-      const me = { disarm: () => { armed = false; } };
-      (handGroups[name] = handGroups[name] || []).push(me);
-      const disarm = ev => {
-        if (!ev.isTrusted || !set) return;
-        const t = ev.target;
-        if (ev.type === 'pointerdown' || ev.type === 'keydown') { if (!t.closest || !t.closest('svg, canvas, input, select')) return; }
-        armed = false;
-      };
-      const watch = s => { if (watched || !s.fig) return; watched = true; ['input', 'change', 'pointerdown', 'keydown'].forEach(tp => s.fig.addEventListener(tp, disarm, true)); };
       hs.querySelector('button').addEventListener('click', () => {
         const s = sims[name]; if (!s) return;
-        watch(s);
-        handGroups[name].forEach(g => { if (g !== me) g.disarm(); });   /* 같은 시뮬레이션을 쓰는 다른 문항은 조건이 바뀌었으므로 숨김 */
         if (set) s.set(set);
-        armed = true;
         if (s.fig) { s.fig.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' }); if (s.play) s.play(); }
       });
-      setInterval(() => {
-        const s = sims[name]; if (!s || !s.read) return;
-        watch(s);
-        if (!armed) { if (out.textContent !== IDLE) out.textContent = IDLE; return; }
-        const r = s.read(key); out.innerHTML = r == null ? '—' : (typeof r === 'string' ? r : Book.fmt(r, 4));
-      }, 400);
+      setInterval(() => { const s = sims[name]; if (!s || !s.read) return; const r = s.read(key); out.innerHTML = r == null ? '—' : (typeof r === 'string' ? r : Book.fmt(r, 4)); }, 400);
     });
   });
 }
@@ -503,27 +494,33 @@ class Plot {
     this.cv.setAttribute('role', 'img');
     if (pickable) {
       this.cv.classList.add('pickable'); this.cv.tabIndex = 0;
-      this.cv.setAttribute('aria-label', (this.cv.getAttribute('aria-label') || '그래프') + '. 누르거나 좌우 화살표 키로 매개변수를 옮긴다.');
+      this.yPick = opt.pickAxis === 'y';
+      this.cv.setAttribute('aria-label', (this.cv.getAttribute('aria-label') || '그래프') + (this.yPick ? '. 누르거나 위아래 화살표 키로 매개변수를 옮긴다.' : '. 누르거나 좌우 화살표 키로 매개변수를 옮긴다.'));
       const t = this.wrap.querySelector('.plot-title');
       if (t && !t.querySelector('.pick-hint')) t.insertAdjacentHTML('beforeend', '<span class="pick-hint">누르면 이동</span>');
       let dragging = false;
-      this.cv.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') { dragging = true; this.cv.setPointerCapture(e.pointerId); this.pick(e.offsetX); } });
+      this.cv.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') { dragging = true; this.cv.setPointerCapture(e.pointerId); this.pick(e.offsetX, e.offsetY); } });
       this.cv.addEventListener('pointerup', e => { dragging = false; });
-      this.cv.addEventListener('click', e => { if (e.pointerType !== 'mouse' && e.detail !== 0) this.pick(e.offsetX); });
-      this.cv.addEventListener('pointermove', e => { if (dragging) this.pick(e.offsetX); });
+      this.cv.addEventListener('click', e => { if (e.pointerType !== 'mouse' && e.detail !== 0) this.pick(e.offsetX, e.offsetY); });
+      this.cv.addEventListener('pointermove', e => { if (dragging) this.pick(e.offsetX, e.offsetY); });
       this.cv.addEventListener('keydown', e => {
-        if (!this.d || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return; e.preventDefault();
+        const keys = this.yPick ? ['ArrowDown', 'ArrowUp'] : ['ArrowLeft', 'ArrowRight'];
+        if (!this.d || !keys.includes(e.key)) return; e.preventDefault();
         const cur = this.opt.current ? this.opt.current() : null; if (cur == null) return;
-        const d = this.d, dir = e.key === 'ArrowRight' ? 1 : -1, n = e.shiftKey ? 10 : 50;
-        const nx = d.xLog ? cur * Math.pow(d.xMax / d.xMin, dir / n) : cur + dir * (d.xMax - d.xMin) / n;
-        this.opt.onPick(Math.min(d.xMax, Math.max(d.xMin, nx)));
+        const d = this.d, dir = e.key === keys[1] ? 1 : -1, n = e.shiftKey ? 10 : 50;
+        const lo = this.yPick ? d.yMin : d.xMin, hi = this.yPick ? d.yMax : d.xMax, lg = this.yPick ? d.yLog : d.xLog;
+        const nv = lg ? cur * Math.pow(hi / lo, dir / n) : cur + dir * (hi - lo) / n;
+        this.opt.onPick(Math.min(hi, Math.max(lo, nv)));
       });
     }
     this.cv.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { this.hoverX = this.pxToX(e.offsetX); this.draw(); } });
     this.cv.addEventListener('pointerleave', () => { this.hoverX = null; this.draw(); });
     Plot.all.add(this);
   }
-  pick(px){ const x = this.pxToX(px); if (x == null) return; this.opt.onPick(this.opt.pickSnap ? this.opt.pickSnap(x) : x); }
+  pick(px, py){ const x = this.yPick ? this.pyToY(py) : this.pxToX(px); if (x == null) return; this.opt.onPick(this.opt.pickSnap ? this.opt.pickSnap(x) : x); }
+  pyToY(py){ if (!this.d) return null; const d = this.d, f = 1 - (py - this.pad.t) / (this.H - this.pad.t - this.pad.b);
+    if (f < -0.02 || f > 1.02) return null; const g = Math.min(1, Math.max(0, f));
+    return d.yLog ? d.yMin * Math.pow(d.yMax / d.yMin, g) : d.yMin + g * (d.yMax - d.yMin); }
   set(d){ this.d = d; this.draw(); }
   fx(x){ const d = this.d; return d.xLog ? Math.log(x / d.xMin) / Math.log(d.xMax / d.xMin) : (x - d.xMin) / (d.xMax - d.xMin); }
   fy(y){ const d = this.d; return d.yLog ? Math.log(y / d.yMin) / Math.log(d.yMax / d.yMin) : (y - d.yMin) / (d.yMax - d.yMin); }
@@ -698,6 +695,42 @@ Book.animate = function(fig, tick, opt = {}){
   const label = () => { if (ctl.btn) { ctl.btn.textContent = ctl.running ? '■ 멈춤' : '▶ 실행'; ctl.btn.setAttribute('aria-pressed', String(!ctl.running)); } };
   ctl.bindButton = b => { ctl.btn = b; b.addEventListener('click', ctl.toggle); label(); };
   return ctl;
+};
+
+/* 시뮬레이션 화면 배치와 그리기 도구 (25장부터 공통으로 쓴다) */
+Book.kit = {
+  layout(fig, opt = {}){
+    const cap = fig.querySelector('figcaption');
+    const grid = document.createElement('div'); grid.className = 'sim-grid';
+    const stage = document.createElement('div'); stage.className = 'sim-stage';
+    const cv = document.createElement('canvas'); cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', opt.aria || '시뮬레이션 화면');
+    if (opt.stageH) cv.style.height = opt.stageH + 'px';
+    stage.appendChild(cv);
+    if (opt.note) { const n = document.createElement('div'); n.className = 'stage-note'; n.textContent = opt.note; stage.appendChild(n); }
+    const side = document.createElement('div'); side.className = 'sim-ctl';
+    grid.append(stage, side);
+    const tiles = document.createElement('div'); tiles.className = 'sim-tiles';
+    const plots = document.createElement('div'); plots.className = 'sim-plots';
+    fig.insertBefore(grid, cap); fig.insertBefore(tiles, cap); fig.insertBefore(plots, cap);
+    return { cv, stage, side, tiles, plots };
+  },
+  buttons(side, list){
+    const w = document.createElement('div'); w.className = 'sim-btns';
+    const out = list.map(([label, cls]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'sim-btn' + (cls ? ' ' + cls : ''); b.textContent = label; w.appendChild(b); return b; });
+    side.appendChild(w); return out;
+  },
+  note(side, html){ const p = document.createElement('p'); p.style.cssText = 'font-size:.8rem;color:var(--text-2);margin:0'; p.innerHTML = html; side.appendChild(p); renderMath(p); return p; },
+  ball(ctx, x, y, r, col){ ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 1.2; ctx.strokeStyle = cssv('--surface'); ctx.stroke(); },
+  arrow(ctx, x0, y0, x1, y1, col, w = 2){ ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    const a = Math.atan2(y1 - y0, x1 - x0); ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - 7 * Math.cos(a - .4), y1 - 7 * Math.sin(a - .4)); ctx.lineTo(x1 - 7 * Math.cos(a + .4), y1 - 7 * Math.sin(a + .4)); ctx.fill(); },
+  linspace: (a, b, n) => Array.from({ length: n }, (_, i) => a + (b - a) * i / (n - 1)),
+  logspace: (a, b, n) => Array.from({ length: n }, (_, i) => a * Math.pow(b / a, i / (n - 1))),
+  rgba(col, a){ const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(String(col).trim()); if (!m) return col;
+    return `rgba(${parseInt(m[1], 16)},${parseInt(m[2], 16)},${parseInt(m[3], 16)},${Math.max(0, Math.min(1, a)).toFixed(3)})`; },
+  /* 심프슨 적분 */
+  simpson(f, a, b, n = 400){ if (n % 2) n++; const h = (b - a) / n; let s = f(a) + f(b); for (let i = 1; i < n; i++) s += (i % 2 ? 4 : 2) * f(a + i * h); return s * h / 3; },
+  /* 구간 [a,b]에서 f의 부호가 바뀌는 점 (이분법) */
+  bisect(f, a, b, it = 80){ let fa = f(a); if (!isFinite(fa)) return NaN; for (let i = 0; i < it; i++) { const m = (a + b) / 2, fm = f(m); if ((fm > 0) === (fa > 0)) { a = m; fa = fm; } else b = m; } return (a + b) / 2; }
 };
 
 /* ---------------------------------------------------------------------
