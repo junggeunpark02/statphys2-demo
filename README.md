@@ -1,7 +1,7 @@
 # 열및통계물리2 · 통계역학 인터랙티브 시뮬레이션
 
 Thermal and Statistical Physics 2 (2026-2학기) 학습 보조 사이트.
-교재: S. J. Blundell & K. M. Blundell, *Concepts in Thermal Physics*, 2nd ed. (OUP) 19–24장.
+교재: S. J. Blundell & K. M. Blundell, *Concepts in Thermal Physics*, 2nd ed. (OUP) 19–30장.
 
 사이트 주소: https://junggeunpark02.github.io/statphys2-demo/
 
@@ -13,7 +13,8 @@ toc.html                      전체 목차 (옛 허브: 장·절 목록, 데모
 ch19/index.html               장 머릿글 (지금까지 무엇이 안 됐나 · 질문 · 장 지도 · 할 수 있는 것 · 남는 문제)
 ch19/19-1.html … 19-4.html    절 페이지 (학습 목표 … 손으로 풀기 · 표기 참고)
 ch19/sim19.js                 19장 시뮬레이션 (교재 그림 19.1–19.7의 움직이는 버전)
-ch20/ … ch24/                 작성 예정 페이지 (주소·목차·이전/다음은 이미 동작)
+ch25/, ch26/                  25장 상대론적 기체, 26장 실제 기체 (머릿글·절 페이지·sim25.js·sim26.js)
+ch20/ … ch24/, ch27/ … ch30/ 작성 예정 페이지 (주소·목차·이전/다음은 이미 동작)
 assets/book.js                공통 코드: 사이드바·서랍, 진술 배지, 위치 링크, 예상하기, 손으로 풀기 채점, 그래프(누르면 이동), 데모 끼워 넣기
 assets/book.css               공통 스타일 (밝게/어둡게, 휴대폰)
 assets/demo-embed.js          기존 데모가 절 본문 iframe 안에서 쓰는 도우미

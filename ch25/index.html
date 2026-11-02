@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>25장 상대론적 기체 · 통계역학 학습서</title>
+<meta name="description" content="왜 상대론적 기체를 공부하는가: 분산관계가 E=pc가 되면 열용량이 두 배가 되고, 우주는 1/a로 식는다. 교재 25장(375–381쪽).">
+<link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+<script src="../assets/book.js"></script>
+</head>
+<body data-root="../" data-page="ch25">
+<main id="main" class="bk-main" tabindex="-1">
+<article class="bk-page">
+<p class="bk-crumb"><a href="../toc.html">전체 목차</a> › Part VIII › 25장</p>
+<h1 class="bk-title"><span class="no">25장</span>상대론적 기체</h1>
+<p class="bk-meta">교재 375–381쪽 · 절 3개 · 예제 2개 · 표 25.1 · 연습문제 3개</p>
+<p class="bk-lang-note" hidden>새로 쓴 본문은 아직 한국어만 있습니다. · The new study text is Korean-only for now.</p>
+<ul class="bk-flow" aria-label="이 장의 흐름">
+  <li><a href="#failed">지금까지 무엇이 안 됐나</a></li><li><a href="#questions">이 장의 질문</a></li><li><a href="#map">장 지도</a></li><li><a href="#cando">끝내면 할 수 있는 것</a></li><li><a href="#left">남는 문제</a></li>
+</ul>
+<p class="bk-lead">Part VIII “이상기체를 넘어서”의 첫 장이다. 이상기체 모형의 가정 가운데 하나, 곧 “입자의 운동 에너지는 $p^2/2m$”을 바꾸어 본다. 겉보기에는 작은 수정인데, 열용량이 두 배가 되고 단열 지수가 바뀌며 우주가 식는 빠르기까지 달라진다.</p>
+
+<h2 id="failed">지금까지 무엇이 안 됐나</h2>
+<p>21장까지의 기체 계산은 모두 에너지 $E=p^2/2m$에서 출발했다. 이 식은 입자가 빛보다 훨씬 느릴 때, 곧 $p\ll mc$일 때만 맞는 근사다. 23장의 광자는 질량이 없어 처음부터 $E=pc$를 썼지만, 광자는 개수가 보존되지 않는 특별한 기체였다. 그렇다면 <b>질량이 있는 입자</b>가 아주 뜨거워져 $k_BT$가 정지 에너지 $mc^2$에 가까워지거나 넘어서면 어떻게 될까?</p>
+<div class="claim" data-k="derived"><p>온도로 바꾸면 그 경계는 $T\sim mc^2/k_B$이다. 전자($mc^2=0.511$ MeV)는 약 $5.9\times10^{9}$ K, 양성자($938$ MeV)는 약 $1.1\times10^{13}$ K이다. 반면 300 K의 질소 분자는 $k_BT/mc^2\approx10^{-12}$이라 상대론을 걱정할 필요가 전혀 없다.</p></div>
+<p>또 하나의 단서가 19장에 있다. 등분배 정리는 “에너지가 제곱 꼴”이라는 가정 위에 서 있었다(<a href="../ch19/19-3.html#assume2">19.3절 가정 2</a>). 초상대론적 입자의 에너지 $E=pc$는 운동량에 대해 제곱이 아니라 일차식이다. 그렇다면 입자당 평균 에너지는 여전히 $\tfrac32k_BT$일까? 마지막으로, 23.7절에서 본 우주 배경 복사의 온도가 우주가 팽창하면서 어떤 규칙으로 떨어지는지도 아직 유도하지 않았다.</p>
+
+<h2 id="questions">이 장이 답하려는 질문</h2>
+<ol class="qlist">
+  <li id="q1"><span class="qn">Q1</span>입자의 에너지-운동량 관계(분산관계)가 바뀌면 기체의 열역학에서 무엇이 바뀌고 무엇이 그대로인가?</li>
+  <li id="q2"><span class="qn">Q2</span>초상대론적 기체의 내부 에너지, 열용량, 압력, 엔트로피는 무엇인가? 등분배 정리와는 어떻게 다른가?</li>
+  <li id="q3"><span class="qn">Q3</span>초상대론적 기체가 단열 팽창하면 온도는 부피에 따라 어떻게 떨어지는가? 우주의 팽창에는 어떤 뜻이 있는가?</li>
+</ol>
+
+<h2 id="map">장 지도</h2>
+<ol class="chmap">
+  <li><span class="sec"><a href="25-1.html">25.1</a></span><span><span class="qs"><a class="qchip" href="#q1">Q1</a></span>질량이 있는 입자의 상대론적 분산관계. $E^2=p^2c^2+m^2c^4$의 두 극한을 보고, 어느 온도에서 어느 극한이 맞는지 판정한다. 무대를 세우는 절.</span></li>
+  <li><span class="sec"><a href="25-2.html">25.2</a></span><span><span class="qs"><a class="qchip" href="#q1">Q1</a><a class="qchip" href="#q2">Q2</a></span>초상대론적 기체. 분배함수를 다시 계산해 모든 상태 함수를 구하고 비상대론 결과와 표로 비교한다. 이 장의 중심.</span></li>
+  <li><span class="sec"><a href="25-3.html">25.3</a></span><span><span class="qs"><a class="qchip" href="#q3">Q3</a></span>초상대론적 기체의 단열 팽창. $\gamma=4/3$을 얻고 우주 배경 복사의 온도가 $1/a$로 떨어지는 이유를 본다. 결과를 쓰는 절.</span></li>
+</ol>
+<p>흐름: 25.1에서 분산관계의 두 극한을 세우고, 25.2에서 그 가운데 초상대론 극한으로 열역학을 다시 짠다. 25.3은 그 결과 하나(엔트로피)를 써서 팽창하는 우주를 다룬다.</p>
+
+<h2 id="cando">이 장을 끝내면 할 수 있는 것</h2>
+<ul>
+  <li>주어진 온도에서 기체가 비상대론적인지 초상대론적인지 $k_BT$와 $mc^2$를 비교해 판정한다.</li>
+  <li>$E=pc$인 기체의 단일입자 분배함수 $Z_1=V/\Lambda^3$을 유도하고, $U$, $C_V$, $p$, $F$, $S$, $G$를 계산한다(예제 25.1, 표 25.1).</li>
+  <li>압력과 에너지 밀도의 관계 $p=u/3$를 비상대론 $p=2u/3$과 비교해 설명한다.</li>
+  <li>$C_V=3Nk_B$가 등분배 값의 두 배인 이유를 분산관계의 꼴로 설명한다.</li>
+  <li>단열 팽창에서 $VT^3=$일정, $\gamma=4/3$을 유도하고, 우주에서 복사 온도 $T\propto a^{-1}$, 밀도 $\rho\propto a^{-4}$를 물질과 비교한다.</li>
+</ul>
+
+<h2 id="left">남는 문제</h2>
+<ul>
+  <li><b>양자 효과</b>: 이 장은 입자가 드물게 퍼져 있어 $Z_N=Z_1^N/N!$이 쓸 만하다고 가정했다. 밀도가 높거나 온도가 낮아 양자 통계가 중요해지면 → <a class="loc" href="../ch29/index.html">[29장]</a>, <a class="loc" href="../ch30/index.html">[30장 · 양자기체와 응축]</a></li>
+  <li><b>분자 사이의 상호작용</b>: 이 장의 기체도 여전히 상호작용이 없는 이상기체다 → <a class="loc" href="../ch26/index.html">[26장 · 실제 기체]</a></li>
+  <li><b>$k_BT\sim mc^2$인 중간 영역</b>: 교재는 두 극한만 다룬다. 이 학습서의 25.1절 시뮬레이션은 그 사이를 수치로 이어 보여 준다.</li>
+  <li><b>별의 구조에서 $p=u/3$가 갖는 뜻</b> → <span class="loc ext" tabindex="0" role="button" data-note="교재 378쪽이 35.1.3절을 가리킨다.">[35.1.3절]</span></li>
+</ul>
+
+<h2 id="tools">이 장에서 쓰는 도구</h2>
+<ul>
+  <li>시뮬레이션 4개: 그림 25.1의 움직이는 버전, 분산관계 $E\propto p^s$의 압력 실험, 물러나는 벽이 만드는 단열 냉각, 우주 팽창 시나리오.</li>
+  <li>이 장은 기존 데모와 Colab 노트북이 아직 없다.</li>
+</ul>
+</article>
+</main>
+</body>
+</html>

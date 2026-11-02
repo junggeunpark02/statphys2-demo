@@ -96,7 +96,7 @@
       <p><b>무엇을 보라</b><span>공이 바닥에서 얼마나 멀리 나가는지, 그리고 $\langle V-V_{\min}\rangle/k_BT$가 언제 ½에서 벗어나는지 보라. 평균 위치 $\langle x\rangle$가 옮겨 가는 것도 보라.</span></p>
       <p data-choices="½에 가까워진다|0에 가까워진다|1에 가까워진다" data-answer="½에 가까워진다" data-why="온도가 낮으면 공은 바닥 근처에만 머물고, 바닥 근처의 우물은 포물선(점선)과 거의 같다. 그래서 등분배 값 ½이 돌아온다. 4차 우물만은 바닥조차 포물선이 아니라 ¼에 머문다."><b>먼저 예상해 보라</b><span>그림 19.7 꼴 우물에서 $k_BT$를 아주 낮추면 $\langle V-V_{\min}\rangle/k_BT$는?</span></p>
     </div>
-    <figcaption><b>그림 19.7을 움직이게 다시 그림.</b> 그림 19.7 꼴 우물은 $V(x)=\varepsilon[(x/a)^2-(x/a)^3+0.27(x/a)^4]$로 만들었다. 이 우물은 $x=0$의 바닥 말고도 오른쪽 $x=\tfrac53a$에 얕은 두 번째 우물($V=0.23\varepsilon$)이 있고, 둘 사이에 $x=\tfrac{10}{9}a$의 낮은 장벽($V=0.27\varepsilon$)이 있다. 공은 열원과 맞닿은 입자의 움직임(랑주뱅 동역학)이고, 정확한 평균은 수치 적분으로 계산한다. 점선은 식 (19.27)의 제곱 근사다.</figcaption>
+    <figcaption><b>그림 19.7을 움직이게 다시 그림.</b> 그림 19.7 꼴 우물은 $V(x)=\varepsilon[(x/a)^2-(x/a)^3+0.27(x/a)^4]$로 만들었다. 최솟값 오른쪽에 낮은 어깨가 있다. 공은 열원과 맞닿은 입자의 움직임(랑주뱅 동역학)이고, 정확한 평균은 수치 적분으로 계산한다. 점선은 식 (19.27)의 제곱 근사다.</figcaption>
   </figure>
 </section>
 <section class="phase" data-step="③" data-phase="식 세우기">
@@ -109,14 +109,14 @@
 <section class="phase" data-step="④" data-phase="결과">
   <p>거의 모든 퍼텐셜 우물의 바닥은 제곱 꼴로 근사된다. 이 근사가 깨지는 경우는 두 가지다.</p>
   <ul>
-    <li><b>온도가 너무 높을 때.</b> 입자가 바닥에서 멀리 나가 3차, 4차 항(비조화 항)을 느낀다. 그림 19.7 꼴 우물에서는 $k_BT=0.02\varepsilon$에서 0.52, $0.05\varepsilon$에서 0.63으로 ½에서 벗어난다. 이때 두 가지 효과를 구별해야 한다. $k_BT\lesssim0.02\varepsilon$에서는 입자가 바닥 근처에 머물며 3차 항 때문에 평균 위치가 완만한 쪽으로 조금 옮겨 간다($k_BT=0.01\varepsilon$에서 $\langle x\rangle=0.0078a$, 3차 항으로 어림한 값 $0.0075a$). $k_BT$가 장벽 높이에 가까워지면 입자가 장벽을 넘어 두 번째 우물에 들어가는 비율이 늘어난다($0.05\varepsilon$에서 1.4%, $0.1\varepsilon$에서 11%). $0.05\varepsilon$에서는 두 효과가 섞여 있고, $0.1\varepsilon$ 이상에서는 두 번째 우물의 몫이 평균을 좌우한다.</li>
+    <li><b>온도가 너무 높을 때.</b> 입자가 바닥에서 멀리 나가 3차, 4차 항(비조화 항)을 느낀다. 그림 19.7 꼴 우물에서는 $k_BT=0.02\varepsilon$에서 0.52, $0.05\varepsilon$에서 0.63으로 ½에서 벗어나고, 평균 위치 $\langle x\rangle$도 완만한 쪽으로 옮겨 간다.</li>
     <li><b>바닥의 곡률이 0일 때.</b> $(\partial^2V/\partial x^2)_{x_0}=0$이면 바닥부터 제곱 꼴이 아니다. 교재 280쪽 각주 4의 예 $V=\alpha(x-x_0)^4$에서는 평균이 $\tfrac14k_BT$이다.</li>
   </ul>
   <div class="claim box key" data-k="derived" id="window"><h4>등분배가 쓸모 있는 온도 창</h4>
     <p>아래로는 양자화 때문에 막힌다($k_BT\gg\hbar\omega$이어야 한다). 위로는 비조화 때문에 막힌다($k_BT$가 비조화 에너지 규모보다 작아야 한다). 교재는 많은 계에서 이 두 경계 사이가 넉넉하다고 말한다(280쪽).</p></div>
 </section>
 <section class="phase" data-step="⑤" data-phase="확인">
-  <p>위 시뮬레이션에서 확인하라. ① 조화 우물은 모든 온도에서 정확히 ½이다. ② 그림 19.7 꼴 우물은 저온에서 ½로 돌아오고, $k_BT\approx0.1\varepsilon$에서 0.8 가까이 커졌다가(두 번째 우물로 넘어간 입자의 몫) 고온에서는 4차 항이 지배해 다시 ¼ 근처로 작아진다. ③ 4차 우물은 언제나 ¼이다. 타일의 $\langle x^2\rangle$를 조화 근사 $k_BT/V''(0)$와 비교하면 근사가 언제 깨지는지 숫자로 보인다.</p>
+  <p>위 시뮬레이션에서 확인하라. ① 조화 우물은 모든 온도에서 정확히 ½이다. ② 그림 19.7 꼴 우물은 저온에서 ½로 돌아오고, $k_BT\approx0.1\varepsilon$에서 0.8 가까이 커졌다가 고온에서는 4차 항이 지배해 다시 작아진다. ③ 4차 우물은 언제나 ¼이다. 타일의 $\langle x^2\rangle$를 조화 근사 $k_BT/V''(0)$와 비교하면 근사가 언제 깨지는지 숫자로 보인다.</p>
 </section>
 
 <h2 id="verdict">결과 판정</h2>
@@ -159,14 +159,14 @@
   <details><summary>H₂의 측정값 $C_p=3.47R$가 $3.5R$보다 조금 작은 이유는 무엇일까?</summary><div><p>수소 분자는 관성모멘트가 가장 작아 회전 준위 간격이 가장 크다. 그래서 298 K에서도 회전이 완전히 고전적으로 들떠 있지 않다. 교재 그림 21.6(314쪽)에서 H₂의 $C_V$는 300 K 근처에서야 $\tfrac52R$에 다가간다.</p></div></details>
   <details><summary>온도를 아주 높이면 이원자 기체의 $C_V$는 $\tfrac72R$에 머물까?</summary><div><p>그 전에 분자가 쪼개질 수 있다. 결합이 끊어지면 입자 수가 바뀌므로 화학 평형 문제가 된다(<a class="loc" href="../ch22/22-8.html">[22.8절 · 예제 22.7]</a>의 H₂ 해리). 또 높은 온도에서는 진동이 비조화가 되어 가정 2도 흔들린다.</p></div></details>
   <details><summary>얼어붙은 진동의 영점 에너지 $\tfrac12\hbar\omega$는 열용량에 기여하는가?</summary><div><p>기여하지 않는다. 온도와 무관한 상수이므로 $T$로 미분하면 0이다. 열용량을 만드는 것은 $\langle E\rangle-\tfrac12\hbar\omega$, 곧 열로 얻은 몫뿐이다.</p></div></details>
-  <details><summary>그림 19.7처럼 비대칭인 우물에서 온도가 오르면 평균 위치는 어떻게 되는가?</summary><div><p>완만한 쪽으로 옮겨 간다. 낮은 온도($k_BT\lesssim0.02\varepsilon$)에서 바닥 근처의 비대칭(3차 항) 때문에 평균 위치가 조금씩 옮겨 가는 것, 곧 원자 사이 거리의 평균이 늘어나는 것이 열팽창의 미시적 기원이다. 조화 근사에서는 우물이 대칭이라 열팽창이 없다. 다만 이 시뮬레이션의 우물은 오른쪽에 두 번째 우물이 있어서, $k_BT\gtrsim0.05\varepsilon$에서 $\langle x\rangle$가 크게 뛰는 것은 열팽창이 아니라 입자가 장벽을 넘어 두 번째 우물로 들어간 결과다. 시뮬레이션의 $\langle x\rangle$ 표시로 두 영역을 비교해 보라.</p></div></details>
+  <details><summary>그림 19.7처럼 비대칭인 우물에서 온도가 오르면 평균 위치는 어떻게 되는가?</summary><div><p>완만한 쪽으로 옮겨 간다. 시뮬레이션의 $\langle x\rangle$ 표시가 보여 준다. 원자 사이 거리의 평균이 늘어나는 것, 이것이 열팽창의 미시적 기원이다. 조화 근사에서는 우물이 대칭이라 열팽창이 없다.</p></div></details>
   <details><summary>거의 모든 온도에서 등분배가 정확히 맞는 자유도가 있을까?</summary><div><p>단원자 기체의 병진 운동이다. 상자 속 입자의 준위 간격은 매우 작아서, 아주 낮은 온도나 아주 높은 밀도가 아니면 연속으로 보아도 된다. 그 정량적 기준이 양자 농도다(<a class="loc" href="../ch21/21-2.html">[21.2절]</a>).</p></div></details>
 </div>
 
 <h2 id="hand">손으로 풀기</h2>
 <div class="hand" id="h1931" data-answer="4.54e-4" data-tol="0.02">
   <header><b>문항 1</b><span>얼어붙은 진동</span></header>
-  <p>어떤 이원자 분자의 진동에서 $\hbar\omega/k_B=3000$ K라고 하자(질소 분자 N₂의 실제 값은 진동 파수 2359 cm⁻¹에서 환산해 약 3400 K이다). 300 K에서 열로 얻은 평균 진동 에너지 $\langle E\rangle-\tfrac12\hbar\omega$는 고전값 $k_BT$의 몇 배인가?</p>
+  <p>어떤 이원자 분자의 진동에서 $\hbar\omega/k_B=3000$ K라고 하자. 300 K에서 열로 얻은 평균 진동 에너지 $\langle E\rangle-\tfrac12\hbar\omega$는 고전값 $k_BT$의 몇 배인가?</p>
   <div class="hand-sim" data-sim="ladder" data-set='{"t":0.1}' data-read="ratio" data-label="사다리 시뮬레이션의 값"></div>
   <details><summary>풀이</summary><p>$x=\hbar\omega/k_BT=10$. 비는 $x/(e^x-1)=10/(e^{10}-1)=10/22025=4.54\times10^{-4}$. 사실상 0이므로 이 진동은 얼어 있다.</p></details>
 </div>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>26.2 디테리치(Dieterici) 방정식 · 통계역학 학습서</title>
+<meta name="description" content="인력을 볼츠만 인자로 넣은 디테리치 방정식, 임계점과 p_cV_c/RT_c=2/e²=0.271. 교재 26.2절(392–393쪽).">
+<link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+<script src="../assets/book.js"></script>
+<script defer src="sim26.js"></script>
+</head>
+<body data-root="../" data-page="26.2">
+<main id="main" class="bk-main" tabindex="-1">
+<article class="bk-page">
+<p class="bk-crumb"><a href="index.html">26장 실제 기체</a> › 26.2</p>
+<h1 class="bk-title"><span class="no">26.2</span>디테리치(Dieterici) 방정식</h1>
+<p class="bk-meta">교재 392–393쪽 · 식 26.31–26.39 · 그림 26.7 · 표 26.1 · 교재 예제 없음</p>
+<p class="bk-lang-note" hidden>새로 쓴 본문은 아직 한국어만 있습니다. · The new study text is Korean-only for now.</p>
+<ul class="bk-flow" aria-label="이 절의 흐름">
+  <li><a href="#goals">학습 목표</a></li><li><a href="#solves">맡은 질문</a></li><li><a href="#start">출발점</a></li><li><a href="#body">본문 전개</a></li>
+  <li><a href="#verdict">결과 판정</a></li><li><a href="#examples">예제 평가</a></li><li><a href="#selfq">스스로 던질 질문</a></li><li><a href="#hand">손으로 풀기</a></li><li><a href="#notation">표기 참고</a></li>
+</ul>
+
+<h2 id="goals">학습 목표</h2>
+<ol>
+  <li>반데르발스 압력을 반발 항과 인력 항으로 나누고, 인력을 다르게 넣는 방법(베르텔로, 디테리치)을 비교할 수 있다.</li>
+  <li>벽에 닿는 분자가 인력 영역을 거슬러 와야 하므로 압력에 볼츠만 인자가 붙는다는 디테리치의 착상을 설명할 수 있다.</li>
+  <li>디테리치 식의 임계 상수와 $p_cV_c/RT_c=2/e^2$을 구하고 측정값과 비교할 수 있다.</li>
+</ol>
+
+<h2 id="solves">이 절이 맡은 질문</h2>
+<p><a class="qchip" href="index.html#q2">Q2</a> 임계점의 $p_cV_c/RT_c$는 모형에 따라 얼마이고, 측정값 0.29에 가까운 모형은 무엇인가?</p>
+
+<h2 id="start">출발점</h2>
+<div class="claim" data-k="cite" data-ref="26-1.html#eq-26-12" data-ref-label="26.1절 · 식 26.12"><p>반데르발스 식 $p=\dfrac{RT}{V-b}-\dfrac{a}{V^2}$.</p></div>
+<div class="claim" data-k="cite" data-ref="26-1.html#eq-26-13" data-ref-label="26.1절 · 식 26.13–26.14"><p>임계점은 $(\partial p/\partial V)_T=(\partial^2p/\partial V^2)_T=0$인 점이다.</p></div>
+<div class="claim" data-k="cite" data-ref="../ch19/19-1.html#start" data-ref-label="19.1절 · 출발점"><p>에너지가 $\Delta E$만큼 높은 곳에 있을 확률은 $e^{-\Delta E/k_BT}$배로 줄어든다(볼츠만 인자).</p></div>
+
+<h2 id="body">본문 전개</h2>
+<section class="phase" data-step="①" data-phase="상황">
+  <div class="claim" data-k="def" id="eq-26-31"><div class="eq"><div class="m">$$p=p_{\rm repulsive}+p_{\rm attractive},\quad p_{\rm repulsive}=\frac{RT}{V-b},\quad p_{\rm attractive}=-\frac{a}{V^2}$$</div><a class="eqno" href="#eq-26-31">(26.31)–(26.33)</a></div>
+    <p>반데르발스 식을 단단한 공의 반발에서 오는 항과 인력에서 오는 항으로 나누어 썼다.</p></div>
+  <p>인력 항을 꼭 $-a/V^2$로 빼야 할까? 벽에 부딪히는 분자를 생각해 보자. 벽 근처의 분자는 뒤쪽(기체 안쪽)에만 이웃이 있어서 안으로 당겨진다. 그러면 벽까지 오는 분자가 줄어들 텐데, 얼마나 줄어들까?</p>
+</section>
+<section class="phase" data-step="②" data-phase="관찰">
+  <figure class="sim-fig" id="sim-dieterici">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>오른쪽 벽 근처 인력 띠의 장벽 $\Delta E/k_BT$, 등온선을 그릴 온도 $\tilde T$. 오른쪽 아래 그래프를 누르면 그 장벽으로 바뀐다.</span></p>
+      <p><b>무엇을 보라</b><span>왼쪽 벽(인력 없음)과 오른쪽 벽(인력 띠)에 닿는 빈도의 비가 장벽에 따라 어떻게 줄어드는지 보라. 아래에서는 두 모형의 등온선과 $p_cV_c/RT_c$를 비교하라.</span></p>
+      <p data-choices="1/2|1/e ≈ 0.37|1/e² ≈ 0.14" data-answer="1/e ≈ 0.37" data-why="열평형에서 벽 앞의 밀도는 볼츠만 인자 $e^{-\Delta E/k_BT}$만큼 줄고, 벽 앞 분자의 속도 분포는 그대로다. 그래서 충돌 빈도도 같은 인자만큼 준다."><b>먼저 예상해 보라</b><span>$\Delta E=k_BT$이면 오른쪽 벽의 충돌 빈도는 왼쪽 벽의 몇 배일까?</span></p>
+    </div>
+    <figcaption><b>디테리치의 착상(교재 392쪽 각주 4)을 실험으로.</b> 분자 200개가 같은 온도로 유지되며 움직인다. 오른쪽 벽 앞의 노란 띠에서는 일정한 힘이 분자를 안쪽으로 당긴다(모형 가정: 인력을 벽 앞의 에너지 장벽으로 단순화). 아래 등온선은 그림 26.2(반데르발스)와 그림 26.7(디테리치)을 환산 변수로 다시 그린 것이다.</figcaption>
+  </figure>
+</section>
+<section class="phase" data-step="③" data-phase="식 세우기">
+  <div class="claim" data-k="model" id="eq-26-34"><div class="eq"><div class="m">$$p_{\rm attractive}=-\frac{a}{TV^2}$$</div><a class="eqno" href="#eq-26-34">(26.34)</a></div>
+    <p>베르텔로 방정식. 인력 항을 온도에 의존하게 만든 한 가지 시도다(여기서 $a$는 반데르발스의 $a$와 단위가 다른 상수, 교재 각주 2).</p></div>
+  <div class="claim" data-k="model" id="eq-26-35"><div class="eq"><div class="m">$$p=p_{\rm repulsive}\exp\!\left(-\frac{a}{RTV}\right)$$</div><a class="eqno" href="#eq-26-35">(26.35)</a></div>
+    <p>디테리치(1899)의 가정: 벽에 닿는 분자는 인력을 거슬러 와야 하므로 압력에 볼츠만 인자 $e^{-\Delta E/k_BT}$가 붙고, 그 에너지 손실 $\Delta E$는 밀도, 곧 $1/V$에 비례한다. 교재는 이것이 현상론적인 동기라고 밝힌다(392쪽 각주 4).</p></div>
+  <div class="claim box key" data-k="derived" id="eq-26-36"><div class="eq"><div class="m">$$p(V_m-b)=RT\exp\!\left(-\frac{a}{RTV_m}\right)$$</div><a class="eqno" href="#eq-26-36">(26.36)</a></div>
+    <p>디테리치 방정식. 식 (26.32)를 (26.35)에 넣었다. 그림 26.7처럼 $V\to b$에서 압력이 급격히 커지는 것은 반데르발스와 같다.</p></div>
+  <div class="claim" data-k="cite" data-ref="26-1.html#eq-26-13" data-ref-label="26.1절 · 임계점 조건" id="eq-26-37"><div class="eq"><div class="m">$$\left(\frac{\partial^2p}{\partial V^2}\right)_T=\left(\frac{\partial p}{\partial V}\right)_T=0$$</div><a class="eqno" href="#eq-26-37">(26.37)</a></div></div>
+  <div class="claim" data-k="derived" id="eq-26-38"><div class="eq"><div class="m">$$T_c=\frac{a}{4Rb},\qquad p_c=\frac{a}{4e^2b^2},\qquad V_c=2b$$</div><a class="eqno" href="#eq-26-38">(26.38)</a></div></div>
+</section>
+<section class="phase" data-step="④" data-phase="결과">
+  <div class="claim box key" data-k="derived" id="eq-26-39"><div class="eq"><div class="m">$$\frac{p_cV_c}{RT_c}=\frac{2}{e^2}=0.271$$</div><a class="eqno" href="#eq-26-39">(26.39)</a></div></div>
+  <div class="claim" data-k="exp" data-src="교재 표 26.1(393쪽), 비활성 기체" id="table-26-1"><div class="bk-table-wrap"><table class="bk-table">
+    <thead><tr><th></th><th>Ne</th><th>Ar</th><th>Kr</th><th>Xe</th></tr></thead>
+    <tbody><tr><td>$p_cV_c/RT_c$</td><td class="num">0.287</td><td class="num">0.292</td><td class="num">0.291</td><td class="num">0.290</td></tr></tbody></table></div></div>
+  <p>반데르발스의 0.375보다 디테리치의 0.271이 측정값에 훨씬 가깝다. 다만 두 식 모두 분자 사이 힘에 대한 현상론적 가정에서 출발했다. 숫자가 잘 맞는다고 해서 어느 한쪽이 “옳은” 미시 이론이라는 뜻은 아니다.</p>
+</section>
+<section class="phase" data-step="⑤" data-phase="확인">
+  <p>벽 실험에서 장벽을 0, 1, 2로 바꾸어 가며 충돌 빈도 비가 1, 0.37, 0.14 근처로 가는지 확인하라. 이것이 식 (26.35)의 지수 인자가 뜻하는 바다. 등온선 그래프에서는 $\tilde T=1$일 때 두 곡선이 모두 $\tilde V=1$, $\tilde p=1$에서 수평 변곡점을 지난다. 그 점에서 떨어지면 두 모형의 차이가 드러난다.</p>
+</section>
+
+<h2 id="verdict">결과 판정</h2>
+<ul class="verdict" aria-label="결과 판정">
+  <li><b>해결됨</b>질문이 이 절로 완전히 답해짐</li>
+  <li class="on"><b>새 문제 발생</b>해결하면서 새 의문이 생김</li>
+  <li><b>추후 논의</b>근사·제한이 남아 뒤에서 다룸</li>
+</ul>
+<p>Q2에 답했다. 디테리치 식은 0.271로 측정값 0.29에 반데르발스(0.375)보다 가깝다. 그러나 이것은 모형을 바꿔 숫자를 맞춘 결과다. 분자 사이의 실제 퍼텐셜에서 출발해 이상기체로부터의 어긋남을 계산할 수는 없을까? → <a href="26-3.html">26.3절 · 비리알 전개</a>.</p>
+
+<h2 id="examples">예제 평가</h2>
+<p>이 절에는 교재 예제가 없다. 이 절의 식을 쓰는 연습문제를 평가한다.</p>
+<article class="exeval" id="ex-p26-3">
+  <header><h3>연습문제 26.3 · 환산된 디테리치 식 (401쪽)</h3><span class="stars" aria-label="중요도 2/3">★★<span class="off">★</span></span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>흐름을 따라가며 손으로 한 번 풀 것. 식 (26.38)을 넣어 $\tilde p(2\tilde V-1)=\tilde T\exp[2(1-1/\tilde T\tilde V)]$를 얻는 계산이다.</dd>
+    <dt>연습문제와의 관계</dt><dd>26.4절 예제 26.3(반데르발스 식의 환산)과 같은 방법이다. 두 문제를 나란히 풀면 대응상태의 법칙이 모형마다 같은 방식으로 나온다는 것이 보인다. 위 시뮬레이션의 디테리치 등온선이 바로 이 식이다.</dd>
+    <dt>솔직한 평가</dt><dd>대수 연습이다. 시험에서는 “임계 상수를 구하라”와 묶여 나올 수 있다.</dd>
+  </dl>
+</article>
+
+<h2 id="selfq">스스로 던질 질문</h2>
+<div class="selfq">
+  <details><summary>밀도가 낮으면 디테리치 식은 반데르발스 식과 같아지는가?</summary><div><p>같아진다. $V\gg b$이고 $a/RTV\ll1$이면 $e^{-a/RTV}\approx1-a/RTV$이므로 $p\approx\dfrac{RT}{V-b}-\dfrac{a}{V(V-b)}\approx\dfrac{RT}{V-b}-\dfrac{a}{V^2}$이다. 두 모형의 차이는 밀도가 높은 곳, 특히 임계점 근처에서 드러난다.</p></div></details>
+  <details><summary>두 모형의 제2 비리알 계수는 같은가?</summary><div><p>같다. 위 전개에서 보듯 $1/V$의 1차 보정은 둘 다 $b-a/RT$이다(26.3절 식 26.43). 그러므로 낮은 밀도의 측정으로는 두 모형을 구별할 수 없다.</p></div></details>
+  <details><summary>벽 실험에서 속도 분포는 왜 그대로인가?</summary><div><p>열평형에서 위치 분포와 속도 분포는 독립이다. 장벽을 넘어 벽에 도달한 분자들은 장벽 앞에서 더 빠른 쪽이 걸러진 것이지만, 장벽을 넘으며 그만큼 느려지므로 벽 앞의 속도 분포는 다시 같은 온도의 맥스웰 분포가 된다. 그래서 밀도만 볼츠만 인자만큼 줄어든다.</p></div></details>
+  <details><summary>베르텔로 식처럼 인력이 온도에 따라 약해지는 것은 물리적으로 그럴듯한가?</summary><div><p>분자가 빠를수록 짧은 시간만 이웃 근처에 머무르므로 인력의 효과가 덜 쌓인다는 직관과 맞는다. 26.3절의 $B(T)$ 계산에서도 인력의 기여(음의 넓이)는 온도가 오를수록 줄어든다.</p></div></details>
+  <details><summary>측정값이 0.29 근처에 모이는 것 자체는 어떻게 설명되는가?</summary><div><p>비활성 기체들은 분자 사이 퍼텐셜의 모양이 거의 같고 크기와 깊이만 다르다. 그러면 임계점 값으로 나눈 양은 물질에 상관없이 같아야 한다. 이것이 <a href="26-4.html">26.4절</a>의 대응상태의 법칙이다.</p></div></details>
+</div>
+
+<h2 id="hand">손으로 풀기</h2>
+<div class="hand" id="h2621" data-answer="0.271" data-tol="0.005">
+  <header><b>문항 1</b><span>디테리치의 임계 압축인자</span></header>
+  <p>식 (26.38)로 $p_cV_c/RT_c$를 계산하라.</p>
+  <details><summary>풀이</summary><p>$\dfrac{(a/4e^2b^2)(2b)}{R\cdot a/4Rb}=\dfrac{2}{e^2}=0.271$.</p></details>
+</div>
+<div class="hand" id="h2622" data-answer="0.844" data-tol="0.005">
+  <header><b>문항 2</b><span>같은 $a$, $b$일 때 임계온도의 비</span></header>
+  <p>같은 $a$, $b$를 쓰면 디테리치 식의 $T_c$는 반데르발스 식의 $T_c$의 몇 배인가?</p>
+  <details><summary>풀이</summary><p>$\dfrac{a/4Rb}{8a/27Rb}=\dfrac{27}{32}=0.844$.</p></details>
+</div>
+<div class="hand" id="h2623" data-answer="69.9" data-tol="0.01" data-unit="cm³/mol">
+  <header><b>문항 3</b><span>아르곤의 임계 부피 예측</span></header>
+  <p>아르곤($T_c=151$ K, $p_c=4.86$ MPa)에 디테리치 식을 맞추면 $V_c=2b$는 몇 cm³/mol인가? ($R=8.314$ J K⁻¹ mol⁻¹)</p>
+  <div class="hand-sim" data-sim="dieterici" data-set='{"dE":1}' data-read="ratio" data-label="(덤) 벽 실험의 충돌 빈도 비, 예측 0.368"></div>
+  <details><summary>풀이</summary><p>식 (26.38)에서 $T_c/p_c=e^2b/R$이므로 $b=RT_c/(e^2p_c)=8.314\times151/(7.389\times4.86\times10^6)=3.50\times10^{-5}$ m³/mol. $V_c=2b=69.9$ cm³/mol. 측정값에서 구한 75 cm³/mol(26장 머릿글)에 반데르발스 예측 96.9 cm³/mol보다 훨씬 가깝다.</p></details>
+</div>
+
+<h2 id="notation">표기 참고</h2>
+<div class="bk-table-wrap"><table class="bk-table">
+  <thead><tr><th>이 학습서 (교재 한국어판)</th><th>다른 표기</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr><td>디테리치(Dieterici) 방정식</td><td>디테리치 상태방정식</td><td>교재 393쪽. Conrad Dieterici(1858–1929).</td></tr>
+    <tr><td>베르텔로 방정식 (Berthelot equation)</td><td>—</td><td>교재 392쪽.</td></tr>
+    <tr><td>척력적 강체공 상호작용</td><td>단단한 공의 반발</td><td>교재 392쪽.</td></tr>
+    <tr><td>$a$</td><td>—</td><td>반데르발스, 베르텔로, 디테리치 식의 $a$는 이름만 같고 단위와 값이 서로 다른 상수다(교재 각주 2, 4).</td></tr>
+  </tbody>
+</table></div>
+</article>
+</main>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>26.1 반데르발스 기체 · 통계역학 학습서</title>
+<meta name="description" content="반데르발스 식, S자 등온선, 임계점, 깁스 함수와 준안정, 막스웰 작도, p–T 상도표. 교재 26.1절(383–392쪽).">
+<link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+<script src="../assets/book.js"></script>
+<script defer src="sim26.js"></script>
+</head>
+<body data-root="../" data-page="26.1">
+<main id="main" class="bk-main" tabindex="-1">
+<article class="bk-page">
+<p class="bk-crumb"><a href="index.html">26장 실제 기체</a> › 26.1</p>
+<h1 class="bk-title"><span class="no">26.1</span>반데르발스 기체</h1>
+<p class="bk-meta">교재 382–392쪽 · 식 26.1–26.30 · 그림 26.1–26.6 · 예제 26.1</p>
+<p class="bk-lang-note" hidden>새로 쓴 본문은 아직 한국어만 있습니다. · The new study text is Korean-only for now.</p>
+<ul class="bk-flow" aria-label="이 절의 흐름">
+  <li><a href="#goals">학습 목표</a></li><li><a href="#solves">맡은 질문</a></li><li><a href="#start">출발점</a></li><li><a href="#body">본문 전개</a></li>
+  <li><a href="#verdict">결과 판정</a></li><li><a href="#examples">예제 평가</a></li><li><a href="#selfq">스스로 던질 질문</a></li><li><a href="#hand">손으로 풀기</a></li><li><a href="#notation">표기 참고</a></li>
+</ul>
+
+<h2 id="goals">학습 목표</h2>
+<ol>
+  <li>반데르발스 식의 두 매개변수 $a$(인력), $b$(배제 부피)의 뜻을 말하고, $a/V_m^2$ 항을 평균장 논리로 유도할 수 있다.</li>
+  <li>S자 등온선에서 압축률이 음수인 불안정 구간을 찾고, 임계 상수 $V_c=3b$, $T_c=8a/27Rb$, $p_c=a/27b^2$을 유도할 수 있다(예제 26.1).</li>
+  <li>일정한 $T$, $p$에서 깁스 함수가 가장 작은 상이 안정하다는 기준으로 준안정 상태와 상공존을 설명할 수 있다.</li>
+  <li>막스웰 작도(같은 넓이 규칙)를 $\int V\,dp=0$에서 유도하고, 공존 압력과 $p$–$T$ 상도표를 얻을 수 있다.</li>
+</ol>
+
+<h2 id="solves">이 절이 맡은 질문</h2>
+<p><a class="qchip" href="index.html#q1">Q1</a> 분자 사이의 인력과 분자의 크기를 상태방정식에 어떻게 넣는가? 액화와 임계점이 설명되는가? <a class="qchip" href="index.html#q2">Q2</a> 임계점의 $p_cV_c/RT_c$는?</p>
+<p>이 절은 Q1에 “그렇다”고 답한다. Q2에는 0.375라는 첫 답을 주는데, 측정값 0.29와 어긋나 다음 절로 이어진다.</p>
+
+<h2 id="start">출발점</h2>
+<div class="claim" data-k="cite" data-ref="../ch21/21-3.html#eq-21-26" data-ref-label="21.3절 · 식 21.26"><p>상호작용이 없는 기체의 분배함수 $Z_N=\dfrac{1}{N!}\left(\dfrac{V}{\lambda_{\rm th}^3}\right)^N$.</p></div>
+<div class="claim" data-k="cite" data-ref="../ch20/20-2.html#table-20-1" data-ref-label="20.2절 · 표 20.1"><p>$F=-k_BT\ln Z$, $p=-(\partial F/\partial V)_T$, $G=F+pV$.</p></div>
+<div class="claim" data-k="cite" data-ext="16장 · 식 16.68" data-note="교재 386쪽이 인용한다."><p>등온압축률 $\kappa_T=-\dfrac1V\left(\dfrac{\partial V}{\partial p}\right)_T$.</p></div>
+<div class="claim" data-k="cite" data-ext="16장 · 열역학 퍼텐셜" data-note="일정한 온도와 압력에서 계는 깁스 함수를 최소화한다."><p>온도와 압력이 일정한 계는 깁스 함수가 가장 작은 상태로 간다.</p></div>
+
+<h2 id="body">본문 전개</h2>
+<section class="phase" data-step="①" data-phase="상황">
+  <div class="claim" data-k="model" id="eq-26-2"><div class="eq"><div class="m">$$pV=n_{\rm moles}RT,\qquad pV_m=RT$$</div><a class="eqno" href="#eq-26-2">(26.1)–(26.2)</a></div>
+    <p>이상기체 상태방정식. $V_m=V/n_{\rm moles}$는 몰부피다. 등온선은 그림 26.1처럼 온도마다 하나씩 있는 쌍곡선이다.</p></div>
+  <p>실제 기체를 충분히 식힌 뒤 피스톤으로 누르면 어느 순간 압력이 더 오르지 않고, 용기 바닥에 액체가 생기기 시작한다. 이상기체 식에는 그런 일이 들어설 자리가 없다. 분자의 크기와 분자 사이의 인력을 넣으면 무엇이 달라질까?</p>
+</section>
+<section class="phase" data-step="②" data-phase="관찰">
+  <figure class="sim-fig" id="sim-vdw">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>온도 $\tilde T$, 피스톤 부피 $\tilde V$, 막스웰 작도 켜기, 이상기체 등온선 같이 보기. 등온선 그래프를 누르면 그 부피로, 상도표를 누르면 그 온도로 이동한다.</span></p>
+      <p><b>무엇을 보라</b><span>$\tilde T\lt 1$에서 등온선이 S자로 휘는 구간, 그 구간에서 피스톤 속에 액체 층이 생겼다 사라지는 과정, $\tilde T\ge1$에서 S자가 사라지는 것을 보라.</span></p>
+      <p data-choices="계속 오른다|일정하게 머문다|오히려 내려간다" data-answer="일정하게 머문다" data-why="평형에서는 두 상이 공존하는 동안 압력이 공존 압력(막스웰 작도의 수평선)에 머문다. 막스웰 작도를 끄면 반데르발스 식이 주는 S자, 곧 압력이 내려가는 구간이 나타나는데 그 구간은 불안정하다."><b>먼저 예상해 보라</b><span>$\tilde T=0.9$에서 기체를 천천히 압축해 공존 구간에 들어서면 평형 압력은?</span></p>
+    </div>
+    <figcaption><b>그림 26.1, 26.2, 26.5, 26.6을 함께 움직이게 다시 그림.</b> 환산 변수($\tilde p=p/p_c$, $\tilde V=V/V_c$, $\tilde T=T/T_c$)로 그렸다. 공존 구간에서는 지렛대 규칙으로 액체의 몰 비를 정해 피스톤 바닥의 액체 층으로 보였다. 점선은 공존 경계, 주황 면은 막스웰 작도의 같은 넓이 두 개다.</figcaption>
+  </figure>
+</section>
+<section class="phase" data-step="③" data-phase="식 세우기">
+  <div class="claim box key" data-k="model" id="eq-26-3"><div class="eq"><div class="m">$$\left(p+\frac{a}{V_m^2}\right)(V_m-b)=RT$$</div><a class="eqno" href="#eq-26-3">(26.3)</a></div>
+    <p>반데르발스 상태방정식. $a$는 분자 사이 인력의 세기, $b$는 분자가 실제로 차지해 다른 분자가 들어갈 수 없는 몰당 부피다. $a=b=0$이거나 밀도가 낮으면($V_m\gg b$, $V_m\gg(a/p)^{1/2}$) 이상기체로 돌아간다.</p></div>
+  <h4>$a/V_m^2$ 항은 어디서 오는가 (교재 384–385쪽 상자)</h4>
+  <div class="claim" data-k="approx" data-cond="분자들이 고르게 퍼져 있다고 보고, 분자 사이의 위치 상관을 무시함 (평균장)" id="eq-26-4"><div class="eq"><div class="m">$$E_{\rm 인력}=-\frac{a\,n_{\rm moles}^2}{V}$$</div><a class="eqno" href="#eq-26-4">(26.4)</a></div>
+    <p>분자 하나가 느끼는 이웃의 수는 밀도 $n_{\rm moles}/V$에 비례하고, 이것을 분자 수만큼 더하면 인력 에너지는 $n_{\rm moles}^2/V$에 비례해 총에너지를 낮춘다.</p></div>
+  <div class="claim" data-k="derived" id="eq-26-7"><p>부피를 $dV$ 바꾸면 이 에너지가 $a\,n_{\rm moles}^2\,dV/V^2$만큼 바뀐다(식 26.5). 이것을 유효 압력이 한 일 $-p_{\rm eff}dV$로 보면 $p_{\rm eff}=-a/V_m^2$이다(식 26.6). 측정하는 압력은 $p=p_{\rm ideal}+p_{\rm eff}$이므로</p>
+    <div class="eq"><div class="m">$$p_{\rm ideal}=p+\frac{a}{V_m^2},\qquad p_{\rm ideal}(V_m-b)=RT$$</div><a class="eqno" href="#eq-26-7">(26.7)–(26.9)</a></div>
+    <p>마지막 식에서 배제 부피를 넣으려고 $V_m\to V_m-b$로 바꾸었다. 결과는 식 (26.3)과 같다.</p></div>
+  <div class="claim" data-k="approx" data-cond="평균장, 낮은 밀도에서 배제 부피를 단순히 뺌" id="eq-26-10"><div class="eq"><div class="m">$$Z_N=\frac{1}{N!}\left(\frac{V-n_{\rm moles}b}{\lambda_{\rm th}^3}\right)^N e^{\beta a n_{\rm moles}^2/V}$$</div><a class="eqno" href="#eq-26-10">(26.10)</a></div>
+    <p>이상기체의 분배함수에서 부피를 실제로 쓸 수 있는 부피로 바꾸고, 평균 인력 에너지의 볼츠만 인자를 곱했다. $F=-k_BT\ln Z_N$에서 $p=-(\partial F/\partial V)_T$를 구하면 반데르발스 식이 나온다.</p></div>
+  <div class="claim" data-k="derived" id="eq-26-11"><div class="eq"><div class="m">$$pV^3-(pb+RT)V^2+aV-ab=0$$</div><a class="eqno" href="#eq-26-11">(26.11)</a></div>
+    <p>1몰($V_m=V$)에 대해 식 (26.3)에 $V^2$을 곱했다. $V$에 대한 3차 식이므로 한 압력에 부피가 셋까지 나올 수 있다. 이것이 S자의 수학적 뿌리다.</p></div>
+  <div class="claim" data-k="derived"><p>S자 구간 가운데에서는 $(\partial V/\partial p)_T>0$, 곧 $\kappa_T\lt 0$이다. 이런 상태는 압력이 조금 오르면 부피가 줄기는커녕 늘어 요동을 키우므로 불안정하다. S자는 온도가 <b>임계 등온선</b>보다 낮을 때 나타나고, 임계 등온선 위의 변곡점이 <b>임계점</b>이다.</p></div>
+  <h3 class="subhead"><span class="no">예제 26.1</span>임계점</h3>
+  <div class="claim" data-k="derived" id="eq-26-12"><div class="eq"><div class="m">$$p=\frac{RT}{V-b}-\frac{a}{V^2}$$</div><a class="eqno" href="#eq-26-12">(26.12)</a></div></div>
+  <div class="claim" data-k="def" id="eq-26-13"><p>임계점은 등온선이 극대·극소 없이 변곡하는 점이다.</p>
+    <div class="eq"><div class="m">$$\left(\frac{\partial p}{\partial V}\right)_T=-\frac{RT}{(V-b)^2}+\frac{2a}{V^3}=0,\qquad\left(\frac{\partial^2p}{\partial V^2}\right)_T=\frac{2RT}{(V-b)^3}-\frac{6a}{V^4}=0$$</div><a class="eqno" href="#eq-26-13">(26.13)–(26.14)</a></div></div>
+  <div class="claim" data-k="derived" id="eq-26-18"><p>두 식에서 각각 $RT=2a(V-b)^2/V^3$, $RT=3a(V-b)^3/V^4$이고(식 26.15–26.16), 나누면 $3(V-b)/V=2$(식 26.17)이다.</p>
+    <div class="eq"><div class="m">$$V_c=3b,\qquad T_c=\frac{8a}{27Rb},\qquad p_c=\frac{a}{27b^2}$$</div><a class="eqno" href="#eq-26-18">(26.18)–(26.20)</a></div></div>
+  <div class="claim box key" data-k="derived" id="eq-26-21"><div class="eq"><div class="m">$$\frac{p_cV_c}{RT_c}=\frac38=0.375$$</div><a class="eqno" href="#eq-26-21">(26.21)</a></div>
+    <p>$a$와 $b$에 무관한 숫자다. 임계점에서 $(\partial p/\partial V)_{T_c}=0$이므로 $\kappa_T\to\infty$이다(식 26.22–26.23).</p></div>
+</section>
+<section class="phase" data-step="④" data-phase="결과">
+  <div class="claim" data-k="exp" data-src="교재 표 26.1(393쪽)"><p>Ne, Ar, Kr, Xe의 측정값은 0.287–0.292이다.</p></div>
+  <p>반데르발스 식은 임계점의 존재와 S자 등온선을 설명하지만, $p_cV_c/RT_c$는 측정값보다 30% 가까이 크다. 그리고 S자 구간 자체는 불안정해서 실제로 관찰되지 않는다. 그렇다면 그 구간에서 기체는 실제로 무엇을 하는가?</p>
+</section>
+
+<h3 class="subhead" id="gibbs"><span class="no">이어서</span>깁스 함수, 준안정, 막스웰 작도</h3>
+<section class="phase" data-step="①" data-phase="상황">
+  <p>실험에서는 보통 온도와 압력을 정해 둔다. 그렇다면 상태를 고르는 기준은 깁스 함수다. $\tilde T=0.9$에서 압력을 천천히 올리면 계는 언제 기체에서 액체로 넘어갈까?</p>
+</section>
+<section class="phase" data-step="②" data-phase="관찰">
+  <figure class="sim-fig" id="sim-gibbs">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>온도 $\tilde T$, 압력 $\tilde p$, ‘압력 천천히 올렸다 내리기’. 아래 두 그래프를 누르면 그 압력으로 이동한다.</span></p>
+      <p><b>무엇을 보라</b><span>압력에 따라 깁스 함수 지형의 두 골짜기 높이가 바뀌는 것, 공이 더 깊은 골짜기로 바로 옮겨 가지 않고 원래 골짜기가 사라질 때까지 머무는 것을 보라. 부피 그래프에 남는 자취가 올라갈 때와 내려갈 때 다르다.</span></p>
+      <p data-choices="B에서 바로|Y 근처에서|X 근처에서" data-answer="Y 근처에서" data-why="B를 지나면 액체 쪽 골짜기가 더 깊어지지만, 그 사이의 장벽 때문에 공은 기체 골짜기에 남는다(과냉각 기체, 준안정). 기체 골짜기가 사라지는 Y 근처에서야 액체로 넘어간다."><b>먼저 예상해 보라</b><span>기체에서 시작해 압력을 천천히 올리면, 공은 어디서 액체 쪽으로 넘어갈까?</span></p>
+    </div>
+    <figcaption><b>그림 26.3과 26.4를 움직이게 다시 그림.</b> 위 화면은 정해진 $T$, $p$에서 부피에 대한 깁스 함수 $G=-RT\ln(V-b)-a/V+pV$(상수 생략, 환산 단위)이고, 공은 작은 요동을 받으며 내리막으로 가는 계의 상태다(모형 가정). 아래 그래프에서 X, B, Y는 그림 26.3의 점들이다.</figcaption>
+  </figure>
+</section>
+<section class="phase" data-step="③" data-phase="식 세우기">
+  <div class="claim" data-k="derived" id="eq-26-25"><p>1몰에 대해 $p=-(\partial F/\partial V)_T$를 적분하면 $F=f(T)-RT\ln(V-b)-a/V$(식 26.24)이고,</p>
+    <div class="eq"><div class="m">$$G=F+pV=f(T)-RT\ln(V-b)-\frac aV+pV$$</div><a class="eqno" href="#eq-26-25">(26.24)–(26.25)</a></div></div>
+  <div class="claim" data-k="cite" data-ext="16장 · 열역학 퍼텐셜"><p>일정한 $T$, $p$에서 계는 $G$가 가장 낮은 가지를 택한다. 그림 26.3 아래의 삼각형 고리 BXYB는 버려지고, 압력이 낮아짐에 따라 계는 A → B → C로 간다.</p></div>
+  <div class="claim" data-k="def"><p>가장 낮지는 않지만 국소적으로 안정해 한동안 머무를 수 있는 상태를 <b>준안정 상태</b>라 한다. 그림 26.3의 BX는 과열 액체, BY는 과냉각 기체다.</p></div>
+  <div class="claim" data-k="cite" data-ext="16장 · 깁스 함수의 미분 dG = V dp − S dT" data-note="일정한 온도에서 dG = V dp." id="eq-26-27"><div class="eq"><div class="m">$$\left(\frac{\partial G}{\partial p}\right)_T=V,\qquad G(p_1,T)=G(p_0,T)+\int_{p_0}^{p_1}V\,dp$$</div><a class="eqno" href="#eq-26-27">(26.26)–(26.28)</a></div></div>
+  <div class="claim box key" data-k="derived" id="eq-26-30"><p>두 상이 공존하는 점 B₁, B₂에서는 깁스 함수가 같으므로</p>
+    <div class="eq"><div class="m">$$\int_{B_1}^{B_2}V\,dp=0$$</div><a class="eqno" href="#eq-26-30">(26.29)–(26.30)</a></div>
+    <p>등온선 위에서 이 적분이 0이 되려면, 수평선이 등온선과 만드는 두 영역의 넓이가 같아야 한다. 이것이 <b>막스웰 작도</b>다(그림 26.5).</p></div>
+</section>
+<section class="phase" data-step="④" data-phase="결과">
+  <p>막스웰 작도로 온도마다 공존 압력을 정하면 $p$–$T$ 평면에 공존 곡선이 그려지고, 그 곡선은 임계점에서 끝난다(그림 26.6). $T>T_c$, $p>p_c$에서는 액체와 기체를 나누는 상경계가 없다. 그래서 상경계를 건너지 않고도 기체를 액체로 바꿀 수 있다. 예를 들어 낮은 압력에서 $T_c$ 위로 가열하고, $T_c$ 위에서 $p_c$ 위로 압축한 뒤, 높은 압력을 유지한 채 $T_c$ 아래로 식히면 된다.</p>
+</section>
+<section class="phase" data-step="⑤" data-phase="확인">
+  <p>깁스 함수 시뮬레이션에서 ‘압력 천천히 올렸다 내리기’를 누르면 부피 그래프의 자취가 X–Y 사이에서 고리(이력)를 그린다. 그다음 위의 반데르발스 시뮬레이션에서 $\tilde T=0.9$에 두고 막스웰 작도를 켜면, 공존 압력이 깁스 함수 시뮬레이션의 $\tilde p_B\approx0.647$과 같은 것을 확인할 수 있다. 상도표에서 그 점이 공존 곡선 위에 놓인다.</p>
+</section>
+
+<h2 id="verdict">결과 판정</h2>
+<ul class="verdict" aria-label="결과 판정">
+  <li><b>해결됨</b>질문이 이 절로 완전히 답해짐</li>
+  <li class="on"><b>새 문제 발생</b>해결하면서 새 의문이 생김</li>
+  <li><b>추후 논의</b>근사·제한이 남아 뒤에서 다룸</li>
+</ul>
+<p>Q1에는 답했다. 두 매개변수만으로 액화, 임계점, 준안정, 상공존이 모두 식 안에 들어왔다. 그러나 Q2의 답 0.375는 측정값 0.29와 맞지 않는다. 인력을 다른 방식으로 넣으면 나아질까? → <a href="26-2.html">26.2절</a>. 또 상전이를 깁스 함수로 다루는 일반론은 <a class="loc" href="../ch28/28-4.html">[28.4절 · 안정성과 준안정성]</a>, 임계점 위에서 액체와 기체를 가르는 문제는 <a class="loc" href="../ch28/28-7.html">[28.7절]</a>에서 다시 나온다.</p>
+
+<h2 id="examples">예제 평가</h2>
+<article class="exeval" id="ex-26-1">
+  <header><h3>예제 26.1 · 반데르발스 기체의 임계점 (386–387쪽)</h3><span class="stars" aria-label="중요도 3/3">★★★</span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>반드시 손으로. 두 조건(1차·2차 미분이 0)을 연립하는 과정과 $p_cV_c/RT_c=3/8$이 $a$, $b$와 무관하다는 결론이 이 절의 핵심이다. 26.2절의 디테리치 계산과 26.4절의 환산 변수가 모두 이 결과에 기댄다.</dd>
+    <dt>연습문제와의 관계</dt><dd>연습문제 26.1($V=V_c$에서 $\kappa_T$)과 26.4(등압팽창률 $\beta_p$)는 임계점 근처의 발산을 이 예제의 결과로 계산한다. 같이 풀 것.</dd>
+    <dt>솔직한 평가</dt><dd>시험에 가장 자주 나오는 유형이다. 계산 실수를 줄이려면 식 (26.15)를 (26.16)으로 나누는 길(교재의 방법)을 그대로 따라가는 것이 좋다.</dd>
+  </dl>
+</article>
+<article class="exeval" id="ex-p26-5">
+  <header><h3>연습문제 26.5–26.6 · 반데르발스 기체의 에너지와 열용량 (401쪽)</h3><span class="stars" aria-label="중요도 2/3">★★<span class="off">★</span></span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>흐름을 따라가며 풀 것. 식 (26.10)에서 $U=\tfrac32RT-a/V$를 얻고, 자유도 $f$로 일반화한다.</dd>
+    <dt>연습문제와의 관계</dt><dd>26.6은 19장의 $C_V=\tfrac f2R$(<a class="loc" href="../ch19/19-2.html#eq-19-22">[19.2절 · 식 19.22]</a>)을 그대로 가져온다. 인력 항이 $C_V$는 바꾸지 않고 $C_p-C_V$만 바꾼다는 점이 27장의 줄 팽창 냉각으로 이어진다.</dd>
+    <dt>솔직한 평가</dt><dd>계산 연습 겸 다음 장 예습이다. 시험에서는 “반데르발스 기체의 $U$가 부피에 따라 바뀌는 이유”를 묻는 서술형이 나올 수 있다.</dd>
+  </dl>
+</article>
+
+<h2 id="selfq">스스로 던질 질문</h2>
+<div class="selfq">
+  <details><summary>인력 항은 왜 $1/V^2$에 비례하는가?</summary><div><p>인력은 분자 쌍 사이에 작용한다. 분자 하나가 느끼는 이웃의 수가 밀도에 비례하고, 그런 분자의 수도 밀도에 비례하므로 단위 부피당 인력 에너지는 밀도의 제곱에 비례한다. 압력으로 바꾸면 $a/V_m^2$이다.</p></div></details>
+  <details><summary>$b$는 분자 1몰의 실제 부피와 같은가?</summary><div><p>같지 않다. 두 단단한 공이 서로 들어갈 수 없는 영역은 공 하나 부피의 8배이고, 쌍마다 한 번씩 세면 분자당 4배가 된다. 그래서 $b$는 분자들이 실제로 차지하는 부피의 약 4배다. 26.3절의 단단한 공 계산이 이것을 확인한다.</p></div></details>
+  <details><summary>S자 구간의 가운데 부분과 바깥 부분은 무엇이 다른가?</summary><div><p>가운데(X와 Y 사이, $\partial p/\partial V>0$)는 불안정해서 어떤 작은 요동에도 무너진다. 바깥쪽 B–X, B–Y는 압축률이 양수라 국소적으로는 안정한 준안정 구간이다. 깨끗한 용기에서 액체를 끓는점 위로 데우거나(과열), 먼지 없는 공기에서 수증기를 포화점 아래로 식히는(과냉각) 실험이 이 구간에 해당한다.</p></div></details>
+  <details><summary>막스웰 작도가 같은 넓이 규칙이 되는 이유를 그림으로 설명할 수 있는가?</summary><div><p>$\int V\,dp$를 등온선을 따라 B₁에서 B₂까지 적분하면, 압력이 내려갔다 올라갔다 하므로 수평선 아래 영역은 한쪽 부호, 위 영역은 다른 부호로 들어간다. 합이 0이려면 두 넓이가 같아야 한다.</p></div></details>
+  <details><summary>임계점에서 압축률이 무한대라는 것은 실제로 무엇을 뜻하는가?</summary><div><p>아주 작은 압력 변화에도 밀도가 크게 출렁인다는 뜻이다. 그래서 임계점 근처의 유체에서는 밀도 요동이 커져 빛을 강하게 산란한다(임계 유백광). 이런 큰 요동이 평균장 모형이 임계점 근처에서 틀리는 이유이기도 하다(<a href="26-4.html">26.4절</a>).</p></div></details>
+</div>
+
+<h2 id="hand">손으로 풀기</h2>
+<div class="hand" id="h2611" data-answer="0.375" data-tol="0.005">
+  <header><b>문항 1</b><span>임계 압축인자</span></header>
+  <p>식 (26.18)–(26.20)으로 반데르발스 기체의 $p_cV_c/RT_c$를 계산하라.</p>
+  <details><summary>풀이</summary><p>$\dfrac{(a/27b^2)(3b)}{R\cdot8a/27Rb}=\dfrac{3a/27b}{8a/27b}=\dfrac38=0.375$.</p></details>
+</div>
+<div class="hand" id="h2612" data-answer="0.6" data-tol="0.01">
+  <header><b>문항 2</b><span>환산 등온선의 한 점</span></header>
+  <p>환산 반데르발스 식 $\tilde p=\dfrac{8\tilde T}{3\tilde V-1}-\dfrac{3}{\tilde V^2}$(26.4절, 식 26.63)에서 $\tilde T=0.9$, $\tilde V=1$일 때 $\tilde p$를 구하라.</p>
+  <div class="hand-sim" data-sim="vdw" data-set='{"T":0.9,"V":1,"mx":false}' data-read="praw" data-label="시뮬레이션의 반데르발스 식 압력"></div>
+  <details><summary>풀이</summary><p>$\tilde p=7.2/2-3=0.6$. 이 점은 S자의 불안정 구간 안에 있다. 막스웰 작도를 켜면 평형 압력은 공존 압력 0.647로 바뀐다.</p></details>
+</div>
+<div class="hand" id="h2613" data-answer="3.23e-5" data-tol="0.01" data-unit="m³/mol">
+  <header><b>문항 3</b><span>아르곤의 반데르발스 상수</span></header>
+  <p>아르곤의 $T_c=151$ K, $p_c=4.86$ MPa(교재 그림 26.9 설명)에서 반데르발스 상수 $b$를 구하라. ($R=8.314$ J K⁻¹ mol⁻¹)</p>
+  <details><summary>풀이</summary><p>$T_c/p_c=8b/R$이므로 $b=RT_c/8p_c=8.314\times151/(8\times4.86\times10^6)=3.23\times10^{-5}$ m³/mol $=32.3$ cm³/mol. 같은 방법으로 $a=27R^2T_c^2/64p_c=0.137$ Pa m⁶ mol⁻². 이 값으로 예측한 $V_c=3b=96.9$ cm³/mol은 실제 값(약 75 cm³/mol)보다 크다. 0.375와 0.292의 차이가 바로 이것이다.</p></details>
+</div>
+
+<h2 id="notation">표기 참고</h2>
+<div class="bk-table-wrap"><table class="bk-table">
+  <thead><tr><th>이 학습서 (교재 한국어판)</th><th>다른 표기</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr><td>반데르발스 기체</td><td>반 데르 발스 기체</td><td>26장 목차(382쪽)는 붙여 쓰고, Part VIII 소개 쪽은 띄어 쓴다.</td></tr>
+    <tr><td>막스웰 작도법 (Maxwell's construction)</td><td>맥스웰 작도, 등면적 규칙</td><td>교재 391쪽.</td></tr>
+    <tr><td>준안정상태 (metastable)</td><td>준안정 상태</td><td>교재 389쪽.</td></tr>
+    <tr><td>그림 26.4의 “임계압력 $p_c$”</td><td>공존 압력, 포화 증기압</td><td>389쪽 본문과 그림 설명의 “임계압력”은 그 온도에서 두 극솟값의 높이가 같아지는 압력을 뜻한다. 식 26.20의 임계점 압력 $p_c$와는 다르다($T=0.9T_c$에서 약 $0.647p_c$).</td></tr>
+    <tr><td>391쪽 “액체로 시작하여 … 기체를 얻는다”</td><td>—</td><td>설명한 경로(낮은 압력에서 $T_c$ 위로 가열 → $p_c$ 위로 압축 → $T_c$ 아래로 냉각)는 기체에서 출발해 액체를 얻는 경로다. 번역 문장이 반대로 읽힐 수 있어 원문 대조가 필요하다 <span class="unv">확인 필요</span></td></tr>
+  </tbody>
+</table></div>
+</article>
+</main>
+</body>
+</html>

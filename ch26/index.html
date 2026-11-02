@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>26장 실제 기체 · 통계역학 학습서</title>
+<meta name="description" content="왜 실제 기체를 공부하는가: 이상기체는 임계점에서 부피를 3배 넘게 틀리고, 액화를 설명하지 못한다. 교재 26장(382–401쪽).">
+<link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+<script src="../assets/book.js"></script>
+</head>
+<body data-root="../" data-page="ch26">
+<main id="main" class="bk-main" tabindex="-1">
+<article class="bk-page">
+<p class="bk-crumb"><a href="../toc.html">전체 목차</a> › Part VIII › 26장</p>
+<h1 class="bk-title"><span class="no">26장</span>실제 기체</h1>
+<p class="bk-meta">교재 382–401쪽 · 절 4개 · 예제 3개 · 그림 26.1–26.11 · 표 26.1 · 연습문제 6개</p>
+<p class="bk-lang-note" hidden>새로 쓴 본문은 아직 한국어만 있습니다. · The new study text is Korean-only for now.</p>
+<ul class="bk-flow" aria-label="이 장의 흐름">
+  <li><a href="#failed">지금까지 무엇이 안 됐나</a></li><li><a href="#questions">이 장의 질문</a></li><li><a href="#map">장 지도</a></li><li><a href="#cando">끝내면 할 수 있는 것</a></li><li><a href="#left">남는 문제</a></li>
+</ul>
+<p class="bk-lead">이상기체 모형은 분자를 크기도 없고 서로 끌지도 않는 점으로 보았다. 이 장은 그 두 가정을 거두어들인다. 그러면 이상기체로는 아예 설명할 수 없던 현상, 곧 기체가 액체로 바뀌는 일과 임계점이 처음으로 식 안에 들어온다.</p>
+
+<h2 id="failed">지금까지 무엇이 안 됐나</h2>
+<div class="claim" data-k="cite" data-ref="../ch19/19-2.html#eq-19-14" data-ref-label="19.2절 · 단원자 기체 모형"><p>19장부터 21장까지 기체 분자 사이의 퍼텐셜 에너지는 무시했다. 그 결과가 $pV_m=RT$(식 26.2)이고, 등온선은 그림 26.1처럼 매끄러운 쌍곡선뿐이다.</p></div>
+<p>그런데 실제 기체를 충분히 식히거나 누르면 액체가 된다. 이상기체 식에는 그런 일이 일어날 자리가 없다. 교재의 숫자로 얼마나 틀리는지 보자.</p>
+<div class="claim" data-k="exp" data-src="교재 그림 26.9 설명(397쪽), 표 26.1(393쪽)"><p>아르곤은 대기압에서 $T_b=87$ K에 끓고, 임계점은 $T_c=151$ K, $p_c=4.86$ MPa이다. 임계점에서 측정한 $p_cV_c/RT_c$는 0.292이다.</p></div>
+<div class="claim" data-k="derived"><p>이상기체라면 $p_cV_c/RT_c=1$이어야 하고, 임계점에서 몰부피는 $RT_c/p_c=258$ cm³/mol이다. 실제 몰부피는 $0.292\times258=75$ cm³/mol이다. 이상기체 식은 임계점에서 부피를 3.4배나 크게 잡는다.</p></div>
+<p>Ne, Ar, Kr, Xe의 $p_cV_c/RT_c$가 모두 0.29 근처라는 것(표 26.1)도 눈여겨볼 점이다. 원자 크기와 끌림의 세기가 서로 다른데 왜 같은 값이 나올까?</p>
+
+<h2 id="questions">이 장이 답하려는 질문</h2>
+<ol class="qlist">
+  <li id="q1"><span class="qn">Q1</span>분자 사이의 인력과 분자의 크기를 상태방정식에 어떻게 넣는가? 그렇게 하면 기체의 액화와 임계점이 설명되는가?</li>
+  <li id="q2"><span class="qn">Q2</span>임계점의 $p_cV_c/RT_c$는 모형에 따라 얼마이고, 측정값 0.29에 가까운 모형은 무엇인가?</li>
+  <li id="q3"><span class="qn">Q3</span>분자 사이의 퍼텐셜 $V(r)$을 알면 이상기체에서 얼마나 벗어나는지 계산할 수 있는가?</li>
+  <li id="q4"><span class="qn">Q4</span>서로 다른 기체가 왜 같은 꼴의 상태방정식을 따르는 것처럼 보이는가?</li>
+</ol>
+
+<h2 id="map">장 지도</h2>
+<ol class="chmap">
+  <li><span class="sec"><a href="26-1.html">26.1</a></span><span><span class="qs"><a class="qchip" href="#q1">Q1</a><a class="qchip" href="#q2">Q2</a></span>반데르발스 기체. 두 매개변수 $a$, $b$로 등온선의 S자, 임계점, 준안정 상태, 막스웰 작도까지 얻는다. $p_cV_c/RT_c=0.375$로 측정값과 아직 어긋난다.</span></li>
+  <li><span class="sec"><a href="26-2.html">26.2</a></span><span><span class="qs"><a class="qchip" href="#q2">Q2</a></span>디테리치 방정식. 인력을 볼츠만 인자로 넣은 다른 모형으로 0.271을 얻는다. 측정값에 더 가깝다.</span></li>
+  <li><span class="sec"><a href="26-3.html">26.3</a></span><span><span class="qs"><a class="qchip" href="#q3">Q3</a></span>비리알 전개. 현상론적 모형 대신, 분자 쌍의 퍼텐셜에서 이상기체로부터의 첫 번째 어긋남 $B(T)$를 직접 계산한다.</span></li>
+  <li><span class="sec"><a href="26-4.html">26.4</a></span><span><span class="qs"><a class="qchip" href="#q4">Q4</a></span>대응상태의 법칙. 임계점 값으로 나누면 여러 기체가 하나로 겹치는 이유와 그 한계.</span></li>
+</ol>
+<p>흐름: 26.1이 가장 단순한 모형으로 액화를 식 안에 넣고, 26.2는 다른 모형으로 숫자를 다듬는다. 26.3은 모형이 아니라 미시적 퍼텐셜에서 출발하는 길을 연다. 26.4는 앞의 모든 결과를 “두 개의 척도”라는 하나의 관점으로 묶는다.</p>
+
+<h2 id="cando">이 장을 끝내면 할 수 있는 것</h2>
+<ul>
+  <li>반데르발스 식과 디테리치 식의 임계 상수 $T_c$, $p_c$, $V_c$와 $p_cV_c/RT_c$를 유도하고 측정값과 비교한다.</li>
+  <li>S자 등온선에서 불안정한 구간(음의 압축률)과 준안정 구간을 구별하고, 막스웰 작도로 공존 압력을 정한다.</li>
+  <li>분자 쌍의 퍼텐셜에서 제2 비리알 계수 $B(T)$를 계산하고, 그 부호와 보일 온도를 설명한다.</li>
+  <li>환산 변수로 상태방정식을 다시 쓰고, 대응상태의 법칙이 맞는 이유와 임계점 근처에서 어긋나는 이유를 말한다.</li>
+</ul>
+
+<h2 id="left">남는 문제</h2>
+<ul>
+  <li><b>실제 기체를 팽창시키면 식는가?</b> 이상기체는 줄 팽창에서 온도가 그대로지만 실제 기체는 다르다 → <a class="loc" href="../ch27/27-1.html">[27.1절 · 줄 팽창]</a>, <a class="loc" href="../ch27/27-3.html">[27.3절 · 줄-켈빈 팽창]</a>, <a class="loc" href="../ch27/27-4.html">[27.4절 · 기체의 액화]</a></li>
+  <li><b>상전이 일반론</b>: 잠열, 공존 곡선의 기울기, 준안정성 → <a class="loc" href="../ch28/28-3.html">[28.3절 · 클라우지우스-클라페이롱 방정식]</a>, <a class="loc" href="../ch28/28-4.html">[28.4절 · 안정성과 준안정성]</a></li>
+  <li><b>임계점 근처의 정확한 모양</b>: 그림 26.11에서 모형과 실험이 임계점 근처에서 어긋나는 이유 → <a class="loc" href="../ch28/28-7.html">[28.7절 · 상전이의 분류]</a></li>
+  <li><b>임계온도 위에서 액체와 기체의 구별</b>: 교재 390쪽이 28.7절로 미룬다 → <a class="loc" href="../ch28/28-7.html">[28.7절]</a></li>
+</ul>
+
+<h2 id="tools">이 장에서 쓰는 도구</h2>
+<ul>
+  <li>시뮬레이션 7개: 교재 그림 26.1–26.11을 모두 움직이는 버전이나 조건을 바꿔 볼 수 있는 버전으로 다시 그렸다. 26.3절에는 서로 끌고 미는 분자들이 실제로 움직이는 2차원 기체가 있다.</li>
+  <li>이 장은 기존 데모와 Colab 노트북이 아직 없다.</li>
+</ul>
+</article>
+</main>
+</body>
+</html>

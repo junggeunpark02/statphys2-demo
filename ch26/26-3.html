@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>26.3 비리알 전개 · 통계역학 학습서</title>
+<meta name="description" content="비리알 전개와 제2 비리알 계수 B(T), 보일 온도, 분자 쌍의 퍼텐셜에서 B(T) 계산하기. 교재 26.3절(394–398쪽).">
+<link rel="stylesheet" href="../assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../assets/book.css">
+<script defer src="../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../assets/vendor/katex/contrib/auto-render.min.js"></script>
+<script src="../assets/book.js"></script>
+<script defer src="sim26.js"></script>
+</head>
+<body data-root="../" data-page="26.3">
+<main id="main" class="bk-main" tabindex="-1">
+<article class="bk-page">
+<p class="bk-crumb"><a href="index.html">26장 실제 기체</a> › 26.3</p>
+<h1 class="bk-title"><span class="no">26.3</span>비리알 전개</h1>
+<p class="bk-meta">교재 394–398쪽 · 식 26.40–26.60 · 그림 26.8, 26.9, 26.10 · 예제 26.2</p>
+<p class="bk-lang-note" hidden>새로 쓴 본문은 아직 한국어만 있습니다. · The new study text is Korean-only for now.</p>
+<ul class="bk-flow" aria-label="이 절의 흐름">
+  <li><a href="#goals">학습 목표</a></li><li><a href="#solves">맡은 질문</a></li><li><a href="#start">출발점</a></li><li><a href="#body">본문 전개</a></li>
+  <li><a href="#verdict">결과 판정</a></li><li><a href="#examples">예제 평가</a></li><li><a href="#selfq">스스로 던질 질문</a></li><li><a href="#hand">손으로 풀기</a></li><li><a href="#notation">표기 참고</a></li>
+</ul>
+
+<h2 id="goals">학습 목표</h2>
+<ol>
+  <li>비리알 전개 $pV_m/RT=1+B/V_m+C/V_m^2+\cdots$의 뜻과 보일 온도의 정의를 말할 수 있다.</li>
+  <li>반데르발스 식을 전개해 $B(T)=b-a/RT$, $T_B=27T_c/8$을 유도할 수 있다(예제 26.2).</li>
+  <li>분자 쌍의 퍼텐셜 $V(r)$에서 $B(T)=\tfrac N2\int d^3r\,[1-e^{-\beta V(r)}]$을 유도하고, 각 단계의 근사를 말할 수 있다.</li>
+  <li>함수 $1-e^{-\beta V(r)}$의 모양으로 $B$가 저온에서 음수, 고온에서 양수인 이유를 설명할 수 있다.</li>
+</ol>
+
+<h2 id="solves">이 절이 맡은 질문</h2>
+<p><a class="qchip" href="index.html#q3">Q3</a> 분자 사이의 퍼텐셜 $V(r)$을 알면 이상기체에서 얼마나 벗어나는지 계산할 수 있는가?</p>
+<p>이 절은 Q3에 “밀도가 낮은 기체라면, 첫 번째 어긋남은 정확히 계산할 수 있다”고 답한다.</p>
+
+<h2 id="start">출발점</h2>
+<div class="claim" data-k="cite" data-ref="26-1.html#eq-26-12" data-ref-label="26.1절 · 식 26.12"><p>반데르발스 식 $p=\dfrac{RT}{V-b}-\dfrac{a}{V^2}$, 그리고 $T_c=\dfrac{8a}{27Rb}$.</p></div>
+<div class="claim" data-k="cite" data-ref="../ch21/21-3.html#eq-21-26" data-ref-label="21.3절 · 식 21.26"><p>상호작용이 없는 기체의 분배함수와 그로부터 얻는 $pV=RT$.</p></div>
+<div class="claim" data-k="cite" data-ref="../ch20/20-2.html#table-20-1" data-ref-label="20.2절 · 표 20.1"><p>$F=-k_BT\ln Z$, $p=-(\partial F/\partial V)_T$.</p></div>
+<div class="claim" data-k="cite" data-ref="../ch19/19-1.html#eq-19-5" data-ref-label="19.1절 · 식 19.5"><p>열평형에서 위치 $\mathbf r$에 입자가 있을 상대 확률은 $e^{-\beta V(\mathbf r)}$이다.</p></div>
+
+<h2 id="body">본문 전개</h2>
+<section class="phase" data-step="①" data-phase="상황">
+  <p>반데르발스 식과 디테리치 식은 서로 다른 가정에서 출발했지만, 밀도가 낮은 곳에서는 같은 1차 보정을 준다. 그렇다면 모형에 기대지 않고, 이상기체에서 벗어나는 정도를 밀도의 거듭제곱으로 체계적으로 써 볼 수 있다. 그 첫 계수는 분자 사이의 힘에 대해 무엇을 알려 줄까?</p>
+</section>
+<section class="phase" data-step="②" data-phase="관찰">
+  <figure class="sim-fig" id="sim-ljgas">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>온도 $k_BT/\varepsilon$. 아래 그래프를 누르면 그 온도로 이동한다.</span></p>
+      <p><b>무엇을 보라</b><span>저온에서는 분자들이 잠깐씩 짝을 짓거나 뭉친다. 그때 압축인자 $Z=pA/Nk_BT$가 1보다 작은지 큰지, 고온에서는 어떻게 바뀌는지 보라. 측정점이 제2 비리알 근사(선)를 얼마나 따르는지도 보라.</span></p>
+      <p data-choices="1보다 작다|1이다|1보다 크다" data-answer="1보다 작다" data-why="저온에서는 분자들이 인력 우물 근처에 오래 머물러 벽을 덜 친다. 그래서 같은 밀도·온도의 이상기체보다 압력이 낮다. 고온에서는 반발(분자 크기)이 이겨 $Z>1$이 된다."><b>먼저 예상해 보라</b><span>$k_BT/\varepsilon=0.8$에서 $Z$는?</span></p>
+    </div>
+    <figcaption><b>서로 끌고 미는 분자들의 기체.</b> 레너드-존스 퍼텐셜 $V(r)=4\varepsilon[(\sigma/r)^{12}-(\sigma/r)^6]$로 상호작용하는 분자 64개를 2차원에서 움직였다(모형 가정: 2차원, 주기 경계, 랑주뱅 열원, $r>3\sigma$에서 힘을 자름). 압력은 비리알 정리 $pA=Nk_BT+\tfrac12\langle\sum\mathbf r_{ij}\cdot\mathbf F_{ij}\rangle$로 잰다. 선은 같은 퍼텐셜의 2차원 제2 비리알 계수로 계산한 $1+B_2n$이다. 분자가 64개뿐이라 $Z$의 시간 평균은 크게 출렁인다. 1분쯤 기다리면 몇 % 안으로 모인다(같은 조건의 독립 계산: $k_BT/\varepsilon=1$에서 $Z=0.91\pm0.02$).</figcaption>
+  </figure>
+</section>
+<section class="phase" data-step="③" data-phase="식 세우기">
+  <div class="claim" data-k="def" id="eq-26-40"><div class="eq"><div class="m">$$\frac{pV_m}{RT}=1+\frac{B}{V_m}+\frac{C}{V_m^2}+\cdots$$</div><a class="eqno" href="#eq-26-40">(26.40)</a></div>
+    <p>비리알 전개. $B(T)$, $C(T)$, …를 비리알 계수라 한다. $B(T_B)=0$인 온도 $T_B$를 <b>보일 온도</b>라 한다. 그 온도에서는 높은 차수를 무시하면 보일의 법칙($pV=$일정)이 맞는다(그림 26.8).</p></div>
+  <h3 class="subhead"><span class="no">예제 26.2</span>반데르발스 식의 비리알 계수</h3>
+  <div class="claim" data-k="derived" id="eq-26-41"><div class="eq"><div class="m">$$p=\frac{RT}{V}\left(1-\frac bV\right)^{-1}-\frac{a}{V^2}$$</div><a class="eqno" href="#eq-26-41">(26.41)</a></div></div>
+  <div class="claim" data-k="approx" data-cond="$b/V\ll1$ (이항 급수가 수렴)" id="eq-26-42"><div class="eq"><div class="m">$$\frac{pV}{RT}=1+\frac1V\left(b-\frac{a}{RT}\right)+\left(\frac bV\right)^2+\left(\frac bV\right)^3+\cdots$$</div><a class="eqno" href="#eq-26-42">(26.42)</a></div></div>
+  <div class="claim" data-k="derived" id="eq-26-43"><div class="eq"><div class="m">$$B(T)=b-\frac{a}{RT},\qquad T_B=\frac{a}{bR}=\frac{27}{8}T_c$$</div><a class="eqno" href="#eq-26-43">(26.43)–(26.45)</a></div>
+    <p>$b$(분자 크기)는 $B$를 키우고 $a$(인력)는 줄인다. 인력의 몫은 온도가 오를수록 작아진다.</p></div>
+  <h3 class="subhead"><span class="no">미시적 유도</span>분자 쌍의 퍼텐셜에서 $B(T)$로</h3>
+  <div class="claim" data-k="model" id="eq-26-48"><div class="eq"><div class="m">$$U=\sum_{i=1}^{N}\frac{p_i^2}{2m}+\sum_{i\ne j}\tfrac12\mathcal V(|\mathbf r_i-\mathbf r_j|)$$</div><a class="eqno" href="#eq-26-48">(26.46)–(26.48)</a></div>
+    <p>퍼텐셜 에너지는 분자 쌍 사이의 퍼텐셜 $\mathcal V(r)$의 합이다. 인자 ½은 같은 쌍을 두 번 세지 않으려는 것이다.</p></div>
+  <div class="claim" data-k="derived" id="eq-26-49"><p>운동량과 위치 적분이 분리되므로 $Z=Z_{\rm K.E.}Z_{\rm P.E.}$(식 26.49)이고, $Z_{\rm K.E.}$는 이상기체 부분이다. 남은 위치 부분을 $1/V^N$로 규격화하면</p>
+    <div class="eq"><div class="m">$$Z_{\rm P.E.}=1+\frac1{V^N}\int\!\cdots\!\int d^3r_1\cdots d^3r_N\left[e^{-\frac\beta2\sum_{i\ne j}\mathcal V(|\mathbf r_i-\mathbf r_j|)}-1\right]$$</div><a class="eqno" href="#eq-26-49">(26.50)–(26.52)</a></div>
+    <p>1을 더하고 뺀 것은 나중에 $\ln(1+x)\approx x$를 쓰려는 것이다(교재 396쪽 각주 6).</p></div>
+  <div class="claim" data-k="approx" data-cond="기체가 묽어서, 서로 가까이 있는 분자 쌍이 한 번에 하나뿐이라고 볼 수 있음" id="eq-26-54"><p>분자 사이 상호작용은 거의 맞닿은 두 분자에게만 중요하다. 쌍을 고르는 방법은 $N(N-1)/2\approx N^2/2$가지이고(식 26.53), 쌍의 거리 $r$ 말고 나머지 좌표를 적분하면 부피 $V$가 나온다.</p>
+    <div class="eq"><div class="m">$$Z_{\rm P.E.}\approx1+\frac{N^2}{2V}\int d^3r\left[e^{-\beta\mathcal V(r)}-1\right]$$</div><a class="eqno" href="#eq-26-54">(26.54)–(26.55)</a></div></div>
+  <div class="claim box key" data-k="def" id="eq-26-56"><div class="eq"><div class="m">$$B(T)=\frac N2\int d^3r\left[1-e^{-\beta\mathcal V(r)}\right]$$</div><a class="eqno" href="#eq-26-56">(26.56)</a></div>
+    <p>그러면 $Z_{\rm P.E.}\approx1-NB(T)/V$(식 26.57)이다. 1몰이면 $N=N_A$이다. 이 학습서에서는 $1-e^{-\beta\mathcal V}$를 줄여 “메이어 함수 꼴”이라고 부르기도 한다.</p></div>
+  <div class="claim" data-k="approx" data-cond="$NB/V\ll1$이어서 $\ln(1+x)\approx x$" id="eq-26-58"><div class="eq"><div class="m">$$F=F_0+\frac{Nk_BTB(T)}{V},\qquad p=\frac{Nk_BT}{V}+\frac{Nk_BTB(T)}{V^2}$$</div><a class="eqno" href="#eq-26-58">(26.58)–(26.59)</a></div></div>
+  <div class="claim" data-k="derived" id="eq-26-60"><div class="eq"><div class="m">$$\frac{pV}{RT}=1+\frac{B(T)}{V}\quad(1\text{몰})$$</div><a class="eqno" href="#eq-26-60">(26.60)</a></div>
+    <p>비리알 전개(식 26.40)에서 첫 보정 항만 남은 꼴이다. 이번에는 $B(T)$가 분자 쌍의 퍼텐셜로 정해진다.</p></div>
+</section>
+<section class="phase" data-step="④" data-phase="결과">
+  <div class="claim" data-k="exp" data-src="교재 그림 26.9(397쪽)"><p>아르곤의 $B(T)$는 저온에서 큰 음수이고, 온도가 오르며 커져 400 K 근처에서 부호가 바뀐 뒤 고온에서 작은 양수가 된다. 아르곤의 끓는점은 $T_b=87$ K, 임계점은 $T_c=151$ K, $p_c=4.86$ MPa이다.</p></div>
+  <p>그 이유는 적분할 함수 $1-e^{-\beta\mathcal V(r)}$의 모양에 있다(그림 26.10). $r$이 분자 지름보다 작으면 $\mathcal V\to\infty$라 이 함수는 1(양의 기여, 분자 크기). 우물 바닥 $r_{\min}$ 근처에서는 $\mathcal V\lt 0$이라 음수(음의 기여, 인력). 저온에서는 $\beta$가 커서 음의 봉우리가 깊어 $B\lt 0$이고, 고온에서는 그 봉우리가 얕아져 양의 부분이 이긴다.</p>
+  <div class="claim" data-k="derived" id="hard-sphere"><p>단단한 공(지름 $d$보다 가까우면 $\mathcal V=\infty$, 그 밖에서는 0)이면 $B=\tfrac N2\cdot\tfrac43\pi d^3=\tfrac{2\pi}{3}Nd^3$이고 온도에 무관하다. 분자 하나의 부피는 $\tfrac\pi6d^3$이므로 $B$는 분자들이 실제로 차지하는 부피의 4배다. 반데르발스 식의 $b$가 바로 이것이다.</p></div>
+</section>
+<section class="phase" data-step="⑤" data-phase="확인">
+  <figure class="sim-fig" id="sim-mayer">
+    <div class="guide">
+      <p><b>무엇을 조절하나</b><span>온도 $k_BT/\varepsilon$, 아르곤 눈금 보기. 오른쪽 아래 그래프를 누르면 그 온도로 이동한다.</span></p>
+      <p><b>무엇을 보라</b><span>고정된 분자 옆을 오가는 이웃 분자가 우물 바닥 근처에 얼마나 오래 머무는지(아래 막대), 적분 함수의 음의 넓이와 양의 넓이가 온도에 따라 어떻게 바뀌는지, $B^*$의 부호가 어디서 바뀌는지 보라.</span></p>
+      <p data-choices="1보다 낮은 곳|약 3.4|10보다 높은 곳" data-answer="약 3.4" data-why="레너드-존스 퍼텐셜의 보일 온도는 $k_BT_B/\varepsilon\approx3.42$이다. 아르곤 값($\varepsilon/k_B=119.8$ K)으로 바꾸면 약 410 K로, 그림 26.9에서 부호가 바뀌는 400 K 근처와 맞는다."><b>먼저 예상해 보라</b><span>$B^*$가 0이 되는 $k_BT/\varepsilon$는?</span></p>
+    </div>
+    <figcaption><b>그림 26.8, 26.9, 26.10을 움직이게 다시 그림.</b> 이웃 분자는 메트로폴리스 규칙으로 거리 $r$을 오가며, 오래 지켜보면 머문 비율이 $e^{-\mathcal V/k_BT}$에 맞는다(이웃이 없는 경우를 1로 둠). 아래 그래프의 넓이를 $r$에 대해 적분한 것이 $B^*=B/(2\pi N_A\sigma^3/3)$이다. 아르곤 레너드-존스 값($\varepsilon/k_B=119.8$ K, $\sigma=0.3405$ nm)은 흔히 쓰는 값이며 교재에 실린 값은 아니다(확인 필요).</figcaption>
+  </figure>
+</section>
+
+<h2 id="verdict">결과 판정</h2>
+<ul class="verdict" aria-label="결과 판정">
+  <li class="on"><b>해결됨</b>질문이 이 절로 완전히 답해짐</li>
+  <li><b>새 문제 발생</b>해결하면서 새 의문이 생김</li>
+  <li><b>추후 논의</b>근사·제한이 남아 뒤에서 다룸</li>
+</ul>
+<p>Q3에 답했다. 밀도가 낮은 기체에서 이상기체로부터의 첫 번째 어긋남 $B(T)$는 분자 쌍의 퍼텐셜에서 식 (26.56)으로 계산된다. 그 부호와 보일 온도도 퍼텐셜의 모양으로 설명된다. 높은 밀도에서는 세 분자 이상이 동시에 가까워지는 경우를 세는 $C(T)$ 이상의 계수가 필요하다. 교재는 이 계산을 다루지 않는다. $B(T)$의 온도 의존성이 기체를 팽창시킬 때의 냉각을 결정하는 일은 <a class="loc" href="../ch27/27-3.html">[27.3절 · 줄-켈빈 팽창]</a>에서 다시 나온다.</p>
+
+<h2 id="examples">예제 평가</h2>
+<article class="exeval" id="ex-26-2">
+  <header><h3>예제 26.2 · 반데르발스 식의 비리알 전개와 보일 온도 (394–395쪽)</h3><span class="stars" aria-label="중요도 3/3">★★★</span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>반드시 손으로. 이항 급수 한 번으로 $B=b-a/RT$가 나오고, $T_B=27T_c/8$로 임계점과 이어진다. $b$와 $a$가 $B$에서 반대 부호로 들어간다는 사실이 이후 모든 해석의 기준이다.</dd>
+    <dt>연습문제와의 관계</dt><dd>연습문제 26.2($p(V-b)=RT$인 기체)는 $a=0$인 특수한 경우로, $B=b$이고 보일 온도가 없다. 27장의 줄-켈빈 계수도 같은 $B(T)$로 계산한다.</dd>
+    <dt>솔직한 평가</dt><dd>시험에 자주 나오는 유형이다. “보일 온도를 임계온도로 나타내라”는 짧은 문항으로 나오기 쉽다.</dd>
+  </dl>
+</article>
+<article class="exeval" id="ex-p26-2">
+  <header><h3>연습문제 26.2 · $p(V-b)=RT$인 기체 (401쪽)</h3><span class="stars" aria-label="중요도 2/3">★★<span class="off">★</span></span></header>
+  <dl>
+    <dt>중요도와 이유</dt><dd>흐름을 따라가며 풀 것. $b$의 크기를 분자 크기로 어림하고, 내부 에너지가 온도만의 함수임을 보이는 문제다.</dd>
+    <dt>연습문제와의 관계</dt><dd>위 “단단한 공” 결과($B=\tfrac{2\pi}{3}Nd^3$)로 $b$의 크기를 바로 어림할 수 있다. 손으로 풀기 2번과 같은 계산이다.</dd>
+    <dt>솔직한 평가</dt><dd>짧은 개념 문제다. 인력이 없으면 $U$가 부피에 의존하지 않는다는 결론은 27장 줄 팽창의 출발점이다.</dd>
+  </dl>
+</article>
+
+<h2 id="selfq">스스로 던질 질문</h2>
+<div class="selfq">
+  <details><summary>$B\lt 0$이면 압력은 이상기체보다 큰가 작은가?</summary><div><p>작다. $pV/RT=1+B/V$에서 $B\lt 0$이면 1보다 작다. 분자들이 서로 끌어 벽을 치는 빈도와 세기가 줄어든 효과다.</p></div></details>
+  <details><summary>왜 묽은 기체에서는 분자 쌍만 세면 되는가?</summary><div><p>두 분자가 가까이 있을 확률은 밀도에 비례하고, 세 분자가 한꺼번에 가까이 있을 확률은 밀도의 제곱에 비례한다. 밀도가 낮으면 쌍의 효과가 첫 보정($1/V$)을, 세 분자의 효과가 그다음($1/V^2$, 곧 $C$)을 맡는다.</p></div></details>
+  <details><summary>반데르발스 상수로 계산한 아르곤의 보일 온도와 그림 26.9의 값은 맞는가?</summary><div><p>반데르발스 상수($T_c$, $p_c$에서 구한 값)로는 $T_B=27T_c/8=510$ K이다. 그림 26.9에서 부호가 바뀌는 곳은 400 K 근처다. 레너드-존스 퍼텐셜로 계산하면 약 410 K로 훨씬 가깝다. 반데르발스 식은 인력과 반발을 너무 단순하게 다룬다.</p></div></details>
+  <details><summary>시뮬레이션의 2차원 기체와 3차원 기체의 보일 온도가 다른 이유는?</summary><div><p>$B$는 $\int d^3r$ (3차원)이냐 $\int d^2r$ (2차원)이냐에 따라 거리마다 주는 가중치가 다르다($r^2$ 대 $r$). 그래서 같은 퍼텐셜이라도 2차원 보일 온도는 약 1.56, 3차원은 약 3.42로 다르다. 부호가 바뀐다는 성질은 같다.</p></div></details>
+  <details><summary>측정한 $B(T)$로 거꾸로 분자 사이 퍼텐셜을 알아낼 수 있을까?</summary><div><p>어느 정도는 가능하다. 퍼텐셜의 꼴(예: 레너드-존스)을 가정하면 $B(T)$ 곡선에 맞춰 $\varepsilon$과 $\sigma$를 정할 수 있다. 그러나 $B(T)$ 하나로 퍼텐셜의 모양 전체가 유일하게 정해지지는 않는다.</p></div></details>
+</div>
+
+<h2 id="hand">손으로 풀기</h2>
+<div class="hand" id="h2631" data-answer="3.375" data-tol="0.005">
+  <header><b>문항 1</b><span>보일 온도와 임계온도</span></header>
+  <p>반데르발스 기체에서 $T_B/T_c$를 구하라.</p>
+  <details><summary>풀이</summary><p>$T_B=a/bR$, $T_c=8a/27Rb$이므로 $T_B/T_c=27/8=3.375$.</p></details>
+</div>
+<div class="hand" id="h2632" data-answer="49.6" data-tol="0.01" data-unit="cm³/mol">
+  <header><b>문항 2</b><span>단단한 공의 $B$</span></header>
+  <p>지름 $d=0.34$ nm인 단단한 공 기체 1몰의 $B=\tfrac{2\pi}{3}N_Ad^3$을 cm³/mol 단위로 구하라. ($N_A=6.022\times10^{23}$ mol⁻¹)</p>
+  <details><summary>풀이</summary><p>$d^3=3.93\times10^{-29}$ m³. $B=2.094\times6.022\times10^{23}\times3.93\times10^{-29}=4.96\times10^{-5}$ m³/mol $=49.6$ cm³/mol. 아르곤의 반데르발스 $b$(32 cm³/mol)와 같은 규모다.</p></details>
+</div>
+<div class="hand" id="h2633" data-answer="-22.6" data-tol="0.02" data-unit="cm³/mol">
+  <header><b>문항 3</b><span>상온 아르곤의 $B$ (반데르발스 상수로)</span></header>
+  <p>26.1절에서 구한 아르곤의 반데르발스 상수 $a=0.137$ Pa m⁶ mol⁻², $b=3.23\times10^{-5}$ m³/mol로 300 K의 $B=b-a/RT$를 cm³/mol 단위로 구하라.</p>
+  <div class="hand-sim" data-sim="mayer" data-set='{"T":2.504}' data-read="Bar" data-label="비교용: 레너드-존스(아르곤 값)로 계산한 300 K의 $B$"></div>
+  <details><summary>풀이</summary><p>$a/RT=0.137/(8.314\times300)=5.49\times10^{-5}$ m³/mol. $B=3.23\times10^{-5}-5.49\times10^{-5}=-2.26\times10^{-5}$ m³/mol $=-22.6$ cm³/mol. 레너드-존스 퍼텐셜로 계산하면 약 −15.5 cm³/mol이다. 두 값의 차이는 반데르발스 모형의 한계를 보여 준다.</p></details>
+</div>
+
+<h2 id="notation">표기 참고</h2>
+<div class="bk-table-wrap"><table class="bk-table">
+  <thead><tr><th>이 학습서 (교재 한국어판)</th><th>다른 표기</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr><td>비리알 전개, 비리알 계수</td><td>비리얼 전개 (virial expansion)</td><td>교재 394쪽 표기를 따른다.</td></tr>
+    <tr><td>보일 온도 (Boyle temperature)</td><td>—</td><td>교재 394쪽.</td></tr>
+    <tr><td>$1-e^{-\beta\mathcal V(r)}$</td><td>메이어 함수 $f(r)=e^{-\beta\mathcal V}-1$의 부호를 바꾼 것</td><td>교재는 이름을 붙이지 않는다. 다른 책은 보통 $f=e^{-\beta\mathcal V}-1$을 메이어 함수라 부른다.</td></tr>
+    <tr><td>$\mathcal V(r)$</td><td>$u(r)$, $\phi(r)$</td><td>교재는 부피 $V$와 구별하려고 필기체 $\mathcal V$를 쓴다.</td></tr>
+    <tr><td>그림 26.9의 세로축 단위</td><td>—</td><td>스캔에서 단위 표기를 정확히 읽기 어렵다. 값의 크기로 보아 $10^{-4}$ m³ mol⁻¹로 보인다 <span class="unv">확인 필요</span></td></tr>
+  </tbody>
+</table></div>
+</article>
+</main>
+</body>
+</html>
